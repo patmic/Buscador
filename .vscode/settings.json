@@ -1,0 +1,20 @@
+{
+    "sqltools.connections": [
+        {
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 1433,
+            "driver": "MSSQL",
+            "name": "dbEcuador",
+            "database": "master",
+            "username": "sa",
+            "password": "Password12345"
+        }
+    ],
+    "CodeGPT.apiKey": "OpenAI"
+}

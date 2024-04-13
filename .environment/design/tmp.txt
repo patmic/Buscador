@@ -1,0 +1,30 @@
+
+vista
+Ecuardor
+{                                     
+    id                   |  
+    nombre               |  
+    fechaCertificacion   |      >>>--------------|     Tabla1 { nombreOrg, fechaCertificacion, Normal}   --> APIRESFULL   --->  |  NOMBRE  | ORGANIZACION |
+    representante        |                       |                                                                              |          |              |
+    Productos            |                       |
+    Normal               |                       |     Tabla3 { nombreOrg, Normal}
+    ....                 |                       |
+    esquemas             |                       |     ------------------------------------------------------
+    ...                  |                       --->> |   Sinonimos   |   Equivalentes    |   MotorBusqueda |
+    ...                  |                             ------------------------------------------------------
+}
+
+vista
+PERU
+{                                               |
+    id                   |                      |
+    nombre               |                      |
+    fechaCertificacion   |                      |
+    representante        |                      |
+    Productos            |                      |
+    Normal               |---------------------
+    ....                 |
+    esquemas             |
+    ...                  |
+    ...                  |
+}

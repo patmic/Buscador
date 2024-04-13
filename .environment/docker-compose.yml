@@ -1,0 +1,97 @@
+version: '3.9'
+
+networks:
+  databases:
+    driver: bridge
+  mssql-network:
+    driver: bridge
+
+volumes:
+  mssqldata:
+    driver: local
+  sqldata:
+    driver: local
+  sqllog:
+    driver: local
+  sqlbackup:
+    driver: local
+  sqlite_data:
+    external: true
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql-container
+    # build:
+    #   dockerfile: sqlserver-fulltext.Dockerfile
+    env_file:
+      - mssql.env
+      - mssqlPass.env
+    # environment:
+    #   MSSQL_PID: "Express"
+    #   MSSQL_AGENT_ENABLED: "true"
+    #   MSSQL_INSTALL_FULLTEXT: "true"  # Esta línea agrega la característica de Full-Text Search
+    ports:
+      - '1433:1433'
+    networks:
+      - mssql-network
+    restart: always
+    volumes:
+      - mssqldata:/var/opt/mssql/
+      - sqldata:/var/opt/sqlserver/data
+      - sqllog:/var/opt/sqlserver/log:rw
+      - sqlbackup:/var/opt/sqlserver/backup
+      - /c/docker/shared:/usr/shared
+    # command: ["/bin/bash", "-c", "/opt/mssql/bin/sqlservr & sleep 30 && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'pat_mic_DBKEY' -Q \"EXEC sp_fulltext_service 'enable';\""]
+    # user: root
+    # # Install dependencies
+    # command: >
+    #   bash -c "apt-get update && 
+    #            apt-get install -yq gnupg gnupg2 gnupg1 curl apt-transport-https &&
+    #            curl https://packages.microsoft.com/keys/microsoft.asc -o /var/opt/mssql/ms-key.cer &&
+    #            apt-key add /var/opt/mssql/ms-key.cer &&
+    #            curl https://packages.microsoft.com/config/ubuntu/20.04/mssql-server-2022.list -o /etc/apt/sources.list.d/mssql-server-2022.list &&
+    #            apt-get update &&
+    #            apt-get install -y mssql-server-fts &&
+    #            apt-get clean &&
+    #            rm -rf /var/lib/apt/lists"
+    # command: ["/opt/mssql/bin/sqlservr"]
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    env_file:
+      - mysql.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql:rw
+    networks:
+      - databases
+
+  sqlite:
+    image: alpine:latest
+    container_name: sqlite-container
+    command: sh -c "apk --no-cache add sqlite && cp /data/initial-Colombia.sqlite /data/Colombia.sqlite && sqlite3 /data/Colombia.sqlite < /data/query/COLOMBIA.sql && tail -f /dev/null"
+    volumes:
+      - ./database:/data
+    networks:
+      - databases
+
+  # NO es necesario un server
+  # sqlitebrowser:
+  #   image: linuxserver/sqlitebrowser
+  #   container_name: sqlitebrowser
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - sqlite
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=UTC
+  #     - ENABLE_UWSGI=true
+  #   volumes:
+  #     - sqlite_data:/data/db
+  #   networks:
+  #     - sqlite-network
