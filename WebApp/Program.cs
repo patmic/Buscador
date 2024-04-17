@@ -15,6 +15,12 @@ builder.Services.AddTransient<IPeruRepository, PeruRepository>();
 
 var app = builder.Build();
 
-// app.MapGet("/", () => "Hello World!");
+app.UseCors(options =>
+{
+    options.AllowAnyOrigin();
+    options.AllowAnyMethod();
+    options.AllowAnyHeader();
+});
+
 app.MapControllers();
 app.Run();
