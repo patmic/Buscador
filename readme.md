@@ -86,3 +86,9 @@ validamos las dependencias creadas
     <PackageReference Include="System.Data.Sqlite.Core" Version="1.0.118" />
   </ItemGroup>
 
+--------------------
+dotnet new blazorwasm -n ClientApp
+dotnet sln add ClientApp/ClientApp.csproj
+Agregar en ClientApp.csproj = >
+< UseRazorSourceGenerator>false</UseRazorSourceGenerator>
+dotnet run
