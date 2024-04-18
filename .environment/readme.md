@@ -70,6 +70,15 @@ LOG ON
 
 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Password12345' -Q "CREATE DATABASE SAE ON PRIMARY (NAME = 'SAE_data', FILENAME = '/var/opt/mssql/data/SAE.mdf', SIZE = 100MB, MAXSIZE = UNLIMITED, FILEGROWTH = 10MB) LOG ON (NAME = 'SAE_log', FILENAME = '/var/opt/mssql/data/SAE.ldf', SIZE = 50MB, MAXSIZE = 200MB, FILEGROWTH = 5MB);"
 
+Ejecutar el container a medida
+docker run -e ACCEPT_EULA=Y -e SA_PASSWORD=pat_mic_DBKEY -d aruponse/sqlserver-fts:0.0.2
+
+conectarse a instalcia de mssql server en container desde consola
+sqlcmd -S localhost -U SA -P 'pat_mic_DBKEY'SELECT FULLTEXTSERVICEPROPERTY('IsFullTextInstalled')
+
+validar si extension full text search está activa
+SELECT FULLTEXTSERVICEPROPERTY('IsFullTextInstalled')
+go
 
 
 
@@ -181,7 +190,7 @@ CMD /opt/mssql/bin/sqlservr
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P pat_mic_DBKEY -Q "SHUTDOWN WITH NOWAIT"
 
 
-/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P pat_mic_DBKEY -Q "EXEC sp_fulltext_service 'load_os_resources', 1;"
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P pat_mic_DBKEY -Q "select FULLTEXTSERVICEPROPERTY('IsFullTextInstalled');go;"
 
 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P pat_mic_DBKEY
 
