@@ -7,4 +7,4 @@ INSERT INTO Usuario (name) VALUES ('Test UserName');
 INSERT INTO Usuario (name) VALUES ('Mark Silva');
 INSERT INTO Usuario (name) VALUES ('Hector Kamara');
 INSERT INTO Usuario (name) VALUES ('Greg Anthony');
-INSERT INTO usuaio (name) VALUES ('pepe');
+INSERT INTO Usuario (name) VALUES ('pepe');

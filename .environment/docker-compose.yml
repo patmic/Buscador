@@ -41,7 +41,7 @@ services:
       - sqldata:/var/opt/sqlserver/data
       - sqllog:/var/opt/sqlserver/log:rw
       - sqlbackup:/var/opt/sqlserver/backup
-      - /c/docker/shared:/usr/shared
+      # - /c/docker/shared:/usr/shared
     # command: ["/bin/bash", "-c", "/opt/mssql/bin/sqlservr & sleep 30 && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'pat_mic_DBKEY' -Q \"EXEC sp_fulltext_service 'enable';\""]
     # user: root
     # # Install dependencies
