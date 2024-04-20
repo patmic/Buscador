@@ -1,0 +1,48 @@
+﻿@page "/peru"
+@inject IOrganizacionRepository OrganizacionRepository
+
+<PageTitle>Perú</PageTitle>
+
+<h1>Datos Perú</h1>
+
+<p>Datos obtenidos desde el WebApi</p>
+
+@if (listOrganizacion == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var org in listOrganizacion)
+            {
+                <tr>
+                    <td>@org.Id</td>
+                    <td>@org.Nombre</td>
+                    <td>@org.Direccion</td>
+                    <td>@org.Telefono</td>
+                    <td>@org.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Organizacion>? listOrganizacion;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listOrganizacion = await OrganizacionRepository.GetOrganizacionesAsync();
+    }
+}
