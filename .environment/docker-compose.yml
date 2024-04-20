@@ -20,43 +20,23 @@ volumes:
 
 services:
   mssql:
-    image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: mssql-container
-    # build:
-    #   dockerfile: sqlserver-fulltext.Dockerfile
+    image: aruponse/sqlserver-fts:0.0.2
     env_file:
       - mssql.env
       - mssqlPass.env
-    # environment:
-    #   MSSQL_PID: "Express"
-    #   MSSQL_AGENT_ENABLED: "true"
-    #   MSSQL_INSTALL_FULLTEXT: "true"  # Esta línea agrega la característica de Full-Text Search
+    environment:
+      MSSQL_PID: "Express"
+      SA_PASSWORD: "pat_mic_DBKEY"
+      ACCEPT_EULA: "Y"
     ports:
-      - '1433:1433'
+      - '1434:1433'
     networks:
-      - mssql-network
+      - databases
     restart: always
     volumes:
-      - mssqldata:/var/opt/mssql/
-      - sqldata:/var/opt/sqlserver/data
-      - sqllog:/var/opt/sqlserver/log:rw
-      - sqlbackup:/var/opt/sqlserver/backup
-      # - /c/docker/shared:/usr/shared
-    # command: ["/bin/bash", "-c", "/opt/mssql/bin/sqlservr & sleep 30 && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'pat_mic_DBKEY' -Q \"EXEC sp_fulltext_service 'enable';\""]
-    # user: root
-    # # Install dependencies
-    # command: >
-    #   bash -c "apt-get update && 
-    #            apt-get install -yq gnupg gnupg2 gnupg1 curl apt-transport-https &&
-    #            curl https://packages.microsoft.com/keys/microsoft.asc -o /var/opt/mssql/ms-key.cer &&
-    #            apt-key add /var/opt/mssql/ms-key.cer &&
-    #            curl https://packages.microsoft.com/config/ubuntu/20.04/mssql-server-2022.list -o /etc/apt/sources.list.d/mssql-server-2022.list &&
-    #            apt-get update &&
-    #            apt-get install -y mssql-server-fts &&
-    #            apt-get clean &&
-    #            rm -rf /var/lib/apt/lists"
-    # command: ["/opt/mssql/bin/sqlservr"]
-
+      - ./volumes/mssql/data:/var/opt/mssql/data
+      - ./volumes/mssql/log:/var/opt/mssql/log
   mysql:
     image: mysql:latest
     container_name: mysql-container
@@ -65,10 +45,9 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql-data:/var/lib/mysql:rw
+      - ./volumes/mysql-data:/var/lib/mysql:rw
     networks:
       - databases
-
   sqlite:
     image: alpine:latest
     container_name: sqlite-container
@@ -77,21 +56,17 @@ services:
       - ./database:/data
     networks:
       - databases
+  mail:
+    image: bytemark/smtp
+    restart: always
+    ports:
+      - "25:25"
+      - "8080:8080"
+      - "8085:8085"
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: mailhog-container
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
-  # NO es necesario un server
-  # sqlitebrowser:
-  #   image: linuxserver/sqlitebrowser
-  #   container_name: sqlitebrowser
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - sqlite
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=UTC
-  #     - ENABLE_UWSGI=true
-  #   volumes:
-  #     - sqlite_data:/data/db
-  #   networks:
-  #     - sqlite-network

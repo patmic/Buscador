@@ -479,3 +479,4 @@ $RECYCLE.BIN/
 *.swp
 /.environment/mysql-data
 /.vscode
+/.environment/volumes
