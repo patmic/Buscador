@@ -1,5 +1,9 @@
 ﻿@page "/peru"
+@using Microsoft.AspNetCore.Authorization;
+@using ClientApp.Services
+@using ClientApp.Services.IService
 @inject IOrganizacionRepository OrganizacionRepository
+@attribute [Authorize]
 
 <PageTitle>Perú</PageTitle>
 

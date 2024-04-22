@@ -4,11 +4,11 @@ namespace WebApp.Models;
 public class Organizacion
 {
     // ORGANIZACION: id,nombre,direccion,telefono,email
-    public int id { get; set; }
+    public int Id { get; set; }
     [Required]
-    public string? nombre { get; set; }
+    public string? Nombre { get; set; }
     [Required]
-    public string? direccion { get; set; }
+    public string? Direccion { get; set; }
     public string? Telefono { get; set; }
-    public string? email { get; set; }
+    public string? Email { get; set; }
 }

@@ -1,10 +1,10 @@
 USE MASTER;
 GO
-CREATE DATABASE CAN ON PRIMARY 
-(   NAME = 'CAN_data', 
-    FILENAME = '/var/opt/mssql/data/CAN.mdf', SIZE = 100MB, MAXSIZE = UNLIMITED, FILEGROWTH = 10MB
+CREATE DATABASE CAN_DB ON PRIMARY 
+(   NAME = 'CAN_DB_data', 
+    FILENAME = '/var/opt/mssql/data/CAN_DB.mdf', SIZE = 100MB, MAXSIZE = UNLIMITED, FILEGROWTH = 10MB
 ) LOG ON 
-(   NAME = 'CAN_log', 
-    FILENAME = '/var/opt/mssql/data/CAN.ldf', SIZE = 50MB, MAXSIZE = 200MB, FILEGROWTH = 5MB
+(   NAME = 'CAN_DB_log', 
+    FILENAME = '/var/opt/mssql/data/CAN_DB.ldf', SIZE = 50MB, MAXSIZE = 200MB, FILEGROWTH = 5MB
 );
 GO
