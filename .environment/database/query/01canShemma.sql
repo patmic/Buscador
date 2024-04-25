@@ -42,6 +42,7 @@ CREATE TABLE Usuario (
     Email NVARCHAR(100) NOT NULL,
     Nombre NVARCHAR(500) NOT NULL,
     Apellido NVARCHAR(500),
+    Telefono NVARCHAR(20),
     Rol NVARCHAR(20) NOT NULL,
     Clave NVARCHAR(MAX) NOT NULL,
 
@@ -83,7 +84,7 @@ CREATE TABLE UsuarioEndpointPermiso (
     IdUserCrea INT NOT NULL DEFAULT(0),
     IdUserModifica INT NOT NULL DEFAULT(0),
 
-    CONSTRAINT CK_Accion CHECK (Accion IN ('GET', 'POST', 'PUT', 'DELETE')),
+    CONSTRAINT CK_Accion CHECK (Accion IN ('GET', 'POST', 'PUT', 'PATH', 'DELETE')),
 
     CONSTRAINT FK_IdUsuario FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario),
     CONSTRAINT FK_IdEndpoint FOREIGN KEY (IdEndpoint) REFERENCES Endpoint(IdEndpoint)
@@ -104,7 +105,7 @@ CREATE TABLE Homologacion (
 	,CONSTRAINT  [PK_IdHomologacion] PRIMARY KEY CLUSTERED (IdHomologacion ASC) 
 	,CONSTRAINT  [UK_BusquedaCodigo] UNIQUE (BusquedaCodigo)
 );
-
+GO
 --CREATE TABLE Sinonimo (
 --    SinonimoId      INT IDENTITY(1,1) NOT NULL CONSTRAINT [PK_SinonimoId] PRIMARY KEY CLUSTERED ,
 --    Palabra         NVARCHAR(100),
@@ -122,6 +123,7 @@ CREATE TABLE Persona (
     ,IdUserModifica			INT			NOT NULL DEFAULT(0) 
     ,CONSTRAINT      [PK_PersonaId] PRIMARY KEY CLUSTERED (PersonaId ASC)  
 );
+GO
 --CREATE TABLE RelacionSemantica (
 --    PersonaId		INT CONSTRAINT FK_RelacionSemantica1 FOREIGN KEY REFERENCES Persona(PersonaId), 
 --    PersonaIdRef	INT CONSTRAINT FK_RelacionSemantica2 FOREIGN KEY REFERENCES Persona(PersonaId) 

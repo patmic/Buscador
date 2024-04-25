@@ -1,21 +1,138 @@
 @page "/"
+@page "/persona"
+@using ClientApp.Services.IService
+@using ClientApp.Models;
+@inject IVwHomologacionRepository vwHomologacionRepository
 
 <PageTitle>Inicio</PageTitle>
 
-<h1 class="Últimos Posts">Hello, world!</h1>
+<!-- Start of Search Wrapper -->
+<div class="search-area-wrapper">
+        <div class="search-area container">
+                <h3 class="search-header">BUSCADOR SERVICIOS DE EVALUACIÓN DE LA CONFORMIDAD ACREDITADOS EN LA CAN</h3>
+
+                <form id="search-form" class="search-form clearfix" method="get" action="#" autocomplete="off">
+                        <input class="search-term required" type="text" id="s" name="s" placeholder="Ingrese Texto a buscar" title="* Please enter a search term!" />
+                        <input class="search-btn" type="submit" value="Buscar" />
+                        <div id="search-error-container"></div>
+                </form>
+        </div>
+</div>
+<!-- Start of Page Container -->
+<div class="page-container">
+        <div class="container">
+                <div class="row">
+
+                        <!-- start of page content -->
+                        <div class="span12 page-content" style="margin-bottom: 10px;border-bottom: 1px solid #e8e8e8;">
+                            <div class="row-fluid">
+
+                                <div class="span2">
+                                    <h4>Alcance</h4>
+                                </div>
+                                <div class="span2">
+                                    <h4>Esquema Acredita</h4>
+                                </div>
+                                <div class="span2">
+                                    <h4>Estado</h4>
+                                </div>
+                                <div class="span2">
+                                    <h4>Organización Acredita</h4>
+                                </div>
+                                <div class="span2">
+                                    <h4>País</h4>
+                                </div>
+                                <div class="span2">
+                                    <h4>Razón Social</h4>
+                                </div>
+                            </div>
+                        </div>
+
+<!-- start of page content -->
+                        <div class="span12 page-content">
+                            <div class="row-fluid">
+
+                                <div class="span2">
+                                    @if (listaAlcance != null ) {
+                                        <select id="listaAlcance" style="max-width: 100%">
+                                            @foreach (var opcion in listaAlcance)
+                                            {
+                                                <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                                <div class="span2">
+                                    @if (listaEsquemaAcredita != null ) {
+                                        <select id="listaEsquemaAcredita" style="max-width: 100%">
+                                            @foreach (var opcion in listaEsquemaAcredita)
+                                            {
+                                                <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                                <div class="span2">
+                                    @if (ListaEstado != null ) {
+                                        <select id="ListaEstado" style="max-width: 100%">
+                                            @foreach (var opcion in ListaEstado)
+                                            {
+                                                <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                                <div class="span2">
+                                    @if (ListaOrganizacionAcredita != null ) {
+                                        <select id="ListaOrganizacionAcredita" style="max-width: 100%">
+                                            @foreach (var opcion in ListaOrganizacionAcredita)
+                                            {
+                                                <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                                <div class="span2">
+                                    @if (listaPais != null ) {
+                                        <select id="listaPais" style="max-width: 100%">
+                                            @foreach (var opcion in listaPais)
+                                            {
+                                                <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                                <div class="span2">
+                                    @if (listaRazonSocial != null ) {
+                                        <select id="listaRazonSocial" style="max-width: 100%">
+                                                @foreach (var opcion in listaRazonSocial)
+                                                {
+                                                    <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
+                                                }
+                                        </select>
+                                        }
+                                </div>
+                            </div>
+                        </div>
+                </div>
+        </div>
+</div>
 
 @code{
-    //Método para el Toastr
-    // private async Task DemoSuccess()
-    // {
-    //     //await JsRuntime.InvokeVoidAsync("ShowToastr", "success", "Tarea completada!");
-    //     await JsRuntime.ToastrSuccess("Tarea completada!");
-    // }
+    private List<VwHomologacion>? listaAlcance;
+    private List<VwHomologacion>? listaEsquemaAcredita;
+    private List<VwHomologacion>? ListaEstado;
+    private List<VwHomologacion>? ListaOrganizacionAcredita;
+    private List<VwHomologacion>? listaPais;
+    private List<VwHomologacion>? listaRazonSocial;
 
-    // private async Task DemoError()
-    // {
-    //     //await JsRuntime.InvokeVoidAsync("ShowToastr", "error", "Error completando tarea!");
-    //     await JsRuntime.ToastrError("Error, Tarea incompletada!");
-    // }
+    protected override async Task OnInitializedAsync()
+    {
+        listaAlcance = await vwHomologacionRepository.GetHomologacionAsync("alcance");
+        listaEsquemaAcredita = await vwHomologacionRepository.GetHomologacionAsync("esq_acredita");
+        ListaEstado = await vwHomologacionRepository.GetHomologacionAsync("estado");
+        ListaOrganizacionAcredita = await vwHomologacionRepository.GetHomologacionAsync("org_acredita");
+        listaPais = await vwHomologacionRepository.GetHomologacionAsync("pais");
+        listaRazonSocial = await vwHomologacionRepository.GetHomologacionAsync("razon_social");
+    }
 }
-

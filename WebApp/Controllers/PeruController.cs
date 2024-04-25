@@ -23,7 +23,7 @@ namespace WebApp.Controllers
             _mapper = mapper;
         }
 
-        [Authorize]
+        // [Authorize]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -41,8 +41,6 @@ namespace WebApp.Controllers
                     listaOrganizacionesDto.Add(_mapper.Map<OrganizacionDto>(lista));
                 }
                 return Ok(listaOrganizacionesDto);
-                // var data = await _peruRepository.GetOrganizacionAsync();
-                // return Ok(data);
             }
             catch (Exception e)
             {
@@ -75,10 +73,6 @@ namespace WebApp.Controllers
 
                 var itemOrganizacionDto = _mapper.Map<OrganizacionDto>(itemOrganizacion);
                 return Ok(itemOrganizacionDto);
-                // var Organizacion = await _peruRepository.GetOrganizacionByIdAsync(id);
-                // if(Organizacion == null)
-                //     return NotFound (new { statusCode = 404, message = "Organizacion no existe"});
-                // return Ok(Organizacion);
             }
             catch (Exception e)
             {
