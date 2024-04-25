@@ -1,39 +1,47 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">ClientApp</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+﻿<nav class="navbar navbar-expand-lg bg-dark">
+    <div class="container">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <NavLink class="nav-link text-white" href="/" Match="NavLinkMatch.All">
+                    <span class="p-2"> Inicio</span>
+                </NavLink>
+                <AuthorizeView>
+                    <Authorized>
+                        <NavLink class="nav-link text-white" href="peru">
+                            <span class="p-2"> Peru</span>
+                        </NavLink>
+                    </Authorized>
+                </AuthorizeView>              
+            </ul>
+
+            <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item p-0">
+                        <NavLink class="nav-link text-white">
+                            <span class="p-2">
+                                Bienvenido,
+                            </span>
+                        </NavLink>
+                        </li>
+                        <li class="nav-item p-0">
+                            <NavLink class="nav-link text-white" href="salir">
+                                <span class="p-2">
+                                    Salir
+                                </span>
+                            </NavLink>
+                        </li>
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink class="nav-link text-white" href="registrarse">
+                            <span class="p-2"> Registrarse</span>
+                        </NavLink>
+                        <NavLink class="nav-link text-white" href="Acceder">
+                            <span class="p-2"> Acceder</span>
+                        </NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </ul>          
+        </div>
     </div>
-</div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="peru">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Tabla Perú
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+</nav>

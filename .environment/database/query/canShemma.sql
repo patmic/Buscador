@@ -1,5 +1,8 @@
 -- https: //www.red-gate.com/simple-talk/databases/sql-server/learn/understanding-full-text-indexing-in-sql-server/
-use CAN_DB;
+-- agegar campo estado a las tablas para borrado lógico
+-- agregar constrains para borrados lógicos
+
+USE CAN_DB;
 GO
 
 IF OBJECT_ID('organizacion', 'U') IS NOT NULL
@@ -13,20 +16,86 @@ GO
 IF OBJECT_ID('RelacionSemantica', 'U') IS NOT NULL
     DROP TABLE RelacionSemantica;
 GO
+
 IF OBJECT_ID('Sinonimo', 'U') IS NOT NULL
     DROP TABLE Sinonimo;
 GO
+
 IF OBJECT_ID(N'Persona', N'U') IS NOT NULL
     DROP TABLE Persona;
 GO
 
+IF OBJECT_ID('Usuario', 'U') IS NOT NULL
+    DROP TABLE Usuario;
+GO
+
+IF OBJECT_ID('Endpoint', 'U') IS NOT NULL
+    DROP TABLE Endpoint;
+GO
+
+IF OBJECT_ID('UsuarioEndpointPermiso', 'U') IS NOT NULL
+    DROP TABLE UsuarioEndpointPermiso;
+GO
+
+CREATE TABLE Usuario (
+    IdUsuario INT IDENTITY(1,1) PRIMARY KEY,
+    Email NVARCHAR(100) NOT NULL,
+    Nombre NVARCHAR(500) NOT NULL,
+    Apellido NVARCHAR(500),
+    Rol NVARCHAR(20) NOT NULL,
+    Clave NVARCHAR(MAX) NOT NULL,
+
+	--campos base para audioria
+    FechaCrea DATETIME NOT NULL DEFAULT(GETDATE()),
+    FechaModifica DATETIME NOT NULL DEFAULT(GETDATE()),
+    IdUserCrea INT NOT NULL DEFAULT(0),
+    IdUserModifica INT NOT NULL DEFAULT(0),
+
+    CONSTRAINT UK_Email UNIQUE (Email),
+    CONSTRAINT CK_Rol CHECK (Rol IN ('ADMIN', 'USER'))
+);
+GO
+
+CREATE TABLE Endpoint (
+    IdEndpoint INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre NVARCHAR(100) NOT NULL,
+    Url NVARCHAR(MAX),
+
+    -- Campos base para auditoría
+    FechaCrea DATETIME NOT NULL DEFAULT(GETDATE()),
+    FechaModifica DATETIME NOT NULL DEFAULT(GETDATE()),
+    IdUserCrea INT NOT NULL DEFAULT(0),
+    IdUserModifica INT NOT NULL DEFAULT(0),
+
+    CONSTRAINT UK_Nombre UNIQUE (Nombre)
+);
+GO
+
+CREATE TABLE UsuarioEndpointPermiso (
+    IdUsuarioEndpointPermiso INT IDENTITY(1,1) PRIMARY KEY,
+    IdUsuario INT NOT NULL DEFAULT(0),
+    IdEndpoint INT NOT NULL DEFAULT(0),
+    Accion NVARCHAR(10) NOT NULL,
+
+    -- Campos base para auditoría
+    FechaCrea DATETIME NOT NULL DEFAULT(GETDATE()),
+    FechaModifica DATETIME NOT NULL DEFAULT(GETDATE()),
+    IdUserCrea INT NOT NULL DEFAULT(0),
+    IdUserModifica INT NOT NULL DEFAULT(0),
+
+    CONSTRAINT CK_Accion CHECK (Accion IN ('GET', 'POST', 'PUT', 'DELETE')),
+
+    CONSTRAINT FK_IdUsuario FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario),
+    CONSTRAINT FK_IdEndpoint FOREIGN KEY (IdEndpoint) REFERENCES Endpoint(IdEndpoint)
+);
+GO
+
 CREATE TABLE Homologacion (
      IdHomologacion     	INT IDENTITY(1,1) NOT NULL
-    ,IdHomologacionGrupo	INT NOT NULL DEFAULT(NULL) 
+    ,IdHomologacionGrupo	INT DEFAULT(NULL) 
     ,BusquedaCodigo			NVARCHAR(20)   NOT NULL 
-    ,BusquedaEtiqueta		NVARCHAR(50)   NOT NULL  
+    ,BusquedaEtiqueta		NVARCHAR(75)   NOT NULL  
     ,Observacion			NVARCHAR(500)   NOT NULL DEFAULT('')
-
     ,FechaCrea				DATETIME	NOT NULL DEFAULT(GETDATE())
     ,FechaModifica			DATETIME	NOT NULL DEFAULT(GETDATE())  
     ,IdUserCrea				INT			NOT NULL DEFAULT(0)
@@ -46,15 +115,18 @@ CREATE TABLE Persona (
     Nombre          NVARCHAR(500)   NOT NULL,  
     Direccion       NVARCHAR(1000)  NOT NULL,  
     Celular         NVARCHAR(100)   NOT NULL,  
-    Fecha           NVARCHAR(100)   NOT NULL,  
-    CONSTRAINT      [PK_PersonaId] PRIMARY KEY CLUSTERED (PersonaId ASC)  
+    Fecha           NVARCHAR(100)   NOT NULL 
+    ,FechaCrea				DATETIME	NOT NULL DEFAULT(GETDATE())
+    ,FechaModifica			DATETIME	NOT NULL DEFAULT(GETDATE())  
+    ,IdUserCrea				INT			NOT NULL DEFAULT(0)
+    ,IdUserModifica			INT			NOT NULL DEFAULT(0) 
+    ,CONSTRAINT      [PK_PersonaId] PRIMARY KEY CLUSTERED (PersonaId ASC)  
 );
 --CREATE TABLE RelacionSemantica (
 --    PersonaId		INT CONSTRAINT FK_RelacionSemantica1 FOREIGN KEY REFERENCES Persona(PersonaId), 
 --    PersonaIdRef	INT CONSTRAINT FK_RelacionSemantica2 FOREIGN KEY REFERENCES Persona(PersonaId) 
 --);
 --GO
-
 
 CREATE TABLE OrganizacionPais (
      IdOrganizacionPais     INT IDENTITY(1,1) NOT NULL
@@ -84,7 +156,7 @@ CREATE TABLE Organizacion (
 	,AreaAcreditacion		NVARCHAR(500) NOT NULL DEFAULT('')
 	,Actividad				NVARCHAR(500) NOT NULL DEFAULT('')
 	,Ciudad					NVARCHAR(500) NOT NULL DEFAULT('')
-	,Estado					NVARCHAR(500) NOT NULL DEFAULT('')
+	,Estado					NVARCHAR(1) NOT NULL DEFAULT('A') -- cuando se elimine X
 	
 	--campos base para audioria
 	,FechaCrea				DATETIME	  NOT NULL DEFAULT(GETDATE())
@@ -98,62 +170,6 @@ CREATE TABLE Organizacion (
 	,INDEX	[IX_AcreditacionActividadRazon] (AreaAcreditacion, Actividad, RazonSocial)
 );
 GO
-
--- GRUPO
-INSERT INTO Homologacion (BusquedaCodigo, BusquedaEtiqueta, Observacion)
-VALUES 
-	--filtros base
-	 ('KEY_PAI'				,'PAIS'							,'Nivel 1')
-	,('KEY_ORG_ACREDITA'	,'ORGANIZACION ACREDITADA'		,'Nivel 2')
-	,('KEY_ESQ_ACREDITA'	,'ESQUEMA ACREDITACION'			,'Nivel 3')
-	,('KEY_EST'				,'ESTADO'						,'Nivel 6')
-	--filtros obtenidos
-	,('KEY_RAZ_SOCIAL'		,'RAZON SOCIAL'					,'Nivel 4')
-	,('KEY_ALC'				,'ALCANCE'						,'Nivel 5')
-	;
-GO
-
-INSERT INTO Homologacion (IdHomologacionGrupo, BusquedaCodigo, BusquedaEtiqueta, Observacion)
-VALUES 
-	--NIVEL 1
-     (1		,'KEY_COL'			,'Colombia' ,'')	
-    ,(1		,'KEY_ECU'			,'Ecuador'  ,'')	
-    ,(1		,'KEY_PER'			,'Perú'		,'')	
-    ,(1		,'KEY_BOL'			,'Bolivia'  ,'')
-	
-	--NIVEL 2
-	,(2		,'KEY_SIS_CONAC'		,'Sistema nacional de Colombi'	,'CONAC'	)
-	,(2		,'KEY_SIS_SAE'			,'Sistema nacional de Ecuador'	,'SAE'		)
-	,(2		,'KEY_SIS_INACAL-DA'	,'Sistema nacional de Perú	 '	,'INACAL-DA')
-	,(2		,'KEY_SIS_DTA-IBMETRO'	,'Sistema nacional de Bolivia'	,'DTA-IBMETRO')
-
-	--NIVEL 3
-    ,(3		,'KEY_LAB_CALIBRA'			,'LABORATORIO CALIBRACIÓN'												,'')	
-    ,(3		,'KEY_LAB_CLINICO'			,'LABORATORIO CLÍNICO'													,'')
-    ,(3		,'KEY_LAB_INVESTI'			,'LABORATORIO INVESTIGACIÓN Y CONTROL DE CALIDAD'						,'')							
-    ,(3		,'KEY_LAB_PROVEED'			,'LABORATORIO PROVEEDORES DE ENSAYOS DE APTITUD'						,'')							
-    ,(3		,'KEY_LAB_ENSAYOS'			,'LABORATORIO ENSAYOS'													,'')
-    ,(3		,'KEY_CER_GESTION'			,'CERTIFICACIÓN SISTEMAS DE GESTIÓN DE CALIDAD'							,'')						
-    ,(3		,'KEY_CER_PERSONA'			,'CERTIFICACIÓN PERSONAS'												,'')	
-    ,(3		,'KEY_CER_PRODUCT'			,'CERTIFICACIÓN PRODUCTOS'												,'')	
-    ,(3		,'KEY_CER_INOCUID'			,'CERTIFICACIÓN SISTEMAS DE INOCUIDAD ALIMENTARIA'						,'')							
-    ,(3		,'KEY_CER_AMBIENT'			,'CERTIFICACIÓN SISTEMAS DE GESTIÓN AMBIENTAL'							,'')						
-    ,(3		,'KEY_CER_ANTISOB'			,'CERTIFICACIÓN SISTEMAS DE GESTIÓN ANTISOBORNO'						,'')							
-    ,(3		,'KEY_CER_DISPOSI_MEDICO'	,'CERTIFICACIÓN SISTEMAS DE GESTIÓN DE CALIDAD DE DISPOSITIVOS MÉDICOS'	,'')												
-    ,(3		,'KEY_INS_INSPECC'			,'INSPECCIÓN INSPECCIÓN'												,'')	
-    ,(3		,'KEY_INS_AMBIENT'			,'INSPECCIÓN AMBIENTAL'													,'')
-    ,(3		,'KEY_INS_AGRICOL'			,'INSPECCIÓN AGRÍCOLA'													,'')
-    ,(3		,'KEY_VER'					,'VALIDACIÓN Y VERIFICACIÓN'											,'')		
-    ,(3		,'KEY_OTR_NIVEL3'			,'CUALQUIER CATEGORIA'													,'')	
-	;
- GO
-
-
---INSERT INTO Sinonimo (Palabra, Sinonimo)
---VALUES 
---    ('jose', 'pepe'),
---    ('luis', 'lucho');
---GO
 
 IF OBJECT_ID(N'fnBuscarPalabraUnica', N'FN') IS NOT NULL
     DROP FUNCTION fnBuscarPalabraUnica;
@@ -184,7 +200,7 @@ RETURN
 	or		(@Columna = 'AreaAcreditacion'		AND AreaAcreditacion	LIKE '%' + @parametro + '%')
 	or		(@Columna = 'Actividad'				AND Actividad			LIKE '%' + @parametro + '%')
 	or		(@Columna = 'Ciudad'				AND Ciudad				LIKE '%' + @parametro + '%')
-)
+);
 GO
 
 IF OBJECT_ID(N'fnBuscarPalabras', N'FN') IS NOT NULL
