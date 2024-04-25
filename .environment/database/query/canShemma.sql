@@ -92,11 +92,10 @@ GO
 
 CREATE TABLE Homologacion (
      IdHomologacion     	INT IDENTITY(1,1) NOT NULL
-    ,IdHomologacionGrupo	INT NOT NULL DEFAULT(NULL) 
+    ,IdHomologacionGrupo	INT DEFAULT(NULL) 
     ,BusquedaCodigo			NVARCHAR(20)   NOT NULL 
-    ,BusquedaEtiqueta		NVARCHAR(50)   NOT NULL  
+    ,BusquedaEtiqueta		NVARCHAR(75)   NOT NULL  
     ,Observacion			NVARCHAR(500)   NOT NULL DEFAULT('')
-
     ,FechaCrea				DATETIME	NOT NULL DEFAULT(GETDATE())
     ,FechaModifica			DATETIME	NOT NULL DEFAULT(GETDATE())  
     ,IdUserCrea				INT			NOT NULL DEFAULT(0)
@@ -116,8 +115,12 @@ CREATE TABLE Persona (
     Nombre          NVARCHAR(500)   NOT NULL,  
     Direccion       NVARCHAR(1000)  NOT NULL,  
     Celular         NVARCHAR(100)   NOT NULL,  
-    Fecha           NVARCHAR(100)   NOT NULL,  
-    CONSTRAINT      [PK_PersonaId] PRIMARY KEY CLUSTERED (PersonaId ASC)  
+    Fecha           NVARCHAR(100)   NOT NULL 
+    ,FechaCrea				DATETIME	NOT NULL DEFAULT(GETDATE())
+    ,FechaModifica			DATETIME	NOT NULL DEFAULT(GETDATE())  
+    ,IdUserCrea				INT			NOT NULL DEFAULT(0)
+    ,IdUserModifica			INT			NOT NULL DEFAULT(0) 
+    ,CONSTRAINT      [PK_PersonaId] PRIMARY KEY CLUSTERED (PersonaId ASC)  
 );
 --CREATE TABLE RelacionSemantica (
 --    PersonaId		INT CONSTRAINT FK_RelacionSemantica1 FOREIGN KEY REFERENCES Persona(PersonaId), 
@@ -168,62 +171,6 @@ CREATE TABLE Organizacion (
 );
 GO
 
--- GRUPO
-INSERT INTO Homologacion (BusquedaCodigo, BusquedaEtiqueta, Observacion)
-VALUES 
-	--filtros base
-	 ('KEY_PAI'				,'PAIS'							,'Nivel 1')
-	,('KEY_ORG_ACREDITA'	,'ORGANIZACION ACREDITADA'		,'Nivel 2')
-	,('KEY_ESQ_ACREDITA'	,'ESQUEMA ACREDITACION'			,'Nivel 3')
-	,('KEY_EST'				,'ESTADO'						,'Nivel 6')
-	--filtros obtenidos
-	,('KEY_RAZ_SOCIAL'		,'RAZON SOCIAL'					,'Nivel 4')
-	,('KEY_ALC'				,'ALCANCE'						,'Nivel 5')
-	;
-GO
-
-INSERT INTO Homologacion (IdHomologacionGrupo, BusquedaCodigo, BusquedaEtiqueta, Observacion)
-VALUES 
-	--NIVEL 1
-     (1		,'KEY_COL'			,'Colombia' ,'')	-- CREATE VIEW fnObtenerPais () AS RETURN select IdHomologacion, BusquedaEtiqueta from Homologacion WHERE IdHomologacionGrupo = 1;
-    ,(1		,'KEY_ECU'			,'Ecuador'  ,'')	
-    ,(1		,'KEY_PER'			,'Perú'		,'')	
-    ,(1		,'KEY_BOL'			,'Bolivia'  ,'')
-	
-	--NIVEL 2
-	,(2		,'KEY_SIS_CONAC'		,'Sistema nacional de Colombi'	,'CONAC'	)
-	,(2		,'KEY_SIS_SAE'			,'Sistema nacional de Ecuador'	,'SAE'		)
-	,(2		,'KEY_SIS_INACAL-DA'	,'Sistema nacional de Perú	 '	,'INACAL-DA')
-	,(2		,'KEY_SIS_DTA-IBMETRO'	,'Sistema nacional de Bolivia'	,'DTA-IBMETRO')
-
-	--NIVEL 3
-    ,(3		,'KEY_LAB_CALIBRA'			,'LABORATORIO CALIBRACIÓN'												,'')	
-    ,(3		,'KEY_LAB_CLINICO'			,'LABORATORIO CLÍNICO'													,'')
-    ,(3		,'KEY_LAB_INVESTI'			,'LABORATORIO INVESTIGACIÓN Y CONTROL DE CALIDAD'						,'')							
-    ,(3		,'KEY_LAB_PROVEED'			,'LABORATORIO PROVEEDORES DE ENSAYOS DE APTITUD'						,'')							
-    ,(3		,'KEY_LAB_ENSAYOS'			,'LABORATORIO ENSAYOS'													,'')
-    ,(3		,'KEY_CER_GESTION'			,'CERTIFICACIÓN SISTEMAS DE GESTIÓN DE CALIDAD'							,'')						
-    ,(3		,'KEY_CER_PERSONA'			,'CERTIFICACIÓN PERSONAS'												,'')	
-    ,(3		,'KEY_CER_PRODUCT'			,'CERTIFICACIÓN PRODUCTOS'												,'')	
-    ,(3		,'KEY_CER_INOCUID'			,'CERTIFICACIÓN SISTEMAS DE INOCUIDAD ALIMENTARIA'						,'')							
-    ,(3		,'KEY_CER_AMBIENT'			,'CERTIFICACIÓN SISTEMAS DE GESTIÓN AMBIENTAL'							,'')						
-    ,(3		,'KEY_CER_ANTISOB'			,'CERTIFICACIÓN SISTEMAS DE GESTIÓN ANTISOBORNO'						,'')							
-    ,(3		,'KEY_CER_DISPOSI_MEDICO'	,'CERTIFICACIÓN SISTEMAS DE GESTIÓN DE CALIDAD DE DISPOSITIVOS MÉDICOS'	,'')												
-    ,(3		,'KEY_INS_INSPECC'			,'INSPECCIÓN INSPECCIÓN'												,'')	
-    ,(3		,'KEY_INS_AMBIENT'			,'INSPECCIÓN AMBIENTAL'													,'')
-    ,(3		,'KEY_INS_AGRICOL'			,'INSPECCIÓN AGRÍCOLA'													,'')
-    ,(3		,'KEY_VER'					,'VALIDACIÓN Y VERIFICACIÓN'											,'')		
-    ,(3		,'KEY_OTR_NIVEL3'			,'CUALQUIER CATEGORIA'													,'')	
-	;
- GO
-
-
---INSERT INTO Sinonimo (Palabra, Sinonimo)
---VALUES 
---    ('jose', 'pepe'),
---    ('luis', 'lucho');
---GO
-
 IF OBJECT_ID(N'fnBuscarPalabraUnica', N'FN') IS NOT NULL
     DROP FUNCTION fnBuscarPalabraUnica;
 GO
@@ -253,7 +200,7 @@ RETURN
 	or		(@Columna = 'AreaAcreditacion'		AND AreaAcreditacion	LIKE '%' + @parametro + '%')
 	or		(@Columna = 'Actividad'				AND Actividad			LIKE '%' + @parametro + '%')
 	or		(@Columna = 'Ciudad'				AND Ciudad				LIKE '%' + @parametro + '%')
-)
+);
 GO
 
 IF OBJECT_ID(N'fnBuscarPalabras', N'FN') IS NOT NULL
