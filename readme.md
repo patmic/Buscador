@@ -90,3 +90,7 @@ dotnet sln add ClientApp/ClientApp.csproj
 Agregar en ClientApp.csproj = >
 < UseRazorSourceGenerator>false</UseRazorSourceGenerator>
 dotnet run
+
+----------------------------
+#git : igual las ramas
+git rebase origin/pat_dev_rama

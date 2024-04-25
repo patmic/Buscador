@@ -194,4 +194,4 @@ CMD /opt/mssql/bin/sqlservr
 
 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P pat_mic_DBKEY
 
-
+/opt/mssql-tools/bin/sqlcmd -S localhost,1434 -U SA -P pat_mic_DBKEY -Q "select 1"

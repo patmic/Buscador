@@ -1,5 +1,8 @@
 USE CAN_DB;
-
+GO
+---------------------------------
+-- poner truncate table
+------------------------------------------
 -- GRUPO
 --filtros base
 DECLARE @KEY_PAI INT;
@@ -33,7 +36,6 @@ GO
 --NIVEL 1
 INSERT INTO Homologacion (IdHomologacionGrupo, BusquedaCodigo, BusquedaEtiqueta, Observacion)
 VALUES 
-	
      (@KEY_PAI		,'KEY_COL'			,'Colombia' ,'')	
     ,(@KEY_PAI		,'KEY_ECU'			,'Ecuador'  ,'')	
     ,(@KEY_PAI		,'KEY_PER'			,'Perú'		,'')	
@@ -43,7 +45,8 @@ VALUES
 	,(@KEY_ORG_ACREDITA		,'KEY_SIS_CONAC'		,'Sistema nacional de Colombi'	,'CONAC'	)
 	,(@KEY_ORG_ACREDITA		,'KEY_SIS_SAE'			,'Sistema nacional de Ecuador'	,'SAE'		)
 	,(@KEY_ORG_ACREDITA		,'KEY_SIS_INACAL-DA'	,'Sistema nacional de Perú	 '	,'INACAL-DA')
-	,(@KEY_ORG_ACREDITA		,'KEY_SIS_DTA-IBMETRO'	,'Sistema nacional de Bolivia'	,'DTA-IBMETRO')
+	,(@KEY_ORG_ACREDITA		,'KEY_SIS_DTA-IBMETRO'	,'Sistema nacional de Bolivia'	,'DTA-IBMETRO');
+GO
 
 INSERT INTO Homologacion (IdHomologacionGrupo, BusquedaCodigo, BusquedaEtiqueta, Observacion)
 VALUES 
