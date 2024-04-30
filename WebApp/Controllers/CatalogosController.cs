@@ -29,27 +29,7 @@ namespace WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult ObtenerPais()
         {
-            try
-            {
-                var listaPais = _vhRepo.ObtenerPais();
-
-                var listaCatalogoDto = new List<CatalogosDto>();
-
-                foreach (var lista in listaPais)
-                {
-                    listaCatalogoDto.Add(_mapper.Map<CatalogosDto>(lista));
-                }
-                return Ok(listaCatalogoDto);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new {
-                            statusCode = 500,
-                            message = e.Message
-                    });
-            }
+            return GetCatalogData(_vhRepo.ObtenerPais, "Error obteniendo datos de pais");
         }
 
         [HttpGet("razon_social")]
@@ -58,27 +38,7 @@ namespace WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult ObtenerRazonSocial()
         {
-            try
-            {
-                var listado = _vhRepo.ObtenerRazonSocial();
-
-                var listaCatalogoDto = new List<CatalogosDto>();
-
-                foreach (var lista in listado)
-                {
-                    listaCatalogoDto.Add(_mapper.Map<CatalogosDto>(lista));
-                }
-                return Ok(listaCatalogoDto);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new {
-                            statusCode = 500,
-                            message = e.Message
-                    });
-            }
+            return GetCatalogData(_vhRepo.ObtenerRazonSocial, "Error obteniendo datos de razon social");
         }
 
         [HttpGet("alcance")]
@@ -87,27 +47,7 @@ namespace WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult ObtenerAlcance()
         {
-            try
-            {
-                var listado = _vhRepo.ObtenerAlcance();
-
-                var listaCatalogoDto = new List<CatalogosDto>();
-
-                foreach (var lista in listado)
-                {
-                    listaCatalogoDto.Add(_mapper.Map<CatalogosDto>(lista));
-                }
-                return Ok(listaCatalogoDto);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new {
-                            statusCode = 500,
-                            message = e.Message
-                    });
-            }
+            return GetCatalogData(_vhRepo.ObtenerAlcance, "Error obteniendo datos de alcance");
         }
 
         [HttpGet("esq_acredita")]
@@ -116,27 +56,7 @@ namespace WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult  ObtenerEsqAcredita()
         {
-            try
-            {
-                var listado = _vhRepo.ObtenerEsqAcredita();
-
-                var listaCatalogoDto = new List<CatalogosDto>();
-
-                foreach (var lista in listado)
-                {
-                    listaCatalogoDto.Add(_mapper.Map<CatalogosDto>(lista));
-                }
-                return Ok(listaCatalogoDto);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new {
-                            statusCode = 500,
-                            message = e.Message
-                    });
-            }
+            return GetCatalogData(_vhRepo.ObtenerEsqAcredita, "Error obteniendo datos de esquema acredita");
         }
 
         [HttpGet("estado")]
@@ -145,27 +65,7 @@ namespace WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult  ObtenerEstado()
         {
-            try
-            {
-                var listado = _vhRepo.ObtenerEstado();
-
-                var listaCatalogoDto = new List<CatalogosDto>();
-
-                foreach (var lista in listado)
-                {
-                    listaCatalogoDto.Add(_mapper.Map<CatalogosDto>(lista));
-                }
-                return Ok(listaCatalogoDto);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new {
-                            statusCode = 500,
-                            message = e.Message
-                    });
-            }
+            return GetCatalogData(_vhRepo.ObtenerEstado, "Error obteniendo datos de estado");
         }
 
         [HttpGet("org_acredita")]
@@ -174,25 +74,26 @@ namespace WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult  ObtenerOrgAcredita()
         {
+            return GetCatalogData(_vhRepo.ObtenerOrgAcredita, "Error obteniendo datos de organizacion acredita");
+        }
+
+        private IActionResult GetCatalogData(Func<IEnumerable<IVwHomologacion>> getData, string errorMessage)
+        {
             try
             {
-                var listado = _vhRepo.ObtenerOrgAcredita();
+                var data = getData();
 
-                var listaCatalogoDto = new List<CatalogosDto>();
+                var catalogDtoList = data.Select(item => _mapper.Map<CatalogosDto>(item)).ToList();
 
-                foreach (var lista in listado)
-                {
-                    listaCatalogoDto.Add(_mapper.Map<CatalogosDto>(lista));
-                }
-                return Ok(listaCatalogoDto);
+                return Ok(catalogDtoList);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, 
                     new {
-                            statusCode = 500,
-                            message = e.Message
+                        statusCode = 500,
+                        message = errorMessage
                     });
             }
         }

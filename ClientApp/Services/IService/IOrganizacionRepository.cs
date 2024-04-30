@@ -2,6 +2,6 @@
 namespace ClientApp.Services.IService {
     public interface IOrganizacionRepository
     {
-        Task<List<Organizacion>> GetOrganizacionesAsync();
+        Task<List<Organizacion>> BuscarPalabraAsync(string campo, string value);
     }
 }

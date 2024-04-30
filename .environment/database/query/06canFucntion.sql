@@ -129,7 +129,7 @@ RETURN
 	or		(@Columna = 'AreaAcreditacion'		AND AreaAcreditacion	LIKE '%' + @parametro + '%')
 	or		(@Columna = 'Actividad'				AND Actividad			LIKE '%' + @parametro + '%')
 	or		(@Columna = 'Ciudad'				AND Ciudad				LIKE '%' + @parametro + '%')
-)
+);
 GO
 
 
@@ -155,3 +155,6 @@ GO
 --JOIN  Sinonimo S ON E.Nombre = S.Palabra
 --WHERE S.Sinonimo             = 'pepe';
 
+use can_db;
+select * from fnBuscarPalabras('Ciudad', 'Quito');
+select * from fnBuscarPalabraUnica('Ciudad', 'Quito');

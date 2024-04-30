@@ -33,6 +33,7 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IEndpointRepository, EndpointRepository>();
 builder.Services.AddScoped<IUsuarioEndpointPermisoRepository, UsuarioEndpointPermisoRepository>();
 builder.Services.AddScoped<IVwHomologacionRepository, VwHomologacionRepository>();
+builder.Services.AddScoped<IBuscadorRepository, BuscadorRepository>();
 
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secreta");
 

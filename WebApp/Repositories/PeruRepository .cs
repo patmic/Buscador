@@ -16,12 +16,12 @@ namespace WebApp.Repositories
         }
         public Organizacion GetOrganizacion(int organizacionId)
         {
-            return _bd.Organizacion.FirstOrDefault(c => c.Id == organizacionId);
+            return _bd.Organizacion.FirstOrDefault(c => c.IdOrganizacion == organizacionId);
         }
 
         public ICollection<Organizacion> GetOrganizaciones()
         {
-            return _bd.Organizacion.OrderBy(c => c.Id).ToList();
+            return _bd.Organizacion.OrderBy(c => c.IdOrganizacion).ToList();
         }
     }
 }

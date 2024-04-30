@@ -11,11 +11,11 @@
         <div class="search-area container">
                 <h3 class="search-header">BUSCADOR SERVICIOS DE EVALUACIÓN DE LA CONFORMIDAD ACREDITADOS EN LA CAN</h3>
 
-                <form id="search-form" class="search-form clearfix" method="get" action="#" autocomplete="off">
-                        <input class="search-term required" type="text" id="s" name="s" placeholder="Ingrese Texto a buscar" title="* Please enter a search term!" />
+                <EditForm Model="buscarRequest" OnValidSubmit="BuscarPalabraRequest" id="search-form" class="search-form clearfix" autocomplete="off">
+                        <InputText @bind-Value="buscarRequest.TextoBuscar" class="search-term required" type="text" id="s" name="s" placeholder="Ingrese Texto a buscar" title="* Please enter a search term!" />
                         <input class="search-btn" type="submit" value="Buscar" />
                         <div id="search-error-container"></div>
-                </form>
+                </EditForm>
         </div>
 </div>
 <!-- Start of Page Container -->
@@ -48,7 +48,7 @@
                             </div>
                         </div>
 
-<!-- start of page content -->
+                        <!-- start of page content -->
                         <div class="span12 page-content">
                             <div class="row-fluid">
 
@@ -115,16 +115,51 @@
                             </div>
                         </div>
                 </div>
+                @if (listOrganizacion != null) {
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Razón Social</th>
+                <th>Código de Acreditación</th>
+                <th>Área de Acreditación</th>
+                <th>Actividad</th>
+                <th>Ciudad</th>
+                <th>Estado</th>
+                <th>Información Adicional</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in listOrganizacion) {
+                <tr>
+                    <td>@row.RazonSocial</td>
+                    <td>@row.CodigoAcreditacion</td>
+                    <td>@row.AreaAcreditacion</td>
+                    <td>@row.Actividad</td>
+                    <td>@row.Ciudad</td>
+                    <td>@row.Estado</td>
+                    <td>id: @row.IdOrganizacion campo{@row.IdOrganizacion}: retiro campo: retiro {@row.IdOrganizacion}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
         </div>
 </div>
 
 @code{
+    private BuscarRequest buscarRequest = new BuscarRequest();
+
+    [Inject]
+    public IOrganizacionRepository servicio { get; set; }
+
     private List<VwHomologacion>? listaAlcance;
     private List<VwHomologacion>? listaEsquemaAcredita;
     private List<VwHomologacion>? ListaEstado;
     private List<VwHomologacion>? ListaOrganizacionAcredita;
     private List<VwHomologacion>? listaPais;
     private List<VwHomologacion>? listaRazonSocial;
+
+    private List<Organizacion>? listOrganizacion;
 
     protected override async Task OnInitializedAsync()
     {
@@ -134,5 +169,10 @@
         ListaOrganizacionAcredita = await vwHomologacionRepository.GetHomologacionAsync("org_acredita");
         listaPais = await vwHomologacionRepository.GetHomologacionAsync("pais");
         listaRazonSocial = await vwHomologacionRepository.GetHomologacionAsync("razon_social");
+    }
+
+    private async Task BuscarPalabraRequest()
+    {
+        listOrganizacion = await servicio.BuscarPalabraAsync("Field", buscarRequest.TextoBuscar);
     }
 }

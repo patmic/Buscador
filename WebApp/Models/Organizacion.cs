@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 namespace WebApp.Models;
 public class Organizacion
 {
-    // ORGANIZACION: id,nombre,direccion,telefono,email
-    public int Id { get; set; }
-    [Required]
-    public string? Nombre { get; set; }
-    [Required]
-    public string? Direccion { get; set; }
-    public string? Telefono { get; set; }
-    public string? Email { get; set; }
+    [Key]
+    public int IdOrganizacion { get; set; }
+    public string? CodigoAcreditacion { get; set; }
+    public string? RazonSocial { get; set; }
+    public string? AreaAcreditacion { get; set; }
+    public string? Actividad { get; set; }
+    public string? Ciudad { get; set; }
+    public string? Estado { get; set; }
 }

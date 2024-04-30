@@ -27,3 +27,5 @@ ON OrganizacionFullText_cat
 WITH STOPLIST = SYSTEM;
 GO
 
+-- select * from sys.fulltext_catalogs;
+Select idOrganizacion from OrganizacionFullText WHERE CONTAINS((FullTextOrganizacion), 'empresa');
