@@ -20,6 +20,7 @@ namespace WebApp.Mappers
             CreateMap<VwEstado, CatalogosDto>();
             CreateMap<VwEsqAcredita, CatalogosDto>();
             CreateMap<VwAlcance, CatalogosDto>();
+            CreateMap<Armonizacion, ArmonizacionDto>();
         }
     }
 }

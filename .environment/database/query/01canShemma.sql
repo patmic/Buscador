@@ -173,5 +173,20 @@ CREATE TABLE Organizacion (
 );
 GO
 
-
-
+DROP TABLE IF EXISTS Armonizacion;
+CREATE TABLE Armonizacion (
+      IdEtiqueta     	INT IDENTITY(1,1) NOT NULL
+      ,Nombre      NVARCHAR(100)   NOT NULL -- Nombre por defecto del campo que se va a armonizar
+      ,Etiqueta			NVARCHAR(100)   NOT NULL -- Etiqueta que se va a mostrar en FontEnd
+      ,Campo  			NVARCHAR(100)   NOT NULL -- Campo de la tabla, tal cual está en respuesta JSON que se devuelve en búsquedas del api, que se va a mostrar en FontEnd
+      ,Comentario		NVARCHAR(500)   NOT NULL DEFAULT('')
+      ,Orden    		INT			NOT NULL
+      ,Tipo        NVARCHAR(100)   NOT NULL DEFAULT('TEXT') -- TEXT, DATE, NUMBER, BOOLEAN
+      ,FechaCrea			DATETIME	NOT NULL DEFAULT(GETDATE())
+      ,FechaModifica		DATETIME	NOT NULL DEFAULT(GETDATE())  
+      ,IdUserCrea		INT			NOT NULL DEFAULT(0)
+      ,IdUserModifica	INT			NOT NULL DEFAULT(0)  
+      ,CONSTRAINT  [PK_IdEtiqueta] PRIMARY KEY CLUSTERED (IdEtiqueta ASC)
+      ,CONSTRAINT CkTipoEtiqueta CHECK (Tipo IN ('ORGANIZACION', 'PERSONA'))
+  );
+GO

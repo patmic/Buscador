@@ -80,23 +80,7 @@ CREATE FUNCTION fnBuscarPalabraUnica
 RETURNS TABLE AS
 RETURN
 (
-	select	o.IdOrganizacion
-			,CodigoAcreditacion		
-			,RazonSocial			
-			,AreaAcreditacion		
-			,Actividad				
-			,Ciudad					
-			,Estado					
-	from	Organizacion			o
-	join	OrganizacionFullText	oft
-			on o.IdOrganizacion  =  oft.IdOrganizacion
-	where	contains( [FullTextOrganizacion]  , @parametro) 
-	or		(@Columna is NULL)
-	or		(@Columna = 'CodigoAcreditacion'	AND CodigoAcreditacion	LIKE '%' + @parametro + '%')
-	or		(@Columna = 'RazonSocial'			AND RazonSocial			LIKE '%' + @parametro + '%')
-	or		(@Columna = 'AreaAcreditacion'		AND AreaAcreditacion	LIKE '%' + @parametro + '%')
-	or		(@Columna = 'Actividad'				AND Actividad			LIKE '%' + @parametro + '%')
-	or		(@Columna = 'Ciudad'				AND Ciudad				LIKE '%' + @parametro + '%')
+	select * from "Organizacion"
 );
 GO
 
@@ -132,29 +116,6 @@ RETURN
 );
 GO
 
-
-	--if @Columna in ('Nombre','Direccion','Celular','Fecha')
-
---select * from BuscarPalabra('pablo',NULL)
-
--- INSERT INTO RelacionSemantica (PersonID1, PersonID2)
--- VALUES 
---     (3, 1), -- teléfono está relacionado con computadora
---     (4, 2); -- computadora está relacionada con pantalla
-
-
--- Consulta para obtener productos relacionados semánticamente
---SELECT E.Nombre
---FROM Person E
---JOIN  RelacionSemantica RS ON E.PersonID = RS.PersonID1
---WHERE RS.PersonID2                       = (SELECT PersonID FROM Person WHERE Nombre = 'Jose');
-
----- Consulta para buscar un producto por su sinónimo
---SELECT E.Nombre
---FROM Person E
---JOIN  Sinonimo S ON E.Nombre = S.Palabra
---WHERE S.Sinonimo             = 'pepe';
-
 use can_db;
 select * from fnBuscarPalabras('Ciudad', 'Quito');
-select * from fnBuscarPalabraUnica('Ciudad', 'Quito');
+select * from fnBuscarPalabraUnica('', 'RazonSocial');

@@ -29,5 +29,6 @@ namespace WebApp.Service
         public DbSet<VwEsqAcredita> VwEsqAcredita { get; set; }
         public DbSet<VwAlcance> VwAlcance { get; set; }
         public DbSet<Organizacion> Organizacion { get; set; }
+        public DbSet<Armonizacion> Armonizacion { get; set; }
     }
 }
