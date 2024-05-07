@@ -14,15 +14,17 @@ IF OBJECT_ID('OrganizacionFullText', 'U') IS NOT NULL
     DROP TABLE OrganizacionFullText;
 GO
 CREATE TABLE OrganizacionFullText(
-    IdOrganizacion			INT NOT NULL,--IDENTITY(1,1),
-    FullTextOrganizacion    NVARCHAR(MAX) NULL,			-- fulltext a considerear
-    CONSTRAINT [PK_OrganizacionFullText] PRIMARY KEY CLUSTERED (IdOrganizacion ASC)  
+     IdOrganizacionFullText	 INT NOT NULL IDENTITY(1,1)
+    ,IdDataLakeOrganizacion	 INT NOT NULL 
+    ,IdHomologacion          INT NOT NULL
+    ,FullTextOrganizacion    NVARCHAR(MAX) NULL			-- fulltext a considerear
+    ,CONSTRAINT [PK_IdOrganizacionFullText] PRIMARY KEY CLUSTERED (IdOrganizacionFullText)  
 );
 GO
 
 CREATE FULLTEXT INDEX ON OrganizacionFullText
 ( FullTextOrganizacion LANGUAGE 3082 )   --3082	Spanish 
-KEY INDEX [PK_OrganizacionFullText]
+KEY INDEX [PK_IdOrganizacionFullText]
 ON OrganizacionFullText_cat
 WITH STOPLIST = SYSTEM;
 GO
