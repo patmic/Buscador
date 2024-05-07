@@ -1,18 +1,16 @@
 #EVN:
 1. SDK .NET : https://dotnet.microsoft.com/en-us/download
-2. SQL SERVER 2019 / SQM ManagerStudio
-   - https://www.mssqltips.com/sqlservertip/6841/add-full-text-search-sql-server/
-3. VSCode   : https://code.visualstudio.com/download
+2. VSCode   : https:2//code.visualstudio.com/download
   - EXT:  
     - .NET Install Tool
     - Docker
     - Database Client JDBC
     - turder client /  Postman 
   - 
-4. crear la base de datos
+3. crear la base de datos
   - .devcontainer\database\query\canShemma.sql
   - .devcontainer\database\query\canOrgFullText.sql
-5. Codificar WebApp
+4. Codificar WebApp
     - MODELO
       WebApp\Models
 
@@ -92,3 +90,7 @@ dotnet sln add ClientApp/ClientApp.csproj
 Agregar en ClientApp.csproj = >
 < UseRazorSourceGenerator>false</UseRazorSourceGenerator>
 dotnet run
+
+----------------------------
+#git : igual las ramas
+git rebase origin/pat_dev_rama
