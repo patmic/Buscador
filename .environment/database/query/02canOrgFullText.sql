@@ -7,6 +7,7 @@ begin
 	DROP FULLTEXT INDEX ON OrganizacionFullText;
 	DROP FULLTEXT CATALOG [OrganizacionFullText_cat];
 end
+
 CREATE FULLTEXT CATALOG OrganizacionFullText_cat WITH ACCENT_SENSITIVITY = OFF;
 GO
 

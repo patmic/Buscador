@@ -48,13 +48,10 @@ CREATE TABLE Usuario (
     ,Apellido		NVARCHAR(500)
     ,Rol			NVARCHAR(20)	NOT NULL DEFAULT('USER')
     ,Clave			NVARCHAR(MAX)	NOT NULL
-
-	-- Campos base para auditoría
     ,FechaCrea				    DATETIME	NOT NULL DEFAULT(GETDATE())
     ,FechaModifica			    DATETIME	NOT NULL DEFAULT(GETDATE())  
     ,IdUserCrea				    INT			NOT NULL DEFAULT(0)
     ,IdUserModifica			    INT			NOT NULL DEFAULT(0)
-
     ,CONSTRAINT UK_Email	UNIQUE (Email)
     ,CONSTRAINT CK_Rol		CHECK (Rol IN ('ADMIN', 'USER'))
 );
@@ -64,13 +61,10 @@ CREATE TABLE Endpoint (
     IdEndpoint			INT IDENTITY(1,1) PRIMARY KEY,
     Nombre				NVARCHAR(100) NOT NULL,
     Url					NVARCHAR(MAX)
-
-    -- Campos base para auditoría
     ,FechaCrea				    DATETIME	NOT NULL DEFAULT(GETDATE())
     ,FechaModifica			    DATETIME	NOT NULL DEFAULT(GETDATE())  
     ,IdUserCrea				    INT			NOT NULL DEFAULT(0)
     ,IdUserModifica			    INT			NOT NULL DEFAULT(0)
-
     ,CONSTRAINT UK_Nombre UNIQUE (Nombre)
 );
 GO
@@ -80,12 +74,10 @@ CREATE TABLE UsuarioEndpointPermiso (
     ,IdUsuario                   INT NOT NULL DEFAULT(0)
     ,IdEndpoint                  INT NOT NULL DEFAULT(0)
     ,Accion                      NVARCHAR(10) NOT NULL
-    -- Campos base para auditoría
     ,FechaCrea				    DATETIME	NOT NULL DEFAULT(GETDATE())
     ,FechaModifica			    DATETIME	NOT NULL DEFAULT(GETDATE())  
     ,IdUserCrea				    INT			NOT NULL DEFAULT(0)
     ,IdUserModifica			    INT			NOT NULL DEFAULT(0)
-
     ,CONSTRAINT UK_Accion       CHECK (Accion IN ('GET', 'POST', 'PUT', 'DELETE'))
     ,CONSTRAINT FK_IdUsuario    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
     ,CONSTRAINT FK_IdEndpoint   FOREIGN KEY (IdEndpoint) REFERENCES Endpoint(IdEndpoint)
@@ -100,12 +92,10 @@ CREATE TABLE Homologacion (
     ,MostrarWeb				NVARCHAR(90)  NOT NULL
     ,Descripcion			NVARCHAR(200)
     ,InfoExtraJson			NVARCHAR(max)
-
     ,FechaCrea				DATETIME	NOT NULL DEFAULT(GETDATE())
     ,FechaModifica			DATETIME	NOT NULL DEFAULT(GETDATE())  
     ,IdUserCrea				INT			NOT NULL DEFAULT(0)
     ,IdUserModifica			INT			NOT NULL DEFAULT(0)  
-    
 	,CONSTRAINT  [PK_IdHomologacion]    PRIMARY KEY CLUSTERED (IdHomologacion DESC) 
 	,CONSTRAINT  [UK_ClaveBuscar]		UNIQUE (ClaveBuscar)
 );
@@ -182,8 +172,7 @@ CREATE TABLE DataLakeOrganizacion(
     ,DataId					NVARCHAR(10) NOT NULL 
     ,DataJson               NVARCHAR(max) NOT NULL 
     ,DataJsonExtra          NVARCHAR(max) NOT NULL 
-	,DataJsonEstado			NVARCHAR(2)   NOT NULL DEFAULT('SI') 
-
+	  ,DataJsonEstado			NVARCHAR(2)   NOT NULL DEFAULT('SI') 
     ,FechaCrea				DATETIME	NOT NULL DEFAULT(GETDATE())
     ,FechaModifica			DATETIME	NOT NULL DEFAULT(GETDATE())  
 	,CONSTRAINT  [PK_IdDataLake]   PRIMARY KEY CLUSTERED (IdDataLakeOrganizacion DESC) 

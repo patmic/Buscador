@@ -23,11 +23,11 @@ namespace WebApp.Service
         public DbSet<Empresa> Empresa { get; set; }
         // vistas
         public DbSet<VwPais> VwPais { get; set; }
-        public DbSet<VwRazonSocial> VwRazonSocial { get; set; }
+        public DbSet<VwTipoAcreditacion> VwTipoAcreditacion { get; set; }
         public DbSet<VwOrgAcredita> VwOrgAcredita { get; set; }
         public DbSet<VwEstado> VwEstado { get; set; }
         public DbSet<VwEsqAcredita> VwEsqAcredita { get; set; }
-        public DbSet<VwAlcance> VwAlcance { get; set; }
+        public DbSet<VwDimension> VwDimension { get; set; }
         public DbSet<Organizacion> Organizacion { get; set; }
         public DbSet<Armonizacion> Armonizacion { get; set; }
     }

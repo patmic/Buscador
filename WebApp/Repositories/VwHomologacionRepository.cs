@@ -14,34 +14,34 @@ namespace WebApp.Repositories
             _bd = dbContext;
         }
 
-        public ICollection<VwAlcance> ObtenerAlcance()
+        public ICollection<VwTipoAcreditacion> ObtenerTipoAcreditacion()
         {
-            return _bd.VwAlcance.OrderBy(c => c.BusquedaEtiqueta).ToList();
+            return _bd.VwTipoAcreditacion.OrderBy(c => c.MostrarWeb).ToList();
         }
 
         public ICollection<VwEsqAcredita> ObtenerEsqAcredita()
         {
-            return _bd.VwEsqAcredita.OrderBy(c => c.BusquedaEtiqueta).ToList();
+            return _bd.VwEsqAcredita.OrderBy(c => c.MostrarWeb).ToList();
         }
 
         public ICollection<VwEstado> ObtenerEstado()
         {
-            return _bd.VwEstado.OrderBy(c => c.BusquedaEtiqueta).ToList();
+            return _bd.VwEstado.OrderBy(c => c.MostrarWeb).ToList();
         }
 
         public ICollection<VwOrgAcredita> ObtenerOrgAcredita()
         {
-            return _bd.VwOrgAcredita.OrderBy(c => c.BusquedaEtiqueta).ToList();
+            return _bd.VwOrgAcredita.OrderBy(c => c.MostrarWeb).ToList();
         }
 
         public ICollection<VwPais> ObtenerPais()
         {
-            return _bd.VwPais.OrderBy(c => c.BusquedaEtiqueta).ToList();
+            return _bd.VwPais.OrderBy(c => c.MostrarWeb).ToList();
         }
 
-        public ICollection<VwRazonSocial> ObtenerRazonSocial()
+        public ICollection<VwDimension> ObtenerDimension()
         {
-            return _bd.VwRazonSocial.OrderBy(c => c.BusquedaEtiqueta).ToList();
+            return _bd.VwDimension.OrderBy(c => c.MostrarWeb).ToList();
         }
     }
 }

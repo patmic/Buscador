@@ -36,18 +36,18 @@ namespace WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult ObtenerRazonSocial()
+        public IActionResult ObtenerDimension()
         {
-            return GetCatalogData(_vhRepo.ObtenerRazonSocial, "Error obteniendo datos de razon social");
+            return GetCatalogData(_vhRepo.ObtenerDimension, "Error obteniendo datos de Grilla");
         }
 
         [HttpGet("alcance")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult ObtenerAlcance()
+        public IActionResult ObtenerTipoAcreditacion()
         {
-            return GetCatalogData(_vhRepo.ObtenerAlcance, "Error obteniendo datos de alcance");
+            return GetCatalogData(_vhRepo.ObtenerTipoAcreditacion, "Error obteniendo datos de alcance");
         }
 
         [HttpGet("esq_acredita")]

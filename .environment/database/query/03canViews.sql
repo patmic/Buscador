@@ -7,8 +7,9 @@ GO
 CREATE VIEW vwPais AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_PAI');
+    MostrarWeb,
+    Descripcion
+FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_PAI');
 GO
 
 DROP VIEW IF EXISTS vwOrgAcredita;
@@ -16,8 +17,9 @@ GO
 CREATE VIEW vwOrgAcredita AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_ORG_ACREDITA');
+    MostrarWeb,
+    Descripcion
+FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_ORG');
 GO
 
 DROP VIEW IF EXISTS vwEsqAcredita;
@@ -25,26 +27,19 @@ GO
 CREATE VIEW vwEsqAcredita AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_ESQ_ACREDITA');
+    MostrarWeb,
+    Descripcion
+FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_ESQ');
 GO
 
-DROP VIEW IF EXISTS vwRazonSocial;
+DROP VIEW IF EXISTS vwTipoAcreditacion;
 GO
-CREATE VIEW vwRazonSocial AS 
+CREATE VIEW vwTipoAcreditacion AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_RAZ_SOCIAL');
-GO
-
-DROP VIEW IF EXISTS vwAlcance;
-GO
-CREATE VIEW vwAlcance AS 
-SELECT 
-    IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_ALC');
+    MostrarWeb,
+    Descripcion
+FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_RAL');
 GO
 
 DROP VIEW IF EXISTS vwEstado;
@@ -52,6 +47,27 @@ GO
 CREATE VIEW vwEstado AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_EST');
+    MostrarWeb,
+    Descripcion
+FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_EST');
+GO
+
+DROP VIEW IF EXISTS vwDimension;
+GO
+CREATE VIEW vwDimension AS 
+SELECT 
+    IdHomologacion,
+    MostrarWeb,
+    Descripcion
+FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_DIM');
+GO
+
+DROP VIEW IF EXISTS vwGrilla;
+GO
+CREATE VIEW vwGrilla AS 
+SELECT 
+    IdHomologacion,
+    MostrarWeb,
+    Descripcion
+FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_DIM');
 GO

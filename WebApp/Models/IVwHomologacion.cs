@@ -7,6 +7,7 @@ namespace WebApp.Models
         [Key]
         public int IdHomologacion { get; set; }
         [Required]
-        public string? BusquedaEtiqueta { get; set; }
+        public string? MostrarWeb { get; set; }
+        public string? Descripcion { get; set; }
     }
 }

@@ -15,11 +15,11 @@ namespace WebApp.Mappers
             CreateMap<Empresa, EmpresaDto>();
             CreateMap<Organizacion, OrganizacionDto>();
             CreateMap<VwPais, CatalogosDto>();
-            CreateMap<VwRazonSocial, CatalogosDto>();
+            CreateMap<VwTipoAcreditacion, CatalogosDto>();
             CreateMap<VwOrgAcredita, CatalogosDto>();
             CreateMap<VwEstado, CatalogosDto>();
             CreateMap<VwEsqAcredita, CatalogosDto>();
-            CreateMap<VwAlcance, CatalogosDto>();
+            CreateMap<VwDimension, CatalogosDto>();
             CreateMap<Armonizacion, ArmonizacionDto>();
         }
     }

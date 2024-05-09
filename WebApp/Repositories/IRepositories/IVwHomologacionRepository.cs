@@ -5,8 +5,8 @@ namespace WebApp.Repositories.IRepositories
     public interface IVwHomologacionRepository
     {
         public ICollection<VwPais> ObtenerPais();
-        ICollection<VwRazonSocial> ObtenerRazonSocial();
-        ICollection<VwAlcance> ObtenerAlcance();
+        ICollection<VwTipoAcreditacion> ObtenerTipoAcreditacion();
+        ICollection<VwDimension> ObtenerDimension();
         ICollection<VwEsqAcredita> ObtenerEsqAcredita();
         ICollection<VwEstado> ObtenerEstado();
         ICollection<VwOrgAcredita> ObtenerOrgAcredita();

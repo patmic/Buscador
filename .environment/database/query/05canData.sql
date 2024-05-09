@@ -37,7 +37,7 @@ INSERT INTO Homologacion    (ClaveBuscar,  Homologado,      MostrarWeb, Descripc
 VALUES                      ('KEY_DIM',    'DIMENSION'      ,'CAMPO HOMOLOGADO'  ,'Columnas de las grillas')
 SET @KEY_DIM = @@IDENTITY;
     -- Datos de los filtros
-INSERT INTO Homologacion (IdHomologacionGrupo, ClaveBuscar,  Homologado,      MostrarWeb, Descripcion ,InfoExtraJson)
+INSERT INTO Homologacion (IdHomologacionGrupo, ClaveBuscar,  Homologado, MostrarWeb, Descripcion ,InfoExtraJson)
 VALUES 
 --NIVEL 1
  (@KEY_PAI,     'KEY_DIM_COL'           ,'Colombia'   ,'Colombia'  ,'Colombiana'     ,'{responsable:"pepe"; email:"Colombia@gob.ec"}')	
