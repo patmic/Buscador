@@ -1,57 +1,50 @@
 USE CAN_DB;
 GO
 
-
-DROP VIEW IF EXISTS vwPais;
-GO
-CREATE VIEW vwPais AS 
+CREATE OR ALTER VIEW vwPais AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_PAI');
+    MostrarWeb
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_PAI');
 GO
 
-DROP VIEW IF EXISTS vwOrgAcredita;
-GO
-CREATE VIEW vwOrgAcredita AS 
+CREATE OR ALTER VIEW vwOrgAcredita AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_ORG_ACREDITA');
+    MostrarWeb
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_ORG');
 GO
 
-DROP VIEW IF EXISTS vwEsqAcredita;
-GO
-CREATE VIEW vwEsqAcredita AS 
+CREATE OR ALTER VIEW vwEsqAcredita AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_ESQ_ACREDITA');
+    MostrarWeb
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_ESQ');
 GO
 
-DROP VIEW IF EXISTS vwRazonSocial;
-GO
-CREATE VIEW vwRazonSocial AS 
+CREATE OR ALTER VIEW vwRazonSocial AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_RAZ_SOCIAL');
+    MostrarWeb
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_RAL');
 GO
 
-DROP VIEW IF EXISTS vwAlcance;
-GO
-CREATE VIEW vwAlcance AS 
+CREATE OR ALTER VIEW vwAlcance AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_ALC');
+    MostrarWeb
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_ALC');
 GO
 
-DROP VIEW IF EXISTS vwEstado;
-GO
-CREATE VIEW vwEstado AS 
+CREATE OR ALTER VIEW vwEstado AS 
 SELECT 
     IdHomologacion,
-    BusquedaEtiqueta
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE BusquedaCodigo = 'KEY_EST');
+    MostrarWeb
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_EST');
 GO
