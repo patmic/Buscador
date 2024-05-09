@@ -45,10 +45,10 @@ VALUES
 ,(@KEY_PAI,     'KEY_DIM_PER'           ,'Perú'	      ,'Perú'	   ,'Peruana'        ,'{responsable:"pepe"; email:"Perú@gob.ec"}')	
 ,(@KEY_PAI,     'KEY_DIM_BOL'           ,'Bolivia'    ,'Bolivia'   ,'Boliviana'      ,'{responsable:"pepe"; email:"Bolivia@gob.ec"}')
 --NIVEL 2
-,(@KEY_ORG,     'KEY_CONAC'		    ,'CONAC'	  ,'Sistema nacional de Colombi'	,''  ,null)
-,(@KEY_ORG,     'KEY_SAE'		    ,'SAE'		  ,'Sistema acreditacion Ecuador'	,''  ,null)
-,(@KEY_ORG,     'KEY_INACAL-DA'	    ,'INACAL-DA'  ,'Sistema nacional del Perú	'	,''  ,null)
-,(@KEY_ORG,     'KEY_DTA-IBMETRO'   ,'DTA-IBMETRO','Sistema nacional de Bolivia'	,''  ,null)
+,(@KEY_ORG,     'KEY_DIM_CONAC'		    ,'CONAC'	  ,'Sistema nacional de Colombi'	,''  ,null)
+,(@KEY_ORG,     'KEY_DIM_SAE'		    ,'SAE'		  ,'Sistema acreditacion Ecuador'	,''  ,null)
+,(@KEY_ORG,     'KEY_DIM_INACAL-DA'	    ,'INACAL-DA'  ,'Sistema nacional del Perú	'	,''  ,null)
+,(@KEY_ORG,     'KEY_DIM_DTA-IBMETRO'   ,'DTA-IBMETRO','Sistema nacional de Bolivia'	,''  ,null)
 --NIVEL 3
 ,(@KEY_ESQ,     'KEY_LAB_CAL'		    ,'LABORATORIO CALIBRACIÓN'							,'LABORATORIO CALIBRACIÓN'							,'' ,null)	
 ,(@KEY_ESQ,     'KEY_LAB_CLI'		    ,'LABORATORIO CLÍNICO'								,'LABORATORIO CLÍNICO'								,'' ,null)
@@ -65,33 +65,43 @@ VALUES
 ,(@KEY_ESQ,     'KEY_INS_AMB'           ,'INSPECCIÓN AMBIENTAL'								,'INSPECCIÓN AMBIENTAL'								,'' ,null)
 ,(@KEY_ESQ,     'KEY_INS_AGR'           ,'INSPECCIÓN AGRÍCOLA'								,'INSPECCIÓN AGRÍCOLA'								,'' ,null)
 ,(@KEY_ESQ,     'KEY_VAL_VER'           ,'VALIDACIÓN Y VERIFICACIÓN'						,'VALIDACIÓN Y VERIFICACIÓN'						,'' ,null)		
---NIVEL 4
+--NIVEL 4 
 ,(@KEY_RAL,     'KEY_RAZ'  		    ,'RAZON SOCIAL'	   ,'RAZON SOCIAL'				,'' ,null)	
 ,(@KEY_RAL,     'KEY_ALC'  		    ,'ALCANCE'		   ,'ALCANCE'					,'' ,null)	
---NIVEL 5
+--NIVEL 5 
 ,(@KEY_EST,     'KEY_ACT'		    ,'ACTIVO'		    ,'Activo'					,'' ,null)	
 ,(@KEY_EST,     'KEY_FIN'		    ,'FINALIZADO'	    ,'Finalizado'				,'' ,null)		
 ,(@KEY_EST,     'KEY_RET'		    ,'RETIRADO'		    ,'Retirado'					,'' ,null)	
--- dimensiones o columnas de la grilla
+-- dimensiones o columnas de la grilla 
 ,(@KEY_DIM		,'KEY_DIM_RAZ'		,'identificado unicoa de CAN'	, 	'RazonSocial'   , 	'Razón Social Unico'        ,null)
 ,(@KEY_DIM		,'KEY_DIM_COD'		,'identificado de Organizaco'	, 	'CodAcredita'   , 	'Codigo de Acreditacion'    ,null)
 ,(@KEY_DIM		,'KEY_DIM_NOM'		,'identificado de NombreOrg'	, 	'NombreOrg'     , 	'nombre de la organizacion' ,null)
 ,(@KEY_DIM		,'KEY_DIM_DIR'		,'direccion de la Organizacion'	, 	'DireccionOrg'  ,	'direccion de organizacion' ,null)
 ,(@KEY_DIM		,'KEY_DIM_FEC'		,'Fecha de la Organizacion'	    , 	'FechaOrg'      ,	'Fecha de organizacion'     ,null)
-
-,(@KEY_DIM		,'KEY_DIM_cou'		,'country'	        , 	'country'             ,	'country'            ,null)
-,(@KEY_DIM		,'KEY_DIM_cit'		,'city'	            , 	'city'                ,	'city'               ,null)
-,(@KEY_DIM		,'KEY_DIM_are'		,'area'	            , 	'area'                ,	'area'               ,null)
-,(@KEY_DIM		,'KEY_DIM_acc'		,'accreditationcode', 	'accreditationcode'   ,	'accreditationcode'  ,null)
-,(@KEY_DIM		,'KEY_DIM_cer'		,'certpdf'	        , 	'certpdf'             ,	'certpdf'            ,null)
-,(@KEY_DIM		,'KEY_DIM_xxx'		,'countrycode'	    , 	'countrycode'         ,	'countrycode'        ,null)
-,(@KEY_DIM		,'KEY_DIM_bus'		,'business'	        , 	'business'            ,	'business'           ,null)
-,(@KEY_DIM		,'KEY_DIM_act'		,'activity'	        , 	'activity'            ,	'activity'           ,null)
-,(@KEY_DIM		,'KEY_DIM_sta'		,'status'	        , 	'status'              ,	'status'             ,null)
+ 
+,(@KEY_DIM		,'KEY_DIM_cou'		,'country'	        ,'country'             ,'country'            ,null)
+,(@KEY_DIM		,'KEY_DIM_cit'		,'city'	            ,'city'                ,'city'               ,null)
+,(@KEY_DIM		,'KEY_DIM_are'		,'area'	            ,'area'                ,'area'               ,null)
+,(@KEY_DIM		,'KEY_DIM_acc'		,'accreditationcode','accreditationcode'   ,'accreditationcode'  ,null)
+,(@KEY_DIM		,'KEY_DIM_cer'		,'certpdf'	        ,'certpdf'             ,'certpdf'            ,null)
+,(@KEY_DIM		,'KEY_DIM_xxx'		,'countrycode'	    ,'countrycode'         ,'countrycode'        ,null)
+,(@KEY_DIM		,'KEY_DIM_bus'		,'business'	        ,'business'            ,'business'           ,null)
+,(@KEY_DIM		,'KEY_DIM_act'		,'activity'	        ,'activity'            ,'activity'           ,null)
+,(@KEY_DIM		,'KEY_DIM_sta'		,'status'	        ,'status'              ,'status'             ,null)
+ 
+,(@KEY_DIM		,'KEY_DIM_ORG_pai'	,'oa_pais'          ,'pais'					,'status'             ,null) 
+,(@KEY_DIM		,'KEY_DIM_ORG_ini'	,'oa_inicialpais'   ,'inicialpais'			,'status'             ,null) 
+,(@KEY_DIM		,'KEY_DIM_ORG_ciu'	,'oa_ciudad'        ,'ciudad'				,'status'             ,null) 
+,(@KEY_DIM		,'KEY_DIM_ORG_nom'	,'oa_nombre'        ,'nombre'				,'status'             ,null) 
+,(@KEY_DIM		,'KEY_DIM_ORG_noi'	,'oa_noibre'        ,'noibreinicial'		,'status'             ,null) 
+,(@KEY_DIM		,'KEY_DIM_ORG_dir'	,'oa_direci'        ,'direccion'			,'status'             ,null) 
+,(@KEY_DIM		,'KEY_DIM_ORG_tel'	,'oa_telefo'        ,'telefono'				,'status'             ,null) 
+,(@KEY_DIM		,'KEY_DIM_ORG_sit'	,'oa_sitiow'        ,'sitioweb'				,'status'             ,null) 
+,(@KEY_DIM		,'KEY_DIM_ORG_log'	,'oa_logo'          ,'logo'					,'status'             ,null) 
+,(@KEY_DIM		,'KEY_DIM_ORG_des'	,'oa_descr'         ,'descripcion'			,'status'             ,null) 
 --poner aca mas columnas
 ;
 GO
-
 INSERT INTO [OrganizacionFullText] 
 ([IdDataLakeOrganizacion] ,[IdHomologacion] ,[FullTextOrganizacion])
 VALUES

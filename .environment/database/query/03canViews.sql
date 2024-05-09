@@ -1,50 +1,49 @@
 USE CAN_DB;
 GO
 
-
-DROP VIEW IF EXISTS vwPais;
-GO
-CREATE VIEW vwPais AS 
+CREATE OR ALTER VIEW vwPais AS 
 SELECT 
     IdHomologacion,
     MostrarWeb,
     Descripcion
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_PAI');
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_PAI');
 GO
 
-DROP VIEW IF EXISTS vwOrgAcredita;
-GO
-CREATE VIEW vwOrgAcredita AS 
+CREATE OR ALTER VIEW vwOrgAcredita AS 
 SELECT 
     IdHomologacion,
     MostrarWeb,
     Descripcion
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_ORG');
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_ORG');
 GO
 
-DROP VIEW IF EXISTS vwEsqAcredita;
-GO
-CREATE VIEW vwEsqAcredita AS 
+CREATE OR ALTER VIEW vwEsqAcredita AS 
 SELECT 
     IdHomologacion,
-    MostrarWeb,
-    Descripcion
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_ESQ');
+    MostrarWeb
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_ESQ');
 GO
 
-DROP VIEW IF EXISTS vwTipoAcreditacion;
-GO
-CREATE VIEW vwTipoAcreditacion AS 
+CREATE OR ALTER VIEW vwRazonSocial AS 
 SELECT 
     IdHomologacion,
-    MostrarWeb,
-    Descripcion
-FROM Homologacion WITH (NOLOCK) WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_RAL');
+    MostrarWeb
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_RAL');
 GO
 
-DROP VIEW IF EXISTS vwEstado;
+CREATE OR ALTER VIEW vwAlcance AS 
+SELECT 
+    IdHomologacion,
+    MostrarWeb
+FROM Homologacion WITH (NOLOCK) 
+WHERE IdHomologacionGrupo = (SELECT IdHomologacion FROM Homologacion WITH (NOLOCK) WHERE ClaveBuscar = 'KEY_ALC');
 GO
-CREATE VIEW vwEstado AS 
+
+CREATE OR ALTER VIEW vwEstado AS 
 SELECT 
     IdHomologacion,
     MostrarWeb,

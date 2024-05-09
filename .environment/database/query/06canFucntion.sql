@@ -7,7 +7,7 @@ IF EXISTS (SELECT * FROM sys.fulltext_stoplists WHERE name = 'OrganizacionFullTe
 CREATE FULLTEXT STOPLIST OrganizacionFullText_Stoplist FROM SYSTEM STOPLIST;  
 GO 
 
--- para no considerar en las busquedas
+-- para no considerar en las busquedas 
 IF NOT EXISTS (SELECT * FROM sys.fulltext_stopwords WHERE stopword = 'en' AND LANGUAGE ='Spanish')
 	ALTER FULLTEXT STOPLIST OrganizacionFullText_Stoplist ADD 'en' LANGUAGE 'Spanish';	
 
