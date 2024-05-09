@@ -13,7 +13,8 @@ namespace WebApp.Mappers
             CreateMap<Models.Endpoint, EndpointDto>();
             CreateMap<UsuarioEndpointPermiso, UsuarioEndpointPermisoDto>();
             CreateMap<Empresa, EmpresaDto>();
-            CreateMap<Organizacion, OrganizacionDto>();
+            CreateMap<DataLakeOrganizacion, BuscadorDto>();
+            CreateMap<BuscadorOrganizacion, BuscadorOrganizacionnDto>();
             CreateMap<VwPais, CatalogosDto>();
             CreateMap<VwTipoAcreditacion, CatalogosDto>();
             CreateMap<VwOrgAcredita, CatalogosDto>();

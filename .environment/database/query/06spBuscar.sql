@@ -1,4 +1,4 @@
-use CAN_DB
+use CAN_DB;
 go
 
 CREATE OR ALTER PROCEDURE psBuscarPalabra
@@ -31,8 +31,8 @@ BEGIN
                     for json path
                 ) DataJson
         FROM	@tb t
-END
+END;
 GO
 --> validar la funcion
 declare  @BuscarPalabra		NVARCHAR(100) = N'act'
-exec psBuscarPalabra @BuscarPalabra, 47
+exec psBuscarPalabra 'act', 47

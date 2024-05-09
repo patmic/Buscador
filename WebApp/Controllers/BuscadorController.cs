@@ -8,37 +8,30 @@ namespace WebApp.Controllers
 {
     [Route("api/buscador")]
     [ApiController]
-    public class BuscadorController : ControllerBase
+    public class BuscadorController(ILogger<BuscadorController> logger, IBuscadorRepository vhRepo, IMapper mapper) : ControllerBase
     {
-        private readonly IBuscadorRepository _vhRepo;
-        protected RespuestasAPI _respuestaApi;
-        private readonly IMapper _mapper;
-        private readonly ILogger<BuscadorController> _logger;
+        private readonly IBuscadorRepository _vhRepo = vhRepo;
+        protected RespuestasAPI? _respuestaApi;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<BuscadorController> _logger = logger;
 
-        public BuscadorController(ILogger<BuscadorController> logger, IBuscadorRepository vhRepo, IMapper mapper)
-        {
-            _vhRepo = vhRepo;
-            _mapper = mapper;
-            _logger = logger;
-        }
-
-        // [Authorize]
-        [HttpGet("buscar_palabras")]
+    // [Authorize]
+    [HttpGet("buscar_palabras")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult BuscarPalabras(string field, string value)
+        public IActionResult BuscarPalabras(string value, int field1, int field2, int field3, int field4)
         {
             try
             {
-                Console.WriteLine($"Buscando palabras {field} {value}");
-                var listado = _vhRepo.BuscarPalabra(value, field);
+                Console.WriteLine($"Buscando palabras {field1} {field2} {field3} {field4} {value}");
+                var listado = _vhRepo.BuscarPalabra(value, field1, field2, field3, field4);
 
-                var listadoDto = new List<OrganizacionDto>();
+                var listadoDto = new List<DataLakeOrganizacionDto>();
 
                 foreach (var lista in listado)
                 {
-                    listadoDto.Add(_mapper.Map<OrganizacionDto>(lista));
+                    listadoDto.Add(_mapper.Map<DataLakeOrganizacionDto>(lista));
                 }
                 return Ok(listadoDto);
             }

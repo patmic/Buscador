@@ -28,7 +28,8 @@ namespace WebApp.Service
         public DbSet<VwEstado> VwEstado { get; set; }
         public DbSet<VwEsqAcredita> VwEsqAcredita { get; set; }
         public DbSet<VwDimension> VwDimension { get; set; }
-        public DbSet<Organizacion> Organizacion { get; set; }
+        public DbSet<DataLakeOrganizacion> DataLakeOrganizacion { get; set; }
         public DbSet<Armonizacion> Armonizacion { get; set; }
+        public DbSet<BuscadorOrganizacion> BuscadorOrganizacion { get; set; }
     }
 }

@@ -15,6 +15,6 @@ namespace WebApp.Service
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             ChangeTracker.LazyLoadingEnabled = false;
         }
-        public DbSet<Organizacion> Organizacion { get; set; }
+        // public DbSet<Organizacion> Organizacion { get; set; }
     }
 }
