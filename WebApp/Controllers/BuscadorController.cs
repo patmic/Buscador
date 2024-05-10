@@ -27,11 +27,11 @@ namespace WebApp.Controllers
                 Console.WriteLine($"Buscando palabras {field1} {field2} {field3} {field4} {value}");
                 var listado = _vhRepo.BuscarPalabra(value, field1, field2, field3, field4);
 
-                var listadoDto = new List<DataLakeOrganizacionDto>();
+                var listadoDto = new List<BuscadorDto>();
 
                 foreach (var lista in listado)
                 {
-                    listadoDto.Add(_mapper.Map<DataLakeOrganizacionDto>(lista));
+                    listadoDto.Add(_mapper.Map<BuscadorDto>(lista));
                 }
                 return Ok(listadoDto);
             }
