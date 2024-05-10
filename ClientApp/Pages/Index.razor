@@ -27,24 +27,13 @@
                         <div class="span12 page-content" style="margin-bottom: 10px;border-bottom: 1px solid #e8e8e8;">
                             <div class="row-fluid">
 
-                                <div class="span2">
-                                    <h4>Alcance</h4>
-                                </div>
-                                <div class="span2">
-                                    <h4>Esquema Acredita</h4>
-                                </div>
-                                <div class="span2">
-                                    <h4>Estado</h4>
-                                </div>
-                                <div class="span2">
-                                    <h4>Organización Acredita</h4>
-                                </div>
-                                <div class="span2">
-                                    <h4>País</h4>
-                                </div>
-                                <div class="span2">
-                                    <h4>Razón Social</h4>
-                                </div>
+                                @if (listaEtiquetasFiltros != null) {
+                                    foreach(var etiqueta in listaEtiquetasFiltros) {
+                                        <div class="span2">
+                                            <h4><Tooltip Title="@etiqueta.Descripcion">@etiqueta.MostrarWeb</Tooltip></h4>
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
 
@@ -52,7 +41,7 @@
                         <div class="span12 page-content">
                             <div class="row-fluid">
 
-                                <div class="span2">
+                                @* <div class="span2">
                                     @if (listaAlcance != null ) {
                                         <select id="listaAlcance" style="max-width: 100%">
                                             @foreach (var opcion in listaAlcance)
@@ -111,7 +100,7 @@
                                                 }
                                         </select>
                                         }
-                                </div>
+                                </div> *@
                             </div>
                         </div>
                 </div>
@@ -152,23 +141,28 @@
     [Inject]
     public IOrganizacionRepository servicio { get; set; }
 
-    private List<VwHomologacion>? listaAlcance;
+    private List<VwHomologacion>? listaEtiquetasFiltros;
+
+    @* private List<VwHomologacion>? listaAlcance;
     private List<VwHomologacion>? listaEsquemaAcredita;
     private List<VwHomologacion>? ListaEstado;
     private List<VwHomologacion>? ListaOrganizacionAcredita;
     private List<VwHomologacion>? listaPais;
     private List<VwHomologacion>? listaRazonSocial;
 
-    private List<Organizacion>? listOrganizacion;
+     *@
+     private List<Organizacion>? listOrganizacion;
 
     protected override async Task OnInitializedAsync()
     {
-        listaAlcance = await vwHomologacionRepository.GetHomologacionAsync("alcance");
-        listaEsquemaAcredita = await vwHomologacionRepository.GetHomologacionAsync("esq_acredita");
-        ListaEstado = await vwHomologacionRepository.GetHomologacionAsync("estado");
-        ListaOrganizacionAcredita = await vwHomologacionRepository.GetHomologacionAsync("org_acredita");
-        listaPais = await vwHomologacionRepository.GetHomologacionAsync("pais");
-        listaRazonSocial = await vwHomologacionRepository.GetHomologacionAsync("razon_social");
+        listaEtiquetasFiltros = await vwHomologacionRepository.GetHomologacionAsync("etiquetas_filtro");
+        @* listaPais = await vwHomologacionRepository.GetHomologacionAsync("pais"); *@
+        @* listaEsquemaAcredita = await vwHomologacionRepository.GetHomologacionAsync("esq_acredita"); *@
+        @* listaAlcance = await vwHomologacionRepository.GetHomologacionAsync("alcance_razon_social"); *@
+        @* ListaEstado = await vwHomologacionRepository.GetHomologacionAsync("estado"); *@
+        @* ListaOrganizacionAcredita = await vwHomologacionRepository.GetHomologacionAsync("org_acredita"); *@
+        @* ListaOrganizacionAcredita = await vwHomologacionRepository.GetHomologacionAsync("dimension"); *@
+        @* listaRazonSocial = await vwHomologacionRepository.GetHomologacionAsync(""); *@
     }
 
     private async Task BuscarPalabraRequest()

@@ -91,4 +91,15 @@ IN ( -- codigo 		EtiquetaColumna
 );
 GO
 
+CREATE OR ALTER FUNCTION fnFiltroDetalle 
+(	@IdHomologacionGrupo	int )  
+RETURNS TABLE AS
+RETURN
+SELECT	IdHomologacion, MostrarWeb, Descripcion
+FROM	dbo.Homologacion WITH (NOLOCK)
+WHERE	IdHomologacionGrupo = @IdHomologacionGrupo;
+GO
+
+-- select * from fnFiltroDetalle(3)
+
 select * from vwFiltro

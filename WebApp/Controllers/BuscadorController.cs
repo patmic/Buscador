@@ -15,8 +15,8 @@ namespace WebApp.Controllers
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<BuscadorController> _logger = logger;
 
-    // [Authorize]
-    [HttpGet("buscar_palabras")]
+        // [Authorize]
+        [HttpGet("buscar_palabras")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -15,14 +15,9 @@ namespace WebApp.Mappers
             CreateMap<Empresa, EmpresaDto>();
             CreateMap<DataLakeOrganizacion, BuscadorDto>();
             CreateMap<BuscadorOrganizacion, BuscadorOrganizacionnDto>();
-            CreateMap<VwPais, CatalogosDto>();
+            CreateMap<IVwHomologacion, CatalogosDto>();
             CreateMap<VwGrilla, CatalogosDto>();
             CreateMap<VwFiltro, CatalogosDto>();
-            CreateMap<VwOrgAcredita, CatalogosDto>();
-            CreateMap<VwEstado, CatalogosDto>();
-            CreateMap<VwEsqAcredita, CatalogosDto>();
-            CreateMap<VwDimension, CatalogosDto>();
-            CreateMap<VwAlcanceRazonSocial, CatalogosDto>();
         }
     }
 }

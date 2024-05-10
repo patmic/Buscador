@@ -22,14 +22,9 @@ namespace WebApp.Service
         // modulo de prueba a otra bd
         public DbSet<Empresa> Empresa { get; set; }
         // vistas
-        public DbSet<VwPais> VwPais { get; set; }
-        public DbSet<VwOrgAcredita> VwOrgAcredita { get; set; }
-        public DbSet<VwEstado> VwEstado { get; set; }
-        public DbSet<VwEsqAcredita> VwEsqAcredita { get; set; }
-        public DbSet<VwDimension> VwDimension { get; set; }
+        public DbSet<IVwHomologacion> IVwHomologacion { get; set; }
         public DbSet<VwGrilla> VwGrilla { get; set; }
         public DbSet<VwFiltro> VwFiltro { get; set; }
-        public DbSet<VwAlcanceRazonSocial> VwAlcanceRazonSocial { get; set; }
         // 
         public DbSet<DataLakeOrganizacion> DataLakeOrganizacion { get; set; }
         public DbSet<BuscadorOrganizacion> BuscadorOrganizacion { get; set; }
