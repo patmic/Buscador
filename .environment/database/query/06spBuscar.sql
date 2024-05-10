@@ -24,7 +24,7 @@ BEGIN
             or (@IdHomologacion4 IS NOT NULL AND IdHomologacion = @IdHomologacion4 AND FullTextOrganizacion like '%'+ @BuscarPalabra +'%')
 
         SELECT	t.IdDataLakeOrganizacion
-                ,(	SELECT  Distinct h.MostrarWeb NombreColumna, o.FullTextOrganizacion  ValorColumna
+                ,(	SELECT  Distinct h.IdHomologacion IdHomologacion, o.FullTextOrganizacion  ValorColumna
                     FROM	OrganizacionFullText	o
                     JOIN	Homologacion			h on o.IdHomologacion = h.IdHomologacion
                     Where	o.IdDataLakeOrganizacion = t.IdDataLakeOrganizacion

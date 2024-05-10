@@ -22,7 +22,6 @@ namespace WebApp.Service
         // modulo de prueba a otra bd
         public DbSet<Empresa> Empresa { get; set; }
         // vistas
-        public DbSet<IVwHomologacion> IVwHomologacion { get; set; }
         public DbSet<VwGrilla> VwGrilla { get; set; }
         public DbSet<VwFiltro> VwFiltro { get; set; }
         // 

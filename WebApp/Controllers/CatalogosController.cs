@@ -40,7 +40,7 @@ namespace WebApp.Controllers
             return GetCatalogData(_vhRepo.ObtenerEtiquetaFiltros, "Error obteniendo datos de Etiqueta Grilla");
         }
 
-        [HttpGet("filtro_detalles")]
+        [HttpGet("filtro_detalles/{IdHomologacion:int}", Name = "ObtenerFiltroDetalles")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
