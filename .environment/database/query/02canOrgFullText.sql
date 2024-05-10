@@ -1,15 +1,6 @@
 USE CAN_DB;
 GO
 
---SELECT fulltext_catalog_id, name FROM sys.fulltext_catalogs
-IF EXISTS (SELECT * FROM sys.fulltext_catalogs WHERE name = 'OrganizacionFullText_cat')
-begin
-	DROP FULLTEXT INDEX ON OrganizacionFullText;
-	DROP FULLTEXT CATALOG [OrganizacionFullText_cat];
-end
-
-CREATE FULLTEXT CATALOG OrganizacionFullText_cat WITH ACCENT_SENSITIVITY = OFF;
-GO
 
 IF OBJECT_ID('OrganizacionFullText', 'U') IS NOT NULL
     DROP TABLE OrganizacionFullText;
@@ -30,5 +21,15 @@ ON OrganizacionFullText_cat
 WITH STOPLIST = SYSTEM;
 GO
 
+--SELECT fulltext_catalog_id, name FROM sys.fulltext_catalogs
+IF EXISTS (SELECT * FROM sys.fulltext_catalogs WHERE name = 'OrganizacionFullText_cat')
+begin
+	DROP FULLTEXT INDEX ON OrganizacionFullText;
+	DROP FULLTEXT CATALOG [OrganizacionFullText_cat];
+end
+
+CREATE FULLTEXT CATALOG OrganizacionFullText_cat WITH ACCENT_SENSITIVITY = OFF;
+GO
+
 -- select * from sys.fulltext_catalogs;
-Select idOrganizacion from OrganizacionFullText WHERE CONTAINS((FullTextOrganizacion), 'empresa');
+Select IdDataLakeOrganizacion from OrganizacionFullText WHERE CONTAINS((FullTextOrganizacion), 'empresa');

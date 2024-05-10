@@ -1,6 +1,6 @@
 ﻿namespace WebApp.Models.Dtos
 {
-  public class BuscadorOrganizacionnDto
+  public class BuscadorOrganizacionDto
   {
     public int IdDataLakeOrganizacion { get; set; }
     // public int? IdHomologacionSistema { get; set; }
