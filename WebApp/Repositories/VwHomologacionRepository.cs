@@ -1,5 +1,4 @@
 using WebApp.Models;
-using WebApp.Models.Dtos;
 using WebApp.Repositories.IRepositories;
 using WebApp.Service;
 
@@ -12,11 +11,6 @@ namespace WebApp.Repositories
         public VwHomologacionRepository(SqlServerDbContext dbContext)
         {
             _bd = dbContext;
-        }
-
-        public ICollection<VwTipoAcreditacion> ObtenerTipoAcreditacion()
-        {
-            return _bd.VwTipoAcreditacion.OrderBy(c => c.MostrarWeb).ToList();
         }
 
         public ICollection<VwEsqAcredita> ObtenerEsqAcredita()
@@ -42,6 +36,21 @@ namespace WebApp.Repositories
         public ICollection<VwDimension> ObtenerDimension()
         {
             return _bd.VwDimension.OrderBy(c => c.MostrarWeb).ToList();
+        }
+
+        public ICollection<VwAlcanceRazonSocial> ObtenerAlcanceRazonSocial()
+        {
+            return _bd.VwAlcanceRazonSocial.OrderBy(c => c.MostrarWeb).ToList();
+        }
+
+        public ICollection<VwGrilla> ObtenerEtiquetaGrilla()
+        {
+            return _bd.VwGrilla.OrderBy(c => c.IdHomologacion).ToList();
+        }
+
+        public ICollection<VwFiltro> ObtenerEtiquetaFiltros()
+        {
+            return _bd.VwFiltro.OrderBy(c => c.IdHomologacion).ToList();
         }
     }
 }

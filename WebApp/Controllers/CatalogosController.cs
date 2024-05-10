@@ -32,22 +32,13 @@ namespace WebApp.Controllers
             return GetCatalogData(_vhRepo.ObtenerPais, "Error obteniendo datos de pais");
         }
 
-        [HttpGet("razon_social")]
+        [HttpGet("alcance_razon_social")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult ObtenerDimension()
+        public IActionResult ObtenerAlcanceRazonSocial()
         {
-            return GetCatalogData(_vhRepo.ObtenerDimension, "Error obteniendo datos de Grilla");
-        }
-
-        [HttpGet("alcance")]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult ObtenerTipoAcreditacion()
-        {
-            return GetCatalogData(_vhRepo.ObtenerTipoAcreditacion, "Error obteniendo datos de alcance");
+            return GetCatalogData(_vhRepo.ObtenerAlcanceRazonSocial, "Error obteniendo datos de Grilla");
         }
 
         [HttpGet("esq_acredita")]
@@ -75,6 +66,33 @@ namespace WebApp.Controllers
         public IActionResult  ObtenerOrgAcredita()
         {
             return GetCatalogData(_vhRepo.ObtenerOrgAcredita, "Error obteniendo datos de organizacion acredita");
+        }
+
+        [HttpGet("dimension")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult ObtenerDimension()
+        {
+            return GetCatalogData(_vhRepo.ObtenerDimension, "Error obteniendo datos de dimension");
+        }
+
+        [HttpGet("etiquetas_grilla")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult ObtenerEtiquetaGrilla()
+        {
+            return GetCatalogData(_vhRepo.ObtenerEtiquetaGrilla, "Error obteniendo datos de Etiqueta Grilla");
+        }
+
+        [HttpGet("etiquetas_filtro")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult ObtenerEtiquetaFiltros()
+        {
+            return GetCatalogData(_vhRepo.ObtenerEtiquetaFiltros, "Error obteniendo datos de Etiqueta Grilla");
         }
 
         private IActionResult GetCatalogData(Func<IEnumerable<IVwHomologacion>> getData, string errorMessage)

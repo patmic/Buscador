@@ -16,12 +16,13 @@ namespace WebApp.Mappers
             CreateMap<DataLakeOrganizacion, BuscadorDto>();
             CreateMap<BuscadorOrganizacion, BuscadorOrganizacionnDto>();
             CreateMap<VwPais, CatalogosDto>();
-            CreateMap<VwTipoAcreditacion, CatalogosDto>();
+            CreateMap<VwGrilla, CatalogosDto>();
+            CreateMap<VwFiltro, CatalogosDto>();
             CreateMap<VwOrgAcredita, CatalogosDto>();
             CreateMap<VwEstado, CatalogosDto>();
             CreateMap<VwEsqAcredita, CatalogosDto>();
             CreateMap<VwDimension, CatalogosDto>();
-            CreateMap<Armonizacion, ArmonizacionDto>();
+            CreateMap<VwAlcanceRazonSocial, CatalogosDto>();
         }
     }
 }

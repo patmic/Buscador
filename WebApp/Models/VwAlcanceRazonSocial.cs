@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApp.Models
 {
-    [Table("vwTipoAcreditacion")]
-    public class VwTipoAcreditacion : IVwHomologacion
+    [Table("vwAlcanceRazonSocial")]
+    public class VwAlcanceRazonSocial : IVwHomologacion
     {
 
     }
