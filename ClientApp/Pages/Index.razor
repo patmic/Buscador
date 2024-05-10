@@ -2,6 +2,7 @@
 @page "/persona"
 @using ClientApp.Services.IService
 @using ClientApp.Models;
+@using Newtonsoft.Json;
 @inject IVwHomologacionRepository vwHomologacionRepository
 
 <PageTitle>Inicio</PageTitle>
@@ -30,7 +31,7 @@
                                 @if (listaEtiquetasFiltros != null) {
                                     foreach(var etiqueta in listaEtiquetasFiltros) {
                                         <div class="span2">
-                                            <h4><Tooltip Title="@etiqueta.Descripcion">@etiqueta.MostrarWeb</Tooltip></h4>
+                                            <h5><Tooltip Title="@etiqueta.Descripcion">@etiqueta.MostrarWeb</Tooltip></h5>
                                         </div>
                                     }
                                 }
@@ -41,93 +42,44 @@
                         <div class="span12 page-content">
                             <div class="row-fluid">
 
-                                @* <div class="span2">
-                                    @if (listaAlcance != null ) {
-                                        <select id="listaAlcance" style="max-width: 100%">
-                                            @foreach (var opcion in listaAlcance)
-                                            {
-                                                <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
-                                            }
-                                        </select>
-                                    }
-                                </div>
-                                <div class="span2">
-                                    @if (listaEsquemaAcredita != null ) {
-                                        <select id="listaEsquemaAcredita" style="max-width: 100%">
-                                            @foreach (var opcion in listaEsquemaAcredita)
-                                            {
-                                                <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
-                                            }
-                                        </select>
-                                    }
-                                </div>
-                                <div class="span2">
-                                    @if (ListaEstado != null ) {
-                                        <select id="ListaEstado" style="max-width: 100%">
-                                            @foreach (var opcion in ListaEstado)
-                                            {
-                                                <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
-                                            }
-                                        </select>
-                                    }
-                                </div>
-                                <div class="span2">
-                                    @if (ListaOrganizacionAcredita != null ) {
-                                        <select id="ListaOrganizacionAcredita" style="max-width: 100%">
-                                            @foreach (var opcion in ListaOrganizacionAcredita)
-                                            {
-                                                <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
-                                            }
-                                        </select>
-                                    }
-                                </div>
-                                <div class="span2">
-                                    @if (listaPais != null ) {
-                                        <select id="listaPais" style="max-width: 100%">
-                                            @foreach (var opcion in listaPais)
-                                            {
-                                                <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
-                                            }
-                                        </select>
-                                    }
-                                </div>
-                                <div class="span2">
-                                    @if (listaRazonSocial != null ) {
-                                        <select id="listaRazonSocial" style="max-width: 100%">
-                                                @foreach (var opcion in listaRazonSocial)
+                                @if (listadeOpciones != null) {
+                                    @foreach(var opciones in listadeOpciones) {
+                                        <div class="span2">
+                                            <select id="listaAlcance" style="max-width: 100%">
+                                                @foreach (var opcion in opciones)
                                                 {
-                                                    <option value="@opcion.IdHomologacion">@opcion.BusquedaEtiqueta</option>
+                                                    <option value="@opcion.IdHomologacion">@opcion.MostrarWeb</option>
                                                 }
-                                        </select>
-                                        }
-                                </div> *@
+                                            </select>
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
                 </div>
-                @if (listOrganizacion != null) {
+                @if (listaEtiquetasGrilla != null) {
         <table class="table">
         <thead>
             <tr>
-                <th>Razón Social</th>
-                <th>Código de Acreditación</th>
-                <th>Área de Acreditación</th>
-                <th>Actividad</th>
-                <th>Ciudad</th>
-                <th>Estado</th>
-                <th>Información Adicional</th>
+                @foreach(var etiqueta in listaEtiquetasGrilla.Where(c => c.MostarNivel.Equals("1"))) {
+                    <th><Tooltip Title="@etiqueta.Descripcion">@etiqueta.MostrarWeb</Tooltip></th>
+                }
             </tr>
         </thead>
         <tbody>
-            @foreach (var row in listOrganizacion) {
-                <tr>
-                    <td>@row.RazonSocial</td>
-                    <td>@row.CodigoAcreditacion</td>
-                    <td>@row.AreaAcreditacion</td>
-                    <td>@row.Actividad</td>
-                    <td>@row.Ciudad</td>
-                    <td>@row.Estado</td>
-                    <td>id: @row.IdOrganizacion campo{@row.IdOrganizacion}: retiro campo: retiro {@row.IdOrganizacion}</td>
-                </tr>
+            @if (listResultadoBusqueda != null)
+            {
+                @foreach (var row in listResultadoBusqueda)
+                {
+                    var jsonData = JsonConvert.DeserializeObject<List<JsonDataresultado>>(row.DataJson); // Supongo que row.Json contiene el JSON
+                    <tr>
+                        @foreach (var etiqueta in listaEtiquetasGrilla.Where(c => c.MostarNivel.Equals("1")))
+                        {
+                            var diccionario = jsonData.FirstOrDefault(f => f.IdHomologacion == etiqueta.IdHomologacion);
+                            <td>@(diccionario != null ? diccionario.ValorColumna : "")</td>
+                        }
+                    </tr>
+                }
             }
         </tbody>
     </table>
@@ -139,34 +91,30 @@
     private BuscarRequest buscarRequest = new BuscarRequest();
 
     [Inject]
-    public IOrganizacionRepository servicio { get; set; }
+    public IBusquedaRepository servicio { get; set; }
 
     private List<VwHomologacion>? listaEtiquetasFiltros;
+    private List<VwHomologacion>? listaEtiquetasGrilla;
+    private List<List<VwHomologacion>>? listadeOpciones = new List<List<VwHomologacion>>();
 
-    @* private List<VwHomologacion>? listaAlcance;
-    private List<VwHomologacion>? listaEsquemaAcredita;
-    private List<VwHomologacion>? ListaEstado;
-    private List<VwHomologacion>? ListaOrganizacionAcredita;
-    private List<VwHomologacion>? listaPais;
-    private List<VwHomologacion>? listaRazonSocial;
+    private List<ResultadoBusqueda>? listResultadoBusqueda;
 
-     *@
-     private List<Organizacion>? listOrganizacion;
+        class JsonDataresultado {
+            public int IdHomologacion { get; set; }
+            public string ValorColumna { get; set; }
+        }
 
     protected override async Task OnInitializedAsync()
     {
         listaEtiquetasFiltros = await vwHomologacionRepository.GetHomologacionAsync("etiquetas_filtro");
-        @* listaPais = await vwHomologacionRepository.GetHomologacionAsync("pais"); *@
-        @* listaEsquemaAcredita = await vwHomologacionRepository.GetHomologacionAsync("esq_acredita"); *@
-        @* listaAlcance = await vwHomologacionRepository.GetHomologacionAsync("alcance_razon_social"); *@
-        @* ListaEstado = await vwHomologacionRepository.GetHomologacionAsync("estado"); *@
-        @* ListaOrganizacionAcredita = await vwHomologacionRepository.GetHomologacionAsync("org_acredita"); *@
-        @* ListaOrganizacionAcredita = await vwHomologacionRepository.GetHomologacionAsync("dimension"); *@
-        @* listaRazonSocial = await vwHomologacionRepository.GetHomologacionAsync(""); *@
+        foreach(var opciones in listaEtiquetasFiltros) {
+            listadeOpciones.Add(await vwHomologacionRepository.GetHomologacionDetalleAsync("filtro_detalles", opciones.IdHomologacion));
+        }
+        listaEtiquetasGrilla = await vwHomologacionRepository.GetHomologacionAsync("etiquetas_grilla");
     }
 
     private async Task BuscarPalabraRequest()
     {
-        listOrganizacion = await servicio.BuscarPalabraAsync("Field", buscarRequest.TextoBuscar);
+        listResultadoBusqueda = await servicio.BuscarPalabraAsync(buscarRequest.TextoBuscar);
     }
 }

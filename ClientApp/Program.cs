@@ -11,7 +11,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-builder.Services.AddScoped<IOrganizacionRepository, OrganizacionRepository>();
+builder.Services.AddScoped<IBusquedaRepository, BusquedaRepository>();
 builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
 builder.Services.AddScoped<IServiceAutenticacion, ServiceAutenticacion>();
 builder.Services.AddScoped<IVwHomologacionRepository, VwHomologacionRepository>();

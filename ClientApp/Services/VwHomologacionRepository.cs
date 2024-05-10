@@ -20,5 +20,12 @@ namespace ClientApp.Services {
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<List<VwHomologacion>>();
         }
+
+        public async Task<List<VwHomologacion>> GetHomologacionDetalleAsync(string endpoint, int IdHomologacion)
+        {
+            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/catalogos/{endpoint}/{IdHomologacion}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<VwHomologacion>>();
+        }
    }
 }

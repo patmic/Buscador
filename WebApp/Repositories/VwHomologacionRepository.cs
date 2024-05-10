@@ -25,7 +25,7 @@ namespace WebApp.Repositories
 
         public ICollection<IVwHomologacion> ObtenerFiltroDetalles(int IdHomologacion)
         {
-            return _bd.Set<IVwHomologacion>().FromSqlRaw("select *  from fnFiltroDetalle({0})", IdHomologacion).ToList();
+            return _bd.Database.SqlQuery<IVwHomologacion>($"SELECT * FROM fnFiltroDetalle({IdHomologacion})").ToList();
         }
     }
 }
