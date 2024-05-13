@@ -14,7 +14,7 @@ namespace ClientApp.Services {
 
         public async Task<List<ResultadoBusqueda>> BuscarPalabraAsync(string value, params int[] fields)
         {
-            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/buscar_palabras?value={value}&field1=47");
+            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/buscar_palabras?value={value}&field1=41");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<List<ResultadoBusqueda>>();
         }

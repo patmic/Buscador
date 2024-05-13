@@ -12,17 +12,8 @@ GO
 IF OBJECT_ID('WebSiteLog', 'U') IS NOT NULL
     DROP TABLE WebSiteLog;
 GO
-IF OBJECT_ID('organizacion', 'U') IS NOT NULL
-    DROP TABLE organizacion;
-GO
 IF OBJECT_ID('OrganizacionPais', 'U') IS NOT NULL
     DROP TABLE OrganizacionPais;
-GO
-IF OBJECT_ID('RelacionSemantica', 'U') IS NOT NULL
-    DROP TABLE RelacionSemantica;
-GO
-IF OBJECT_ID('Sinonimo', 'U') IS NOT NULL
-    DROP TABLE Sinonimo;
 GO
 IF OBJECT_ID(N'Persona', N'U') IS NOT NULL
     DROP TABLE Persona;
@@ -40,14 +31,14 @@ IF OBJECT_ID('Homologacion', 'U') IS NOT NULL
     DROP TABLE Homologacion;
 GO
 
-
 CREATE TABLE Usuario (
-    IdUsuario		INT IDENTITY(1,1) PRIMARY KEY
-    ,Email			NVARCHAR(100) NOT NULL
-    ,Nombre			NVARCHAR(500) NOT NULL
-    ,Apellido		NVARCHAR(500)
-    ,Rol			NVARCHAR(20)	NOT NULL DEFAULT('USER')
-    ,Clave			NVARCHAR(MAX)	NOT NULL
+    IdUsuario					INT IDENTITY(1,1) PRIMARY KEY
+    ,Email						NVARCHAR(100) NOT NULL
+    ,Nombre						NVARCHAR(500) NOT NULL
+    ,Apellido					NVARCHAR(500)
+	,Telefono					nvarchar(20)
+    ,Rol						NVARCHAR(20)	NOT NULL DEFAULT('USER')
+    ,Clave						NVARCHAR(MAX)	NOT NULL
     ,FechaCrea				    DATETIME	NOT NULL DEFAULT(GETDATE())
     ,FechaModifica			    DATETIME	NOT NULL DEFAULT(GETDATE())  
     ,IdUserCrea				    INT			NOT NULL DEFAULT(0)
@@ -87,17 +78,19 @@ GO
 CREATE TABLE Homologacion (
      IdHomologacion     	INT IDENTITY(1,1) NOT NULL
     ,IdHomologacionGrupo	INT DEFAULT(NULL) 
-    ,ClaveBuscar			NVARCHAR(20)  NOT NULL 
-    ,Homologado				NVARCHAR(90)  NOT NULL
+    ,CodigoHomologacion		NVARCHAR(25)  NOT NULL
+    ,NombreHomologado		NVARCHAR(90)  NOT NULL
+    ,MostrarWebOrden		INT DEFAULT(0) 
     ,MostrarWeb				NVARCHAR(90)  NOT NULL
-    ,Descripcion			NVARCHAR(200)
-    ,InfoExtraJson			NVARCHAR(max)
+	,Descripcion			NVARCHAR(200)
+    ,InfoExtraJson			NVARCHAR(max) NOT NULL DEFAULT('{}')
     ,FechaCrea				DATETIME	NOT NULL DEFAULT(GETDATE())
     ,FechaModifica			DATETIME	NOT NULL DEFAULT(GETDATE())  
     ,IdUserCrea				INT			NOT NULL DEFAULT(0)
     ,IdUserModifica			INT			NOT NULL DEFAULT(0)  
-	,CONSTRAINT  [PK_IdHomologacion]    PRIMARY KEY CLUSTERED (IdHomologacion DESC) 
-	,CONSTRAINT  [UK_ClaveBuscar]		UNIQUE (ClaveBuscar)
+	,CONSTRAINT  [PK_IdHomologacion]		PRIMARY KEY CLUSTERED (IdHomologacion) 
+	,CONSTRAINT  [UK_CodigoHomologacion]	UNIQUE  (CodigoHomologacion)
+    ,CONSTRAINT  [CK_InfoExtraJson]         CHECK   ( ISJSON(InfoExtraJson) = 1 )
 );
 GO
 --CREATE TABLE Sinonimo (
@@ -125,10 +118,10 @@ CREATE TABLE DataLakeOrganizacion(
     ,DataId					NVARCHAR(10) NOT NULL 
     ,DataJson               NVARCHAR(max) NOT NULL 
     ,DataJsonExtra          NVARCHAR(max) NOT NULL 
-	  ,DataJsonEstado			NVARCHAR(2)   NOT NULL DEFAULT('SI') 
+	,DataJsonEstado		    NVARCHAR(2)   NOT NULL DEFAULT('SI') 
     ,FechaCrea				DATETIME	NOT NULL DEFAULT(GETDATE())
     ,FechaModifica			DATETIME	NOT NULL DEFAULT(GETDATE())  
-	,CONSTRAINT  [PK_IdDataLake]   PRIMARY KEY CLUSTERED (IdDataLakeOrganizacion DESC) 
+	,CONSTRAINT  [PK_IdDataLake]   PRIMARY KEY CLUSTERED (IdDataLakeOrganizacion) 
 	,CONSTRAINT  [UK_DataEstado]   CHECK (DataJsonEstado IN ('NO', 'SI'))
 );
 GO

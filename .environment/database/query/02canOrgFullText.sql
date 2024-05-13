@@ -1,7 +1,6 @@
 USE CAN_DB;
 GO
 
-
 IF OBJECT_ID('OrganizacionFullText', 'U') IS NOT NULL
     DROP TABLE OrganizacionFullText;
 GO
@@ -32,4 +31,4 @@ CREATE FULLTEXT CATALOG OrganizacionFullText_cat WITH ACCENT_SENSITIVITY = OFF;
 GO
 
 -- select * from sys.fulltext_catalogs;
-Select IdDataLakeOrganizacion from OrganizacionFullText WHERE CONTAINS((FullTextOrganizacion), 'empresa');
+-- Select IdDataLakeOrganizacion from OrganizacionFullText WHERE CONTAINS((FullTextOrganizacion), 'empresa');
