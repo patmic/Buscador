@@ -2,3 +2,4 @@
 - Solicitar línea gráfica acorde al demos
 - Crear un datalakeDetalle para los esquemas extras
 - Crear un datalakePlatilla para los esquemas definido y definirlo para correlacionarlo con cada columna
+- agregar borrado logico
