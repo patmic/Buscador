@@ -13,17 +13,17 @@
                         <DataAnnotationsValidator />
 
                         <div class="form-row py-2">
-                            <InputText @bind-Value="usuarioAutenticacion.NombreUsuario" id="email" placeholder="Nombre usuario..." class="form-control mb-2" />
-                            <ValidationMessage For="(()=>usuarioAutenticacion.NombreUsuario)"></ValidationMessage>
+                            <InputText @bind-Value="usuarioAutenticacion.Email" id="email" placeholder="Nombre usuario..." class="form-control mb-2" />
+                            <ValidationMessage For="(()=>usuarioAutenticacion.Email)"></ValidationMessage>
                         </div>
 
                         <div class="form-row py-2">
-                            <InputText @bind-Value="usuarioAutenticacion.Password" type="password" placeholder="Password..." id="password" class="form-control mb-2" />
-                            <ValidationMessage For="(()=>usuarioAutenticacion.Password)"></ValidationMessage>
+                            <InputText @bind-Value="usuarioAutenticacion.Clave" type="password" placeholder="Password..." id="clave" class="form-control mb-2" />
+                            <ValidationMessage For="(()=>usuarioAutenticacion.Clave)"></ValidationMessage>
                         </div>
 
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-12">
                                 @if (EstaProcesando)
                                 {
                                     <button type="submit" class="btn btn-success disabled" style="vertical-align:middle;line-height:30px;"><i class="fas fa-sign-in-alt"></i> Porfavor espera...</button>
@@ -32,10 +32,6 @@
                                 {
                                     <button type="submit" class="btn btn-success" style="vertical-align:middle;line-height:30px;"><i class="fas fa-sign-in-alt"></i> Acceder</button>
                                 }
-                            </div>
-                            <div class="col-6">
-                                <a href="/registrarse"
-                                   class="btn btn-primary text-white" style="vertical-align:middle;line-height:30px;"><i class="fas fa-user-plus"></i> Registrar nuevo usuario</a>
                             </div>
                         </div>
                     </EditForm>

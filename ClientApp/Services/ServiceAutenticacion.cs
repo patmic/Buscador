@@ -37,7 +37,7 @@ namespace ClientApp.Services
             if (response.IsSuccessStatusCode)
             {
                 var Token = resultado["result"]["token"].Value<string>();
-                var Usuario = resultado["result"]["usuario"]["nombreUsuario"].Value<string>();
+                var Usuario = resultado["result"]["usuario"]["email"].Value<string>();
                 var Rol = resultado["result"]["usuario"]["rol"].Value<string>();
 
                 await _localStorage.SetItemAsync(Inicializar.Token_Local, Token);
@@ -50,24 +50,6 @@ namespace ClientApp.Services
             else
             {
                 return new RespuestaAutenticacion { IsSuccess = false };
-            }
-        }
-
-        public async Task<RespuestaRegistro> RegistrarUsuario(UsuarioRegistro usuarioParaRegistro)
-        {
-            var content = JsonConvert.SerializeObject(usuarioParaRegistro);
-            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
-            var response = await _cliente.PostAsync($"{Inicializar.UrlBaseApi}api/usuarios/registro", bodyContent);
-            var contentTemp = await response.Content.ReadAsStringAsync();
-            var resultado = JsonConvert.DeserializeObject<RespuestaRegistro>(contentTemp);
-
-            if (response.IsSuccessStatusCode)
-            {                
-                return new RespuestaRegistro { registroCorrecto = true };
-            }
-            else
-            {
-                return resultado;
             }
         }
 

@@ -6,29 +6,38 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using WebApp.Mappers;
 using Microsoft.OpenApi.Models;
-using DataAccess.Service.IService;
-using DataAccess.Service;
+using WebApp.Service;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+// DbContext
+builder.Services.AddDbContextPool<MySqlDbContext>(options => {
+    options.UseMySQL(builder.Configuration.GetConnectionString("Mysql"));
+});
+
+builder.Services.AddDbContextPool<SqlServerDbContext>(options => {
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Mssql-CanDb"));
+});
+
 builder.Services.AddControllers();
 
 // WorkerService
 builder.Services.AddHostedService<BackgroundWorkerService>();
 
-// services
-builder.Services.AddSingleton<IDatabaseService, DatabaseService>();
-
 // Api
 builder.Services.AddScoped<IEcuadorSAEvwBusquedaRepository, EcuadorSAEvwBusquedaRepository>();
 builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 builder.Services.AddScoped<IEcuadorRepository, EcuadorRepository>();
-builder.Services.AddScoped<IPeruRepository, PeruRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IEndpointRepository, EndpointRepository>();
+builder.Services.AddScoped<IUsuarioEndpointPermisoRepository, UsuarioEndpointPermisoRepository>();
+builder.Services.AddScoped<IVwHomologacionRepository, VwHomologacionRepository>();
+builder.Services.AddScoped<IBuscadorRepository, BuscadorRepository>();
 
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secreta");
 
 //Agregar Automapper
-builder.Services.AddAutoMapper(typeof(BlogMapper));
+builder.Services.AddAutoMapper(typeof(Mapper));
 
 //Aqu� se configura la Autenticaci�n - Primera parte
 builder.Services.AddAuthentication(x =>

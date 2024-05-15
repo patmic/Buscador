@@ -99,9 +99,6 @@ namespace WebApp.Controllers
             }
         }
 
-
-        //Métodos o endpoints de la API por si el estudiante quiere usarlos,
-        //No se usaran en el consume usando blazor web assembly
         [Authorize]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -162,6 +159,35 @@ namespace WebApp.Controllers
                             message = e.Message
                     });
             }
+        }
+
+        [Authorize]
+        [HttpPatch("{usuarioId:int}", Name = "ActualizarPatchUsuario")]
+        [ProducesResponseType(201, Type = typeof(UsuarioActualizarDto))]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult ActualizarPatchUsuario(int usuarioId, [FromBody] UsuarioActualizarDto usuarioDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (usuarioDto == null || usuarioId != usuarioDto.IdUsuario)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var usr = _mapper.Map<Usuario>(usuarioDto);
+
+            if (!_usRepo.ActualizarUsuario(usr))
+            {
+                ModelState.AddModelError("", $"Algo salió mal guardando el registro{usr.Email}");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
         }
     }
 }

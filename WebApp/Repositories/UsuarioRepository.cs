@@ -7,35 +7,35 @@ using System.Security.Claims;
 using System.Text;
 using XSystem.Security.Cryptography;
 using WebApp.Service;
-using DataAccess.Service.IService;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace WebApp.Repositories
 {
     public class UsuarioRepository : IUsuarioRepository
     {
-        private readonly DbContextSqlServer _bd;
-        private string claveSecreta;
+        private readonly SqlServerDbContext _bd;
+        private readonly IConfiguration _configuration;
 
-        public UsuarioRepository(IDatabaseService databaseService)
+        public UsuarioRepository(SqlServerDbContext dbContext, IConfiguration configuration)
         {
-            string connectionString = databaseService.GetConnectionString("ConexionSql");
-            _bd = new DbContextSqlServer(connectionString);
-            claveSecreta = databaseService.GetValueString("ApiSettings:Secreta");
+            _bd = dbContext;
+            _configuration = configuration;
         }
 
         public Usuario GetUsuario(int usuarioId)
         {
-            return _bd.Usuario.FirstOrDefault(c => c.IdUsuario == usuarioId);
+            return _bd.Usuario.AsNoTracking().FirstOrDefault(c => c.IdUsuario == usuarioId);
         }
 
         public ICollection<Usuario> GetUsuarios()
         {
-            return _bd.Usuario.OrderBy(c => c.IdUsuario).ToList();
+            return _bd.Usuario.AsNoTracking().OrderBy(c => c.IdUsuario).ToList();
         }
 
         public bool IsUniqueUser(string email)
         {
-            var usuariobd = _bd.Usuario.FirstOrDefault(u => u.Email == email);
+            var usuariobd = _bd.Usuario.AsNoTracking().FirstOrDefault(u => u.Email == email);
             if (usuariobd == null)
             {
                 return true;
@@ -48,7 +48,7 @@ namespace WebApp.Repositories
         {
             var passwordEncriptado = obtenermd5(usuarioLoginDto.Clave);
 
-            var usuario = _bd.Usuario.FirstOrDefault(
+            var usuario = _bd.Usuario.AsNoTracking().FirstOrDefault(
                 u => u.Email.ToLower() == usuarioLoginDto.Email.ToLower()
                 && u.Clave == passwordEncriptado
                 );
@@ -62,6 +62,7 @@ namespace WebApp.Repositories
                 };
             }
    
+            var claveSecreta = _configuration.GetValue<string>("ApiSettings:Secreta");
             var manejadorToken = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(claveSecreta);
 
@@ -87,6 +88,7 @@ namespace WebApp.Repositories
                     Email = usuario.Email,
                     Nombre = usuario.Nombre,
                     Apellido = usuario.Apellido,
+                    Telefono = usuario.Telefono,
                     Rol = usuario.Rol
                 }
             };
@@ -102,9 +104,13 @@ namespace WebApp.Repositories
             Usuario usuario = new Usuario()
             {
                 Nombre = usuarioRegistroDto.Nombre,
+                Apellido = usuarioRegistroDto.Apellido,
                 Email = usuarioRegistroDto.Email,
                 Clave = usuarioRegistroDto.Clave,
+                Telefono = usuarioRegistroDto.Telefono,
                 Rol = usuarioRegistroDto.Rol,
+                FechaCrea = DateTime.Now,
+                FechaModifica = DateTime.Now
             };
 
             _bd.Usuario.Add(usuario);
@@ -123,6 +129,38 @@ namespace WebApp.Repositories
             for (int i = 0; i < data.Length; i++)
                 resp += data[i].ToString("x2").ToLower();
             return resp;
+        }
+
+        public bool ActualizarUsuario(Usuario usuario)
+        {
+            var usuarioExistente = _bd.Usuario.AsNoTracking().FirstOrDefault(u => u.IdUsuario == usuario.IdUsuario);
+
+            usuario.FechaModifica = DateTime.Now;
+
+            PropertyInfo[] propiedades = typeof(Usuario).GetProperties();
+
+            foreach (PropertyInfo propiedad in propiedades)
+            {
+                // Obtenemos el valor de la propiedad en el objeto modificado
+                object valorModificado = propiedad.GetValue(usuario);
+
+                // Obtenemos el valor de la propiedad en el registro existente
+                object valorExistente = propiedad.GetValue(usuarioExistente);
+
+                // Verificamos si los valores son diferentes y actualizamos si es necesario
+                if (valorModificado != null && !object.Equals(valorModificado, valorExistente))
+                {
+                    propiedad.SetValue(usuarioExistente, valorModificado);
+                }
+            }
+
+            _bd.Usuario.Update(usuarioExistente);
+
+            if (usuario.Clave != null && usuario.Clave != "") {
+                usuarioExistente.Clave = obtenermd5(usuario.Clave);;
+            }
+
+            return _bd.SaveChanges() >= 0 ? true : false;
         }
     }
 }

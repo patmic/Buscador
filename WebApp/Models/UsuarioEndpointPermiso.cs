@@ -12,7 +12,7 @@ namespace WebApp.Models
         [Required]
         public int IdEndpoint { get; set; }
         [Required]
-        public int Accion { get; set; }
+        public string Accion { get; set; }
         public DateTime FechaCrea { get; set; }
         public DateTime FechaModifica { get; set; }
         public int IdUserCrea { get; set; }

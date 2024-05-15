@@ -5,8 +5,8 @@ namespace ClientApp.Models
     public class UsuarioAutenticacion
     {
         [Required(ErrorMessage = "El usuario es obligatorio")]
-        public string NombreUsuario { get; set; }        
-        [Required(ErrorMessage = "El password es obligatorio")]
-        public string Password { get; set; }
+        public string Email { get; set; }        
+        [Required(ErrorMessage = "El Clave es obligatorio")]
+        public string Clave { get; set; }
     }
 }

@@ -94,3 +94,8 @@ dotnet run
 ----------------------------
 #git : igual las ramas
 git rebase origin/pat_dev_rama
+
+
+----------------------------
+Prototipo en Figma
+https://www.figma.com/proto/PiZQnYZZuHU4U49uI4zne0/Buscador-OEA-y-E%26E?node-id=4-505&source=email_invite&starting-point-node-id=4%3A505

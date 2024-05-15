@@ -10,6 +10,8 @@ namespace WebApp.Models.Dtos
         public string Nombre { get; set; }
         [Required(ErrorMessage = "El apellido es obligatorio")]
         public string Apellido { get; set; }
+        [Required(ErrorMessage = "El teléfono es obligatorio")]
+        public string Telefono { get; set; }
         [Required(ErrorMessage = "El rol es obligatorio")]
         public string Rol { get; set; }
         [Required(ErrorMessage = "La clave es obligatorio")]

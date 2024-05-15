@@ -1,21 +1,152 @@
 @page "/"
+@page "/persona"
+@using ClientApp.Services.IService
+@using ClientApp.Models;
+@using Newtonsoft.Json;
+@inject IVwHomologacionRepository vwHomologacionRepository
 
 <PageTitle>Inicio</PageTitle>
 
-<h1 class="Últimos Posts">Hello, world!</h1>
+<!-- Start of Search Wrapper -->
+<div class="search-area-wrapper">
+    <div class="search-area container">
+        <h3 class="search-header">BUSCADOR SERVICIOS DE EVALUACIÓN DE LA CONFORMIDAD ACREDITADOS EN LA CAN</h3>
+
+        <EditForm Model="buscarRequest" OnValidSubmit="BuscarPalabraRequest" id="search-form" class="search-form clearfix" autocomplete="off">
+            <InputText @bind-Value="buscarRequest.TextoBuscar" class="search-term required" type="text" style="box-sizing: content-box" placeholder="Ingrese Texto a buscar" />
+            <input class="search-btn" type="submit" value="Buscar" />
+            <div id="search-error-container"></div>
+        </EditForm>
+    </div>
+</div>
+
+<!-- Start of Page Container -->
+<div class="page-container">
+    <div class="container">
+        <div class="row">
+
+            <!-- start of page content -->
+            <div class="span12 page-content" style="margin-bottom: 10px;border-bottom: 1px solid #e8e8e8;">
+                <div class="row-fluid">
+                    @if (listaEtiquetasFiltros != null) {
+                        foreach(var etiqueta in listaEtiquetasFiltros) {
+                            <div class="span2">
+                                <h5><Tooltip Title="@etiqueta.Descripcion">@etiqueta.MostrarWeb</Tooltip></h5>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- start of page content -->
+            <div class="span12 page-content">
+                <div class="row-fluid">
+
+                    @if (listadeOpciones != null) {
+                        @for (int i = 0; i < listadeOpciones.Count; i += 1) {
+                            <div class="span2">
+                                <select style="max-width: 100%" value="@GetSelectedValue(i)">
+                                    <option value="">Seleccione...</option>
+                                    @foreach (var opcion in listadeOpciones[i])
+                                    {
+                                        <option value="@opcion.IdHomologacion">@opcion.MostrarWeb</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    @if (listaEtiquetasGrilla != null && listResultadoBusqueda != null) {
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach(var etiqueta in listaEtiquetasGrilla.Where(c => c.MostarNivel.Equals("1"))) {
+                        <th><Tooltip Title="@etiqueta.Descripcion">@etiqueta.MostrarWeb</Tooltip></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (listResultadoBusqueda != null)
+                {
+                    @foreach (var row in listResultadoBusqueda)
+                    {
+                        var jsonData = JsonConvert.DeserializeObject<List<JsonDataresultado>>(row.DataJson); // Supongo que row.Json contiene el JSON
+                        <tr>
+                            @foreach (var etiqueta in listaEtiquetasGrilla.Where(c => c.MostarNivel.Equals("1")))
+                            {
+                                var diccionario = jsonData.FirstOrDefault(f => f.IdHomologacion == etiqueta.IdHomologacion);
+                                <td>@(diccionario != null ? diccionario.ValorColumna : "")</td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+    </div>
+</div>
 
 @code{
-    //Método para el Toastr
-    // private async Task DemoSuccess()
-    // {
-    //     //await JsRuntime.InvokeVoidAsync("ShowToastr", "success", "Tarea completada!");
-    //     await JsRuntime.ToastrSuccess("Tarea completada!");
-    // }
+    private BuscarRequest buscarRequest = new BuscarRequest();
 
-    // private async Task DemoError()
-    // {
-    //     //await JsRuntime.InvokeVoidAsync("ShowToastr", "error", "Error completando tarea!");
-    //     await JsRuntime.ToastrError("Error, Tarea incompletada!");
-    // }
+    [Inject]
+    public IBusquedaRepository servicio { get; set; }
+
+    private List<VwHomologacion>? listaEtiquetasFiltros;
+    private List<VwHomologacion>? listaEtiquetasGrilla;
+    private List<List<VwHomologacion>>? listadeOpciones = new List<List<VwHomologacion>>();
+    private Dictionary<int, int> valoresSeleccionados = new Dictionary<int, int>();
+
+    private List<ResultadoBusqueda>? listResultadoBusqueda;
+
+        class JsonDataresultado {
+            public int IdHomologacion { get; set; }
+            public string ValorColumna { get; set; }
+        }
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaEtiquetasFiltros = await vwHomologacionRepository.GetHomologacionAsync("etiquetas_filtro");
+        foreach(var opciones in listaEtiquetasFiltros) {
+            listadeOpciones.Add(await vwHomologacionRepository.GetHomologacionDetalleAsync("filtro_detalles", opciones.IdHomologacion));
+        }
+        listaEtiquetasGrilla = await vwHomologacionRepository.GetHomologacionAsync("etiquetas_grilla");
+    }
+
+    private async Task CambiarSeleccion(ChangeEventArgs args, List<VwHomologacion> opciones, int index)
+    {
+        Console.WriteLine(args.Value);
+        Console.WriteLine(opciones);
+        Console.WriteLine(index);
+        if (args.Value != null && opciones != null && opciones.Any() && index >= 0 && index < listadeOpciones.Count)
+        {
+            int idSeleccionado = Convert.ToInt32(args.Value);
+            Console.WriteLine(valoresSeleccionados);
+            if (valoresSeleccionados.ContainsKey(index))
+            {
+                valoresSeleccionados[index] = idSeleccionado;
+            }
+            else
+            {
+                valoresSeleccionados.Add(index, idSeleccionado);
+            }
+            Console.WriteLine(valoresSeleccionados);
+            await BuscarPalabraRequest();
+        }
+    }
+
+    private string GetSelectedValue(int index)
+    {
+        if (valoresSeleccionados.ContainsKey(index))
+        {
+            return valoresSeleccionados[index].ToString();
+        }
+        return "";
+    }
+    private async Task BuscarPalabraRequest()
+    {
+        listResultadoBusqueda = await servicio.BuscarPalabraAsync(buscarRequest.TextoBuscar);
+    }
 }
-
