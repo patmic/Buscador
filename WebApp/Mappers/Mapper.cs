@@ -19,6 +19,8 @@ namespace WebApp.Mappers
             CreateMap<VwPais, CatalogosDto>();
             CreateMap<VwGrilla, CatalogosDto>();
             CreateMap<VwFiltro, CatalogosDto>();
+            CreateMap<HomologacionEsquema, HomologacionEsquemaDto>();
+            CreateMap<HomologacionEsquemaDto, HomologacionEsquema>();
         }
     }
 }

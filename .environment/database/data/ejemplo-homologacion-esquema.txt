@@ -1,0 +1,30 @@
+
+[
+    {"IdHomologacion":1,"ValorColumna":"1 Organismo\t  "},{"IdHomologacion":42,"ValorColumna":"1 Reconocimiento"},{"IdHomologacion":43,"ValorColumna":"1 OEC\/Razón soci"},{"IdHomologacion":44,"ValorColumna":"1 País\t      "},{"IdHomologacion":45,"ValorColumna":"1 Esquema\t\t  "},{"IdHomologacion":46,"ValorColumna":"1 Norma\t\t  "},{"IdHomologacion":47,"ValorColumna":"1 Identificación"},{"IdHomologacion":48,"ValorColumna":"1 Estado\t\t  "},{"IdHomologacion":49,"ValorColumna":"1 Alcance Detall"},{"IdHomologacion":50,"ValorColumna":"1 Alcance acredi"},{"IdHomologacion":51,"ValorColumna":"1 oa_pais\t\t  "},{"IdHomologacion":52,"ValorColumna":"1 oa_inicialpais"},{"IdHomologacion":53,"ValorColumna":"1 oa_ciudad\t  "},{"IdHomologacion":54,"ValorColumna":"1 oa_nombre\t  "},{"IdHomologacion":55,"ValorColumna":"1 oa_nombreInici"},{"IdHomologacion":56,"ValorColumna":"1 oa_direcion\t  "},{"IdHomologacion":57,"ValorColumna":"1 oa_telefono\t  "},{"IdHomologacion":58,"ValorColumna":"1 oa_sitioweb\t  "},{"IdHomologacion":59,"ValorColumna":"1 oa_logo\t\t  "},{"IdHomologacion":60,"ValorColumna":"1 oa_descripcion"}]
+
+Formulario completo dinámico
+CRUD COMPLETO DE ESTA TABLA
+IdHomologacionEsquema | CodigoHomologacionEsquema | NombreHomologacionEsquema | HomologacionEsquemaJson            | MostrarWebOrden | MostrarWeb               | Descripcion | FechaCrea   | FechaModifica | IdUserCrea | IdUserModific | 
+1                     |  KEY_ESQ_01               | Esquema de país           |  { nombre, representante, etc }    |  1              |  País                    | Tooltip xxx |  2019-01-01 | 2019-01-01    |  1         |  1            |
+2                     |  KEY_ESQ_02               | Esquema de Laboratorios   |  { nombre, ruc, fecha_acredita }   |  2              |  Laboratorio Acreditado  | Tooltip xxx |  2019-01-01 | 2019-01-01    |  1         |  1            |
+
+Front ligada a la grilla para visualizar como data adicional
+SOLO LECTURA PARA ESTA TABLA, JOIN PARA OBTENER ESQUEMA JSON Y TÍTULO A MOSTRAR EN LA WEB, ordenar por MostrarWebOrden
+DataLakeOrganizacion
+IdDataLakeOrganizacion | IdHomologacionEsquema | IdDataLake | DataJsonEsquema                                                          | DataJsonEsquemaExtra | DataJsonFechaCarga | FechaCrea | FechaModific | 
+ 1                     |  1                    |  1         |  { nombre: 'Ecuador', representante: 'Pepe', etc: 'Etcetera' }
+ 3                     |  2                    |  1         |  { nombre: 'LAB_ECUA', ruc: '2222222222001', fecha_acredita: '200601' }
+ 2                     |  1                    |  2         |  { nombre: 'Peru', representante: '', etc: 'Etcetera' }
+
+ fn_get_schemas -> @params IdDataLake -> returns => MostrarWeb, MostrarWebOrden, Descripcion, DataJsonSchema
+
+ Select IdHomologacionEsquema, IdDataLake, DataJsonEsquema from DataLakeOrganizacion where IdDataLake = IdDataLakeP [1]
+=== 1                     |  1                    |    { nombre: 'Ecuador', representante: 'Pepe', etc: 'Etcetera' }
+=== 1                     |  1                    |    { nombre: 'Ecuador', representante: 'Pepe', etc: 'Etcetera' }
+=== 3                     |  2                    |    { nombre: 'LAB_ECUA', ruc: '2222222222001', fecha_acredita: '200601' }
+
+JOIN Select HomologacionEsquemaJson, MostrarWeb, Descripcion from HomologacionEsquema where IdHomologacionEsquema = IdHomologacionEsquemaP [1]
+JOIN Select HomologacionEsquemaJson, MostrarWeb, Descripcion from HomologacionEsquema where IdHomologacionEsquema = IdHomologacionEsquemaP [1]
+JOIN Select HomologacionEsquemaJson, MostrarWeb, Descripcion from HomologacionEsquema where IdHomologacionEsquema = IdHomologacionEsquemaP [2]
+
+>>>order MostrarWebOrden

@@ -27,5 +27,6 @@ namespace WebApp.Service
         // 
         public DbSet<DataLakeOrganizacion> DataLakeOrganizacion { get; set; }
         public DbSet<BuscadorOrganizacion> BuscadorOrganizacion { get; set; }
+        public DbSet<HomologacionEsquema> HomologacionEsquema { get; set; }
     }
 }
