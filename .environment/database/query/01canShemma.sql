@@ -16,12 +16,6 @@
 USE CAN_DB;
 GO
 
-IF OBJECT_ID('UsuarioEndpointPermiso', 'U') IS NOT NULL
-    DROP TABLE UsuarioEndpointPermiso;
-GO
-IF OBJECT_ID('DataLakePersona', 'U') IS NOT NULL
-    DROP TABLE DataLakePersona;
-GO
 IF OBJECT_ID('DataLakeOrganizacion', 'U') IS NOT NULL
     DROP TABLE DataLakeOrganizacion;
 GO
@@ -43,7 +37,6 @@ GO
 IF OBJECT_ID(N'Persona', N'U') IS NOT NULL
     DROP TABLE Persona;
 GO
-
 IF OBJECT_ID('Usuario', 'U') IS NOT NULL
     DROP TABLE Usuario;
 GO
@@ -53,6 +46,19 @@ GO
 IF OBJECT_ID('Homologacion', 'U') IS NOT NULL
     DROP TABLE Homologacion;
 GO
+IF OBJECT_ID('HomologacionEsquema', 'U') IS NOT NULL
+    DROP TABLE HomologacionEsquema;
+GO
+IF OBJECT_ID('Usuario', 'U') IS NOT NULL
+    DROP TABLE Usuario;
+GO
+IF OBJECT_ID('Endpoint', 'U') IS NOT NULL
+    DROP TABLE Endpoint;
+GO
+IF OBJECT_ID('Homologacion', 'U') IS NOT NULL
+    DROP TABLE Homologacion;
+GO
+
 IF OBJECT_ID('HomologacionEsquema', 'U') IS NOT NULL
     DROP TABLE HomologacionEsquema;
 GO
@@ -94,8 +100,8 @@ CREATE TABLE EndPointWeb (
 )
 GO
 
-CREATE TABLE UsuarioEndpointPermiso (
-    IdUsuarioEndpointPermiso    INT IDENTITY(1,1) 
+CREATE TABLE UsuarioEndPointWebPermiso (
+    IdUsuarioEndPointWebPermiso    INT IDENTITY(1,1) 
     ,IdUsuario                  INT NOT NULL DEFAULT(0)
     ,IdEndPointWeb              INT NOT NULL DEFAULT(0)
     ,Accion                     NVARCHAR(10) NOT NULL
@@ -105,7 +111,7 @@ CREATE TABLE UsuarioEndpointPermiso (
     ,IdUserCreacion				INT			NOT NULL DEFAULT(0)
     ,IdUserModifica			    INT			NOT NULL DEFAULT(0)
 
-	,CONSTRAINT PK_UEP_IdUsuarioEndpointPermiso	PRIMARY KEY CLUSTERED (IdUsuarioEndpointPermiso)  
+	,CONSTRAINT PK_UEP_IdUsuarioEndpointPermiso	PRIMARY KEY CLUSTERED (IdUsuarioEndPointWebPermiso)  
     ,CONSTRAINT FK_UEP_IdUsuario		FOREIGN KEY (IdUsuario)		REFERENCES Usuario(IdUsuario)
     ,CONSTRAINT FK_UEP_IdEndPointWeb	FOREIGN KEY (IdEndPointWeb)	REFERENCES EndPointWeb(IdEndPointWeb)
     ,CONSTRAINT UK_UEP_Accion			CHECK (Accion IN ('GET', 'POST', 'PUT', 'DELETE'))
