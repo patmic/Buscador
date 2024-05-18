@@ -22,7 +22,10 @@ namespace WebApp.Repositories
         {
             return _bd.VwFiltro.OrderBy(c => c.IdHomologacion).ToList();
         }
-
+        public ICollection<VwDimension> ObtenerDimension()
+        {
+            return _bd.VwDimension.OrderBy(c => c.MostrarWebOrden).ToList();
+        }
         public ICollection<IVwHomologacion> ObtenerFiltroDetalles(int IdHomologacion)
         {
             return _bd.Database.SqlQuery<IVwHomologacion>($"SELECT * FROM fnFiltroDetalle({IdHomologacion})").ToList();

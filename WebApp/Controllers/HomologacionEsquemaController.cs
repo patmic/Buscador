@@ -3,6 +3,7 @@ using WebApp.Models.Dtos;
 using WebApp.Repositories.IRepositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
@@ -14,10 +15,25 @@ namespace WebApp.Controllers
   public class HomologacionEsquemaController(ILogger<HomologacionEsquemaController> logger, IHomologacionEsquemaRepository vhRepo, IMapper mapper) : ControllerBase
   {
     private readonly IHomologacionEsquemaRepository _vhRepo = vhRepo;
-    protected RespuestasAPI? _respuestaApi;
     private readonly IMapper _mapper = mapper;
     private readonly ILogger<HomologacionEsquemaController> _logger = logger;
 
+    [Authorize]
+    [HttpGet]
+    public IActionResult GetHomologacionEsquemas()
+    {
+      try {
+        var records = _vhRepo.findAll();
+        var dtos = records.Select(item => _mapper.Map<HomologacionEsquemaDto>(item)).ToList();
+        return Ok(dtos);
+      }
+      catch (Exception e) {
+        _logger.LogError(e, $"Error en {nameof(GetHomologacionEsquemas)}");
+        return StatusCode(500, "Error en el servidor");
+      }
+    }
+
+    [Authorize]
     [HttpGet("{id:int}")]
     public IActionResult GetHomologacionEsquema(int Id) {
       try {
@@ -35,26 +51,63 @@ namespace WebApp.Controllers
       }
     }
 
-      // [Authorize]
+    [Authorize]
     [HttpPut("{id:int}")]
     public IActionResult ActualizarHomologacionEsquema(int Id, [FromBody] HomologacionEsquemaDto dto)
-      {
-        try {
-          if (dto == null || Id != dto.IdHomologacionEsquema)
-          {
-            return BadRequest(ModelState);
-          }
-
-          var record = _mapper.Map<HomologacionEsquema>(dto);
-          _vhRepo.update(record);
-
-          return Ok();
-        }
-        catch (Exception e)
+    {
+      try {
+        if (dto == null || Id != dto.IdHomologacionEsquema)
         {
-          _logger.LogError(e, $"Error en {nameof(ActualizarHomologacionEsquema)}");
-          return StatusCode(500, "Error en el servidor");
+          return BadRequest(ModelState);
         }
+
+        var record = _mapper.Map<HomologacionEsquema>(dto);
+        _vhRepo.update(record);
+
+        return Ok();
       }
+      catch (Exception e)
+      {
+        _logger.LogError(e, $"Error en {nameof(ActualizarHomologacionEsquema)}");
+        return StatusCode(500, "Error en el servidor");
+      }
+    }
+
+    [Authorize]
+    [HttpPost]
+    public IActionResult RegistrarHomologacionEsquema([FromBody] HomologacionEsquemaDto dto)
+    {
+      try {
+        var record = _mapper.Map<HomologacionEsquema>(dto);
+        _vhRepo.create(record);
+
+        return Ok();
+      }
+      catch (Exception e)
+      {
+        _logger.LogError(e, $"Error en {nameof(RegistrarHomologacionEsquema)}");
+        return StatusCode(500, "Error en el servidor");
+      }
+    }
+    [Authorize]
+    [HttpDelete("{Id:int}")]
+    public IActionResult EliminarHomologacionEsquema(int Id)
+    {
+      try {
+        var record = _vhRepo.find(Id);
+
+        if (record == null) {
+          return NotFound();
+        }
+        record.Estado = "X";
+
+        _vhRepo.update(record);
+        return Ok();
+      }
+      catch (Exception e) {
+        _logger.LogError(e, $"Error en {nameof(EliminarHomologacionEsquema)}");
+        return StatusCode(500, "Error en el servidor");
+      }
+    }
   }
 }

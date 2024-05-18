@@ -4,190 +4,145 @@ using WebApp.Repositories.IRepositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace WebApp.Controllers
 {
     [Route("api/usuarios")]
     [ApiController]
-    public class UsuariosController : ControllerBase
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public class UsuariosController(ILogger<UsuariosController> logger, IUsuarioRepository vhRepo, IMapper mapper) : ControllerBase
     {
-        private readonly IUsuarioRepository _usRepo;
-        protected RespuestasAPI _respuestaApi;
-        private readonly IMapper _mapper;
-        private readonly ILogger<UsuariosController> _logger;
-
-        public UsuariosController(ILogger<UsuariosController> logger, IUsuarioRepository usRepo, IMapper mapper)
-        {
-            _usRepo = usRepo;
-            _mapper = mapper;
-            _logger = logger;
-            this._respuestaApi = new();
-        }
-
-        // [Authorize]
-        [HttpPost("registro")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Registro([FromBody] UsuarioRegistroDto usuarioRegistroDto)
-        {
-            try
-            {
-                bool validarEmailUnico = _usRepo.IsUniqueUser(usuarioRegistroDto.Email);
-                if (!validarEmailUnico)
-                {
-                    _respuestaApi.StatusCode = HttpStatusCode.BadRequest;
-                    _respuestaApi.IsSuccess = false;
-                    _respuestaApi.ErrorMessages.Add("El nombre de usuario ya existe");
-                    return BadRequest(_respuestaApi);
-                }
-
-                var usuario = await _usRepo.Registro(usuarioRegistroDto);
-                if (usuario == null)
-                {
-                    _respuestaApi.StatusCode = HttpStatusCode.BadRequest;
-                    _respuestaApi.IsSuccess = false;
-                    _respuestaApi.ErrorMessages.Add("Error en el registro");
-                    return BadRequest(_respuestaApi);
-                }
-
-                _respuestaApi.StatusCode = HttpStatusCode.OK;
-                _respuestaApi.IsSuccess = true;
-                _respuestaApi.Result = _mapper.Map<UsuarioDto>(usuario);
-                return Ok(_respuestaApi);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new {
-                            statusCode = 500,
-                            message = e.Message
-                    });
-            }
-        }
+        private readonly IUsuarioRepository _vhRepo = vhRepo;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<UsuariosController> _logger = logger;
 
         [HttpPost("login")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] UsuarioLoginDto usuarioLoginDto)
         {          
             try
             {
-                var respuestaLogin = await _usRepo.Login(usuarioLoginDto);
-                if (respuestaLogin.Usuario == null || string.IsNullOrEmpty(respuestaLogin.Token))
+                var usuarioLogin = await _vhRepo.login(usuarioLoginDto);
+                if (usuarioLogin == null)
                 {
-                    _respuestaApi.StatusCode = HttpStatusCode.BadRequest;
-                    _respuestaApi.IsSuccess = false;
-                    _respuestaApi.ErrorMessages.Add("El nombre de usuario o password son incorrectos");
-                    return BadRequest(_respuestaApi);
+                    return BadRequest(new {
+                        ErrorMessages = new List<string> { "El nombre de usuario o password son incorrectos" }
+                    });
                 }
 
-                _respuestaApi.StatusCode = HttpStatusCode.OK;
-                _respuestaApi.IsSuccess = true;
-                _respuestaApi.Result = respuestaLogin;
-                return Ok(_respuestaApi);
+                return Ok(usuarioLogin);
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new {
-                            statusCode = 500,
-                            message = e.Message
+                _logger.LogError(e, $"Error en {nameof(Login)}");
+                return StatusCode(500, "Error en el servidor");
+            }
+        }
+
+        [Authorize]
+        [HttpPost("registro")]
+        public IActionResult Registro([FromBody] UsuarioDto dto)
+        {
+            try
+            {
+                bool validarEmailUnico = _vhRepo.isUniqueUser(dto.Email);
+                if (!validarEmailUnico)
+                {
+                    return BadRequest(new {
+                        ErrorMessages = new List<string> { "El nombre de usuario ya existe" }
                     });
+                }
+
+                _vhRepo.create(_mapper.Map<Usuario>(dto));
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error en {nameof(Registro)}");
+                return StatusCode(500, "Error en el servidor");
             }
         }
 
         [Authorize]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetUsuarios()
         {
             try
             {
-                var listaUsuarios = _usRepo.GetUsuarios();
-
-                var listaUsuariosDto = new List<UsuarioDto>();
-
-                foreach (var lista in listaUsuarios)
-                {
-                    listaUsuariosDto.Add(_mapper.Map<UsuarioDto>(lista));
-                }
-                return Ok(listaUsuariosDto);
+                var records = _vhRepo.findAll();
+                var dtos = records.Select(item => _mapper.Map<UsuarioDto>(item)).ToList();
+                return Ok(dtos);
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new {
-                            statusCode = 500,
-                            message = e.Message
-                    });
+                _logger.LogError(e, $"Error en {nameof(GetUsuarios)}");
+                return StatusCode(500, "Error en el servidor");
             }
         }
 
         [Authorize]
         [HttpGet("{usuarioId:int}", Name = "GetUsuario")]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetUsuario(int usuarioId)
         {
             try
             {
-                var itemUsuario = _usRepo.GetUsuario(usuarioId);
+                var itemUsuario = _vhRepo.find(usuarioId);
 
                 if (itemUsuario == null)
                 {
                     return NotFound();
                 }
 
-                var itemUsuarioDto = _mapper.Map<UsuarioDto>(itemUsuario);
-                return Ok(itemUsuarioDto);
+                return Ok(_mapper.Map<UsuarioDto>(itemUsuario));
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new {
-                            statusCode = 500,
-                            message = e.Message
-                    });
+                _logger.LogError(e, $"Error en {nameof(GetUsuario)}");
+                return StatusCode(500, "Error en el servidor");
             }
         }
 
         [Authorize]
-        [HttpPatch("{usuarioId:int}", Name = "ActualizarPatchUsuario")]
-        [ProducesResponseType(201, Type = typeof(UsuarioActualizarDto))]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult ActualizarPatchUsuario(int usuarioId, [FromBody] UsuarioActualizarDto usuarioDto)
+        [HttpPut("{Id:int}", Name = "ActualizarUsuario")]
+        public IActionResult ActualizarUsuario(int Id, [FromBody] UsuarioDto dto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                dto.IdUsuario = Id;
+                var usuario = _mapper.Map<Usuario>(dto);
+                _vhRepo.update(usuario);
 
-            if (usuarioDto == null || usuarioId != usuarioDto.IdUsuario)
+                return Ok();
+            }
+            catch (Exception e)
             {
-                return BadRequest(ModelState);
+                _logger.LogError(e, $"Error en {nameof(ActualizarUsuario)}");
+                return StatusCode(500, "Error en el servidor");
             }
+        }
 
-            var usr = _mapper.Map<Usuario>(usuarioDto);
+        [Authorize]
+        [HttpDelete("{Id:int}", Name = "DesactivarUsuario")]
+        public IActionResult DesactivarUsuario(int Id)
+        {
+            try {
+                var usuario = _vhRepo.find(Id);
 
-            if (!_usRepo.ActualizarUsuario(usr))
-            {
-                ModelState.AddModelError("", $"Algo salió mal guardando el registro{usr.Email}");
-                return StatusCode(500, ModelState);
+                if (usuario == null) {
+                    return NotFound();
+                }
+
+                usuario.Estado = "X";
+                _vhRepo.update(usuario);
+
+                return Ok("Eliminado correctamente");
             }
-            return NoContent();
+            catch (Exception e) {
+                _logger.LogError(e, $"Error en {nameof(DesactivarUsuario)}");
+                return StatusCode(500, "Error en el servidor");
+            }
         }
     }
 }

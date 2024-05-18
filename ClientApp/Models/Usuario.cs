@@ -14,11 +14,7 @@ namespace ClientApp.Models
         public string Email { get; set; }
         [Required(ErrorMessage = "El rol es obligatorio")]
         public string Rol { get; set; }
-        [Required(ErrorMessage = "El clave es obligatorio")]
         public string Clave { get; set; }
-        public DateTime FechaCrea { get; set; }
-        public DateTime FechaModifica { get; set; }
-        public int IdUserCrea { get; set; }
-        public int IdUserModifica { get; set; }
+        public string Estado { get; set; }
     }
 }

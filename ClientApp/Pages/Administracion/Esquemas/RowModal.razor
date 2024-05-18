@@ -1,0 +1,19 @@
+@using ClientApp.Models;
+
+<Grid TItem="HomologacionEsquemaColumnas" class="table table-hover table-bordered table-striped" Data="columnas" Responsive="true">
+    <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Código" PropertyName="Codigo">
+        @context.Codigo
+    </GridColumn>
+    <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Nombre" PropertyName="Nombre">
+        @context.Nombre
+    </GridColumn>
+    <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Descripción" PropertyName="Descripcion">
+        @context.Descripcion
+    </GridColumn>
+    <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Tipo Dato" PropertyName="TipoDato">
+        @context.TipoDato
+    </GridColumn>
+    <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Sin Datos" PropertyName="SinDatos">
+        @context.SinDatos
+    </GridColumn>
+</Grid>

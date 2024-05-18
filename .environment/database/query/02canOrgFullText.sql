@@ -1,3 +1,18 @@
+/*-----------------------------------------------------------------------------------------\
+|         2©24 Copyright      												Quito		   |
+| Todos los Derechos Reservados                                    República del Ecuador   |
+|------------------------------------------------------------------------------------------|
+| Este código está protegido por las leyes y tratados internacionales de derechos de autor |
+| por lo que el uso, reproducción o distribución del código total o parcial no autorizada  |
+| se atendrá a las sanciones contempladas en la ley con su máximo rigor.                   |
+\------------------------------------------------------------------------------------------/
+	- Developer		: patmic										 
+	- Descripction  : Crear OrganizacionFullText
+	- Validate		: [ ] Stress o Stress concurrente       [ ] ETL       
+                      [ ] Quality Data                      [X] Log & Audit   
+                      [x] Standart Code 
+\*----------------------------------------------------------------------------------------*/
+
 USE CAN_DB;
 GO
 

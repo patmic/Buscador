@@ -8,6 +8,9 @@ namespace WebApp.Controllers
 {
     [Route("api/catalogos")]
     [ApiController]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public class CatalogosController : ControllerBase
     {
         private readonly IVwHomologacionRepository _vhRepo;
@@ -23,27 +26,23 @@ namespace WebApp.Controllers
         }
 
         [HttpGet("etiquetas_grilla")]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult ObtenerEtiquetaGrilla()
         {
             return GetCatalogData(_vhRepo.ObtenerEtiquetaGrilla, "Error obteniendo datos de Etiqueta Grilla");
         }
 
         [HttpGet("etiquetas_filtro")]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult ObtenerEtiquetaFiltros()
         {
             return GetCatalogData(_vhRepo.ObtenerEtiquetaFiltros, "Error obteniendo datos de Etiqueta Grilla");
         }
+        [HttpGet("dimension")]
+        public IActionResult ObtenerDimension()
+        {
+            return GetCatalogData(_vhRepo.ObtenerDimension, "Error obteniendo datos de Dimensión");
+        }
 
         [HttpGet("filtro_detalles/{IdHomologacion:int}", Name = "ObtenerFiltroDetalles")]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult ObtenerFiltroDetalles(int IdHomologacion)
         {
             try
@@ -78,11 +77,7 @@ namespace WebApp.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, 
-                    new {
-                        statusCode = 500,
-                        message = errorMessage
-                    });
+                return StatusCode(500, errorMessage);
             }
         }
     }

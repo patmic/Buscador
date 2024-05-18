@@ -24,6 +24,7 @@ namespace WebApp.Service
         // vistas
         public DbSet<VwGrilla> VwGrilla { get; set; }
         public DbSet<VwFiltro> VwFiltro { get; set; }
+        public DbSet<VwDimension> VwDimension { get; set; }
         // 
         public DbSet<DataLakeOrganizacion> DataLakeOrganizacion { get; set; }
         public DbSet<BuscadorOrganizacion> BuscadorOrganizacion { get; set; }

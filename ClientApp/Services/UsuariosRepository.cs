@@ -10,6 +10,7 @@ namespace ClientApp.Services {
     public class UsuariosRepository : IUsuariosRepository
     {
         private readonly HttpClient _httpClient;
+        private string url = $"{Inicializar.UrlBaseApi}api/usuarios";
 
         public UsuariosRepository(HttpClient httpClient)
         {
@@ -18,27 +19,36 @@ namespace ClientApp.Services {
 
         public async Task<List<Usuario>> GetUsuariosAsync()
         {
-            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/usuarios");
+            var response = await _httpClient.GetAsync($"{url}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<List<Usuario>>();
         }
 
         public async Task<Usuario> GetUsuarioAsync(int IdUsuario)
         {
-            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/usuarios/{IdUsuario}");
+            var response = await _httpClient.GetAsync($"{url}/{IdUsuario}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<Usuario>();
         }
-        public async Task<RespuestaRegistro> RegistrarUsuario(Usuario usuarioParaRegistro)
+        public async Task<RespuestaRegistro> RegistrarOActualizar(Usuario registro)
         {
-            var content = JsonConvert.SerializeObject(usuarioParaRegistro);
+            var content = JsonConvert.SerializeObject(registro);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{Inicializar.UrlBaseApi}api/usuarios/registro", bodyContent);
+            HttpResponseMessage response;
+            if (registro.IdUsuario > 0)
+            {
+                response = await _httpClient.PutAsync($"{url}/{registro.IdUsuario}", bodyContent);
+            }
+            else
+            {
+                response = await _httpClient.PostAsync($"{url}/registro", bodyContent);
+            }
+
             var contentTemp = await response.Content.ReadAsStringAsync();
             var resultado = JsonConvert.DeserializeObject<RespuestaRegistro>(contentTemp);
 
             if (response.IsSuccessStatusCode)
-            {                
+            {
                 return new RespuestaRegistro { registroCorrecto = true };
             }
             else

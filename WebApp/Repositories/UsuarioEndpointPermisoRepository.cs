@@ -33,7 +33,7 @@ namespace WebApp.Repositories
                 IdUsuario = usuarioEndpointPermisoRegistroDto.IdUsuario,
                 IdEndpoint = usuarioEndpointPermisoRegistroDto.IdEndpoint,
                 Accion = usuarioEndpointPermisoRegistroDto.Accion,
-                FechaCrea = DateTime.Now,
+                FechaCreacion = DateTime.Now,
                 FechaModifica = DateTime.Now
             };
 

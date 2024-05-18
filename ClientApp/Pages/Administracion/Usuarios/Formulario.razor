@@ -1,0 +1,63 @@
+@page "/nuevo-usuario"
+@page "/editar-usuario/{Id:int}"
+@layout AdminLayout
+@using Microsoft.AspNetCore.Authorization;
+@using ClientApp.Services.IService
+@using ClientApp.Models;
+@attribute [Authorize]
+
+<PageTitle>Formulario Usuarios</PageTitle>
+
+<EditForm Model="Usuario" OnValidSubmit="RegistrarUsuario" class="pt-4">
+    <DataAnnotationsValidator />
+    
+                <div class="card border">
+                    <div class="card-body px-lg-5 pt-4">
+                        <h3 class="text-success text-center py-2">
+                            <strong>Información Principal</strong>
+                        </h3>
+
+                        <hr style="background-color:aliceblue" />
+                        <div class="py-2">
+                            <InputText @bind-Value="Usuario.Nombre" class="form-control" placeholder="Nombre..." />
+                            <ValidationMessage For="(()=>Usuario.Nombre)" />
+
+                        </div>
+                        <div class="py-2">
+                            <InputText @bind-Value="Usuario.Apellido" class="form-control" placeholder="Apellido..." />
+                            <ValidationMessage For="(()=>Usuario.Apellido)" />
+
+                        </div>
+                        <div class="py-2">
+                            <InputText @bind-Value="Usuario.Email" class="form-control" placeholder="Email..." />
+                            <ValidationMessage For="(()=>Usuario.Email)" />
+
+                        </div>
+                        <div class="py-2 input-group">
+                            <InputText @bind-Value="Usuario.Telefono" class="form-control" placeholder="Teléfono..." />
+                            <ValidationMessage For="(()=>Usuario.Telefono)" />
+
+                        </div>
+                        <div class="py-2 input-group">
+                            <select @bind="Usuario.Rol">
+                                <option value="USER"> USER </option>
+                                <option value="ADMIN"> ADMIN </option>
+                            </select>
+
+                        </div>
+                        <div class="form-row py-2">
+                            <div class="col">
+                                <InputText @bind-Value="Usuario.Clave" type="password" id="password" placeholder="Clave..." class="form-control" />
+                                <ValidationMessage For="(()=>Usuario.Clave)" />
+                            </div>
+
+                        </div>
+                        <div class="py-2">
+                            <hr style="background-color:aliceblue" />
+                            <Button @ref="saveButton" Color="ButtonColor.Success" @onclick="async () => await RegistrarUsuario()">
+                                Guardar
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+</EditForm>

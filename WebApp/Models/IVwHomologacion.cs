@@ -8,6 +8,6 @@ namespace WebApp.Models
         public int IdHomologacion { get; set; }
         [Required]
         public string? MostrarWeb { get; set; }
-        public string? Descripcion { get; set; }
+        public string? TooltipWeb { get; set; }
     }
 }

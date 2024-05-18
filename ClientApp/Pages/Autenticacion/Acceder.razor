@@ -1,5 +1,7 @@
 ﻿@page "/acceder"
 
+<PageTitle>Acceder</PageTitle>
+
 <div class="py-4">
     <div class=" row form-group ">
         <div class="col-6 offset-3 ">
@@ -9,8 +11,13 @@
                         <strong>Acceder</strong>
                     </h3>
 
-                    <EditForm Model="usuarioAutenticacion" OnValidSubmit="AccesoUsuario">
+                    <EditForm EditContext="@editContext">
                         <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        @if(!string.IsNullOrEmpty(@alertMessage)) {
+                            <Alert Color="AlertColor.Danger" Dismissable="false"> <Icon Name="IconName.ExclamationTriangleFill" class="me-2"></Icon>@alertMessage </Alert>
+                        }
 
                         <div class="form-row py-2">
                             <InputText @bind-Value="usuarioAutenticacion.Email" id="email" placeholder="Nombre usuario..." class="form-control mb-2" />
@@ -18,21 +25,14 @@
                         </div>
 
                         <div class="form-row py-2">
-                            <InputText @bind-Value="usuarioAutenticacion.Clave" type="password" placeholder="Password..." id="clave" class="form-control mb-2" />
+                            <InputText @bind-Value="usuarioAutenticacion.Clave" type="password" placeholder="Password..." id="clave" class="form-control mb-2" style="height: auto;padding: .375rem .75rem;" />
                             <ValidationMessage For="(()=>usuarioAutenticacion.Clave)"></ValidationMessage>
                         </div>
 
-                        <div class="row">
-                            <div class="col-12">
-                                @if (EstaProcesando)
-                                {
-                                    <button type="submit" class="btn btn-success disabled" style="vertical-align:middle;line-height:30px;"><i class="fas fa-sign-in-alt"></i> Porfavor espera...</button>
-                                }
-                                else
-                                {
-                                    <button type="submit" class="btn btn-success" style="vertical-align:middle;line-height:30px;"><i class="fas fa-sign-in-alt"></i> Acceder</button>
-                                }
-                            </div>
+                        <div class="form-row">
+                            <Button @ref="saveButton" Color="ButtonColor.Success" @onclick="async()=> await AccesoUsuario()">
+                                Acceder
+                            </Button>
                         </div>
                     </EditForm>
 

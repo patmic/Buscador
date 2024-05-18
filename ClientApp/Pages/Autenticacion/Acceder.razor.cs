@@ -2,56 +2,58 @@
 using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components;
 using System.Web;
-using Microsoft.JSInterop;
-using ClientApp.Helpers;
+using BlazorBootstrap;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace ClientApp.Pages.Autenticacion
 {
     public partial class Acceder
     {
+        private Button saveButton = default!;
+        private EditContext editContext;
         private UsuarioAutenticacion usuarioAutenticacion = new UsuarioAutenticacion();
-        public bool EstaProcesando { get; set; } = false;
-        public bool MostrarErroresAutenticacion { get; set; }
 
         public string UrlRetorno { get; set; }
 
-        public string Errores { get; set; }
+        public string alertMessage { get; set; }
 
         [Inject]
         public IServiceAutenticacion servicioAutenticacion { get; set; }
 
         [Inject]
         public NavigationManager navigationManager { get; set; }
-
-        [Inject]
-        public IJSRuntime JsRuntime { get; set; }
+        protected override void OnInitialized()
+        {
+            editContext = new EditContext(usuarioAutenticacion);
+        }
 
         private async Task AccesoUsuario()
         {
-            EstaProcesando = true;
-            var result = await servicioAutenticacion.Acceder(usuarioAutenticacion);
-            if (result.IsSuccess)
+            if (editContext.Validate())
             {
-                EstaProcesando = false;
-                var urlAbsoluta = new Uri(navigationManager.Uri);
-                var parametrosQuery = HttpUtility.ParseQueryString(urlAbsoluta.Query);
-                UrlRetorno = parametrosQuery["returnUrl"];
-                if (string.IsNullOrEmpty(UrlRetorno))
+                saveButton.ShowLoading("Verificando...");
+                var result = await servicioAutenticacion.Acceder(usuarioAutenticacion);
+                if (result.IsSuccess)
                 {
-                    navigationManager.NavigateTo("/");
+                    var urlAbsoluta = new Uri(navigationManager.Uri);
+                    var parametrosQuery = HttpUtility.ParseQueryString(urlAbsoluta.Query);
+                    UrlRetorno = parametrosQuery["returnUrl"];
+                    if (string.IsNullOrEmpty(UrlRetorno))
+                    {
+                        navigationManager.NavigateTo("/administracion");
+                    }
+                    else
+                    {
+                        navigationManager.NavigateTo("/" + UrlRetorno);
+                    }
                 }
                 else
                 {
-                    navigationManager.NavigateTo("/" + UrlRetorno);
+                    alertMessage = result.ErrorMessages;
                 }
-               await JsRuntime.ToastrSuccess("¡Credenciales Correctas!");
+                saveButton.HideLoading();
             }
-            else
-            {
-                EstaProcesando = false;
-                navigationManager.NavigateTo("/acceder");
-                await JsRuntime.ToastrError(Errores);
-            }
+            await Task.CompletedTask;
         }
     }
 }
