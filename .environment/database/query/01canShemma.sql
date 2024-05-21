@@ -16,51 +16,29 @@
 USE CAN_DB;
 GO
 
-IF OBJECT_ID('DataLakeOrganizacion', 'U') IS NOT NULL
-    DROP TABLE DataLakeOrganizacion;
+DROP TABLE if exists OrganizacionPais;
 GO
-IF OBJECT_ID('DataLake', 'U') IS NOT NULL
-    DROP TABLE DataLake;
+DROP TABLE if exists Endpoint;
 GO
-IF OBJECT_ID('HomologacionEsquema', 'U') IS NOT NULL
-    DROP TABLE HomologacionEsquema;
+DROP TABLE if exists Persona;
 GO
-IF OBJECT_ID('EndPointWeb', 'U') IS NOT NULL
-    DROP TABLE EndPointWeb;
+DROP TABLE if exists UsuarioEndPointWebPermiso;
 GO
-IF OBJECT_ID('WebSiteLog', 'U') IS NOT NULL
-    DROP TABLE WebSiteLog;
+DROP TABLE if exists Usuario;
 GO
-IF OBJECT_ID('OrganizacionPais', 'U') IS NOT NULL
-    DROP TABLE OrganizacionPais;
+DROP TABLE if exists EndPointWeb;
 GO
-IF OBJECT_ID(N'Persona', N'U') IS NOT NULL
-    DROP TABLE Persona;
+DROP TABLE if exists DataLakePersona
 GO
-IF OBJECT_ID('Usuario', 'U') IS NOT NULL
-    DROP TABLE Usuario;
+DROP TABLE if exists DataLakeOrganizacion;
 GO
-IF OBJECT_ID('Endpoint', 'U') IS NOT NULL
-    DROP TABLE Endpoint;
+DROP TABLE if exists DataLake;
 GO
-IF OBJECT_ID('Homologacion', 'U') IS NOT NULL
-    DROP TABLE Homologacion;
+DROP TABLE if exists WebSiteLog;
 GO
-IF OBJECT_ID('HomologacionEsquema', 'U') IS NOT NULL
-    DROP TABLE HomologacionEsquema;
+DROP TABLE if exists HomologacionEsquema;
 GO
-IF OBJECT_ID('Usuario', 'U') IS NOT NULL
-    DROP TABLE Usuario;
-GO
-IF OBJECT_ID('Endpoint', 'U') IS NOT NULL
-    DROP TABLE Endpoint;
-GO
-IF OBJECT_ID('Homologacion', 'U') IS NOT NULL
-    DROP TABLE Homologacion;
-GO
-
-IF OBJECT_ID('HomologacionEsquema', 'U') IS NOT NULL
-    DROP TABLE HomologacionEsquema;
+DROP TABLE if exists Homologacion;
 GO
 
 CREATE TABLE Usuario (
@@ -121,31 +99,34 @@ GO
 
 CREATE TABLE Homologacion (
      IdHomologacion     	INT IDENTITY(1,1) NOT NULL
-    ,IdHomologacionGrupo	INT DEFAULT(NULL) 
-    ,CodigoHomologacion		NVARCHAR(25)  NOT NULL
-    ,NombreHomologado		NVARCHAR(90)  NOT NULL
+    ,IdHomologacionGrupo	INT DEFAULT	  (NULL) 
     ,MostrarWebOrden		INT DEFAULT(0) 
     ,MostrarWeb				NVARCHAR(90)  NOT NULL
-	,Descripcion			NVARCHAR(200)
+	,TooltipWeb				NVARCHAR(200) NOT NULL DEFAULT('')
+	,MascaraDato			NVARCHAR(10)  NOT NULL DEFAULT('TEXTO')
+	,SiNoHayDato			NVARCHAR(10)  NOT NULL DEFAULT('')
     ,InfoExtraJson			NVARCHAR(max) NOT NULL DEFAULT('{}')
-	,Estado					NVARCHAR(1) NOT NULL DEFAULT('A')
-    ,FechaCreacion			DATETIME	NOT NULL DEFAULT(GETDATE())
-    ,FechaModifica			DATETIME	NOT NULL DEFAULT(GETDATE())  
-    ,IdUserCreacion			INT			NOT NULL DEFAULT(0)
-    ,IdUserModifica			INT			NOT NULL DEFAULT(0)  
+    ,CodigoHomologacion		NVARCHAR(20)  --NOT NULL
+    ,NombreHomologado		NVARCHAR(90) NOT NULL DEFAULT('')
+	,Estado					NVARCHAR(1)  NOT NULL DEFAULT('A')
+    ,FechaCreacion			DATETIME	 NOT NULL DEFAULT(GETDATE())
+    ,FechaModifica			DATETIME	 NOT NULL DEFAULT(GETDATE())  
+    ,IdUserCreacion			INT			 NOT NULL DEFAULT(0)
+    ,IdUserModifica			INT			 NOT NULL DEFAULT(0)  
 	
 	,CONSTRAINT  [PK_H_IdHomologacion]		PRIMARY KEY CLUSTERED (IdHomologacion) 
-	,CONSTRAINT  [UK_H_CodigoHomologacion]	UNIQUE  (CodigoHomologacion)
-    ,CONSTRAINT  [CK_H_InfoExtraJson]         CHECK   (ISJSON(InfoExtraJson) = 1 )
+	--,CONSTRAINT  [UK_H_CodigoHomologacion]	UNIQUE  (CodigoHomologacion)
+    ,CONSTRAINT  [CK_H_InfoExtraJson]       CHECK   (ISJSON(InfoExtraJson) = 1 )
+    ,CONSTRAINT  [CK_H_MascaraDato]			CHECK   (MascaraDato IN ('TEXTO', 'FECHA', 'NUMERICO'))
     ,CONSTRAINT  [CK_H_Estado]				CHECK   (Estado IN ('A', 'X'))
 )
 GO
 
 CREATE TABLE HomologacionEsquema(
 	 IdHomologacionEsquema     	INT IDENTITY(1,1) NOT NULL
-    ,MostrarWebOrden			INT DEFAULT(0) 
-    ,MostrarWeb					NVARCHAR(200)  NOT NULL
-	,Descripcion				NVARCHAR(200)
+    ,MostrarWebOrden			INT DEFAULT(1) 
+    ,MostrarWeb					NVARCHAR(200) NOT NULL DEFAULT('GRILLA')
+	,TooltipWeb					NVARCHAR(200) NOT NULL DEFAULT('')
     ,EsquemaJson				NVARCHAR(max) NOT NULL DEFAULT('{}')
 	,Estado						NVARCHAR(1) NOT NULL DEFAULT('A')
 	,FechaCreacion				DATETIME	NOT NULL DEFAULT(GETDATE())
