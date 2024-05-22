@@ -1,6 +1,17 @@
 use CAN_DB;
 go
 
+
+
+-- SELECT DISTINCT IdHomologacion
+-- 				FROM  OPENJSON((	SELECT * --TOP 1 EsquemaJson
+-- 									FROM HomologacionEsquema WITH (NOLOCK)
+-- 									ORDER BY MostrarWebOrden
+-- 				))
+-- 				WITH (IdHomologacion INT '$.IdHomologacion')
+
+
+
 CREATE OR ALTER PROCEDURE psBuscarPalabra
 (
     @BuscarPalabra		NVARCHAR(100)

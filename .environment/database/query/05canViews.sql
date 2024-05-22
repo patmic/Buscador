@@ -79,28 +79,50 @@ RETURN
 	WHERE	IdHomologacionGrupo = @IdHomologacionGrupo
 GO
 
-CREATE OR ALTER FUNCTION fnEsquema ( @IdHomologacionEsquema	INT )  
+CREATE OR ALTER FUNCTION fnHomologacionEsquemaCampo ( @IdHomologacionEsquema INT )  
+--RETURNS TABLE AS
+--RETURN
+RETURNS NVARCHAR(MAX) AS
+BEGIN	
+	DECLARE @json NVARCHAR(MAX) ='{}';
+	SELECT	@json = (	SELECT	 H.IdHomologacion
+								,H.MostrarWeb
+								,H.TooltipWeb
+								,H.MostrarWebOrden
+						FROM	Homologacion	H	WITH (NOLOCK)
+						JOIN	(	SELECT DISTINCT IdHomologacion
+									FROM  OPENJSON((	SELECT	EsquemaJson
+														FROM	HomologacionEsquema		WITH (NOLOCK)
+														WHERE	IdHomologacionEsquema = @IdHomologacionEsquema
+												  ))
+									WITH (IdHomologacion INT '$.IdHomologacion')
+								)	HE	ON HE.IdHomologacion = H.IdHomologacion
+						FOR JSON AUTO 
+					);
+	RETURN @json;
+END;
+GO
+
+CREATE OR ALTER FUNCTION fnHomologacionEsquema ( @IdHomologacionEsquema	INT )  
 RETURNS TABLE AS
 RETURN
-	SELECT	 H.IdHomologacion
-			,H.MostrarWeb
-			,H.TooltipWeb
-			,H.MostrarWebOrden
-	FROM	Homologacion	H	WITH (NOLOCK)
-	JOIN	(	SELECT DISTINCT IdHomologacion
-				FROM  OPENJSON((	SELECT	EsquemaJson
-									FROM	HomologacionEsquema		WITH (NOLOCK)
-									WHERE	IdHomologacionEsquema = @IdHomologacionEsquema
-				))
-				WITH (IdHomologacion INT '$.IdHomologacion')
-			)	HE	ON HE.IdHomologacion = H.IdHomologacion
+	SELECT	 IdHomologacionEsquema	
+			,MostrarWebOrden	
+			,MostrarWeb	
+			,TooltipWeb	
+			,(select dbo.fnHomologacionEsquemaCampo(IdHomologacionEsquema)) Esquema
+	FROM	HomologacionEsquema		WITH (NOLOCK)
+	WHERE	IdHomologacionEsquema = @IdHomologacionEsquema	
+	AND		Estado = 'A'
 GO
 
 --testing
--- select * from vwGrilla
+--select * from vwGrilla
 -- select * from vwDimension
 
 -- select * from fnFiltroDetalle(3)
 -- select * from vwFiltro
 
--- select * from fnEsquema(5)
+-- select dbo.fnHomologacionEsquemaCampo(5) as er
+
+-- select * from fnHomologacionEsquema (5)
