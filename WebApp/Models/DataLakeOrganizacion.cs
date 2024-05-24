@@ -6,8 +6,8 @@ public class DataLakeOrganizacion
     [Key]
     public int IdDataLakeOrganizacion { get; set; }
     public int? IdHomologacionSistema { get; set; }
-    public string? DataId { get; set; }
-    public string? DataJson { get; set; }
-    public string? DataJsonExtra { get; set; }
-    public string? DataJsonEstado { get; set; }
+    public int? IdDataLake { get; set; }
+    public string? DataEsquemaJson { get; set; }
+    public string? Estado { get; set; }
+    public bool? Activo { get; set; }
 }

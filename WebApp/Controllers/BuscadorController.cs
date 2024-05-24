@@ -45,5 +45,75 @@ namespace WebApp.Controllers
                     });
             }
         }
+    
+    [HttpGet("organizacion/{Id:int}")]
+    public IActionResult BuscarOrganizacion(int Id)
+    {
+      try
+      {
+        var organizacion = _vhRepo.BuscarOrganizacion(Id);
+        var organizacionDto = _mapper.Map<BuscadorOrganizacionDto>(organizacion);
+        return Ok(organizacionDto);
+      }
+      catch (Exception e)
+      {
+        _logger.LogError(e.Message);
+        return StatusCode(StatusCodes.Status500InternalServerError, 
+          new {
+                  statusCode = 500,
+                  message = e.Message
+          });
+      }
     }
+  
+    [HttpGet("esquemas_relacionados/{Id:int}")]
+    public IActionResult ObtenerEsquemasRelacionados(int Id)
+    {
+        try
+        {
+          var listado = _vhRepo.ObtenerEsquemasRelacionados(Id);
+          var listadoDto = new List<HomologacionEsquemaDto>();
+
+          foreach (var lista in listado)
+          {
+            listadoDto.Add(_mapper.Map<HomologacionEsquemaDto>(lista));
+          }
+          return Ok(listadoDto);
+        }
+        catch (Exception e)
+        {
+          _logger.LogError(e.Message);
+          return StatusCode(StatusCodes.Status500InternalServerError, 
+            new {
+                    statusCode = 500,
+                    message = e.Message
+            });
+        }
+    }
+
+    [HttpGet("organizaciones_relacionadas/{Id}/{IdDataLake}")]
+    public IActionResult ObtenerOrganizacionesRelacionadas(int Id, int IdDataLake)
+    {
+        try
+        {
+          var listado = _vhRepo.ObtenerOrganizacionesRelacionadas(Id, IdDataLake);
+          var listadoDto = new List<DataLakeOrganizacionDto>();
+
+          foreach (var lista in listado)
+          {
+            listadoDto.Add(_mapper.Map<DataLakeOrganizacionDto>(lista));
+          }
+          return Ok(listadoDto);
+        }
+        catch (Exception e)
+        {
+          _logger.LogError(e.Message);
+          return StatusCode(StatusCodes.Status500InternalServerError, 
+            new {
+                    statusCode = 500,
+                    message = e.Message
+            });
+        }
+    }
+  }
 }
