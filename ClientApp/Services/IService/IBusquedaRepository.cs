@@ -5,5 +5,6 @@ namespace ClientApp.Services.IService {
     public interface IBusquedaRepository
     {
         Task<List<DataLakeOrganizacion>> BuscarPalabraAsync(string campo, params int[] fields);
+        Task<List<HomologacionEsquema>> ObtenerEsquemasRelacionados(int Id);
     }
 }

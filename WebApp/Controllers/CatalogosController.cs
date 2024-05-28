@@ -41,6 +41,11 @@ namespace WebApp.Controllers
         {
             return GetCatalogData(_vhRepo.ObtenerDimension, "Error obteniendo datos de Dimensión");
         }
+        [HttpGet("grupo")]
+        public IActionResult ObtenerGrupos()
+        {
+            return GetCatalogData(_vhRepo.ObtenerGrupos, "Error obteniendo datos de Dimensión");
+        }
 
         [HttpGet("filtro_detalles/{IdHomologacion:int}", Name = "ObtenerFiltroDetalles")]
         public IActionResult ObtenerFiltroDetalles(int IdHomologacion)
@@ -64,7 +69,7 @@ namespace WebApp.Controllers
             }
         }
 
-        private IActionResult GetCatalogData(Func<IEnumerable<IVwHomologacion>> getData, string errorMessage)
+        private IActionResult GetCatalogData(Func<IEnumerable<object>> getData, string errorMessage)
         {
             try
             {

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using ClientApp;
 using ClientApp.Services;
 using ClientApp.Services.IService;
-using BlazorBootstrap;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -13,11 +12,15 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddBlazorBootstrap();
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddScoped(sp => new HttpClient {
+  BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
+});
+
 builder.Services.AddScoped<IBusquedaRepository, BusquedaRepository>();
 builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
 builder.Services.AddScoped<IServiceAutenticacion, ServiceAutenticacion>();
 builder.Services.AddScoped<IVwHomologacionRepository, VwHomologacionRepository>();
+builder.Services.AddScoped<IHomologacionRepository, HomologacionRepository>();
 builder.Services.AddScoped<IHomologacionEsquemaRepository, HomologacionEsquemaRepository>();
 builder.Services.AddSingleton<ClientApp.Services.ToastService>();
 

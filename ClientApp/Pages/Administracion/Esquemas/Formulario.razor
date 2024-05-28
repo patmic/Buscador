@@ -38,58 +38,42 @@
                 </div>
 
             </div>
+
+            <div class="form-row py-2">
+                <AutoComplete @bind-Value="homologacionName"
+                    TItem="VwHomologacion"
+                    DataProvider="VwHomologacionDataProvider"
+                    PropertyName="MostrarWeb"
+                    Placeholder="Search a columna..."
+                    OnChanged="(VwHomologacion vwHomologacion) => OnAutoCompleteChanged(vwHomologacion)" />
+            </div>
         </div>
     </div>
 </EditForm>
 <div class="py-2">
-    <AutoComplete @bind-Value="homologacionName"
-        TItem="VwHomologacion"
-        DataProvider="VwHomologacionDataProvider"
-        PropertyName="MostrarWeb"
-        Placeholder="Search a columna..."
-        OnChanged="(VwHomologacion vwHomologacion) => OnAutoCompleteChanged(vwHomologacion)" />
-</div>
-<div class="py-2">
-    <Grid TItem="HomologacionEsquemaColumnas" class="table table-hover table-bordered table-striped" Data="lista" Responsive="true" FixedHeader="true" Height="350" Id="sortableGrid">
-        <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Código" PropertyName="Codigo">
-            <EditTemplate Context="context">
-                <input @bind="context.Codigo" />
-            </EditTemplate>
-            <input type="hidden" value="@context.Id" />
+    <Grid TItem="VwHomologacion" class="table table-hover table-bordered table-striped" Data="lista" Responsive="true" FixedHeader="true" Height="350" Id="sortableGrid">
+        <GridColumn TItem="VwHomologacion" HeaderText="Mostrar Web Orden" PropertyName="MostrarWebOrden">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MostrarWebOrden
+            <input type="hidden" value="@context.IdHomologacion" />
         </GridColumn>
-        <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Nombre" PropertyName="Nombre">
-            <EditTemplate Context="context">
-                <input @bind="@context.Nombre" />
-            </EditTemplate>
+        <GridColumn TItem="VwHomologacion" HeaderText="Mostrar Web" PropertyName="MostrarWeb">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MostrarWeb
         </GridColumn>
-        <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Descripción" PropertyName="Descripcion">
-            <EditTemplate Context="context">
-                <input @bind="@context.Descripcion" />
-            </EditTemplate>
+        <GridColumn TItem="VwHomologacion" HeaderText="Tooltip Web" PropertyName="TooltipWeb">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.TooltipWeb
         </GridColumn>
-        <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Tipo Dato" PropertyName="TipoDato">
-            <EditTemplate Context="context">
-                <select @bind="context.TipoDato">
-                    <option value="Texto"> Texto </option>
-                    <option value="Fecha"> Fecha </option>
-                </select>
-            </EditTemplate>
+        <GridColumn TItem="VwHomologacion" HeaderText="Mascara Dato" PropertyName="MascaraDato">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MascaraDato
         </GridColumn>
-        <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Sin Datos" PropertyName="SinDatos">
-            <EditTemplate Context="context">
-                <input @bind="@context.SinDatos" />
-            </EditTemplate>
+        <GridColumn TItem="VwHomologacion" HeaderText="Si No Hay Dato" PropertyName="SiNoHayDato">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.SiNoHayDato
         </GridColumn>
-        <GridColumn TItem="HomologacionEsquemaColumnas" HeaderText="Eliminar">
-            <Button Color="ButtonColor.Danger" Outline="true" @onclick="() => EliminarElemento(context.Id)" Size="Size.Small">
+        <GridColumn TItem="VwHomologacion" HeaderText="Eliminar">
+            <Button Color="ButtonColor.Danger" Outline="true" @onclick="() => EliminarElemento(context.IdHomologacion)" Size="Size.Small">
                 <Icon Name="IconName.Trash3" />
             </Button>
         </GridColumn>
     </Grid>
-    <div class="py-2">
-        <hr style="background-color:aliceblue" />
-        <Button Color="ButtonColor.Primary" @onclick="() => AgregarElemento()">Agregar</Button>
-    </div>
 </div>
 <div class="py-2">
     <hr style="background-color:aliceblue" />

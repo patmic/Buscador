@@ -6,6 +6,7 @@
 
 <PageTitle>Inicio</PageTitle>
 
+<Modal @ref="modal" Size="ModalSize.ExtraLarge"/>
 <!-- Start of Search Wrapper -->
 <div class="search-area-wrapper">
     <div class="search-area container">
@@ -61,13 +62,13 @@
             @if (listaEtiquetasGrilla != null)
             {
                 <Grid @ref="grid"  TItem="DataLakeOrganizacion" class="table table-hover table-bordered table-striped" DataProvider="ResultadoBusquedaDataProvider" Responsive="true">
-                    @foreach(var etiqueta in listaEtiquetasGrilla) {
+                    @foreach(var etiqueta in listaEtiquetasGrilla.OrderBy(c => c.MostrarWebOrden)) {
                         <GridColumn TItem="DataLakeOrganizacion" HeaderText="@etiqueta.MostrarWeb" PropertyName="@etiqueta.MostrarWeb">
                             @context?.DataJson?.FirstOrDefault(f => f.IdHomologacion == etiqueta.IdHomologacion)?.ValorColumna
                         </GridColumn>
                     }
                     <GridColumn TItem="DataLakeOrganizacion" HeaderText="-">
-                        <Button Color="ButtonColor.Secondary" Outline="true" Size="Size.Small">
+                        <Button Color="ButtonColor.Secondary" Outline="true" Size="Size.Small" @onclick="() => showModal(context)">
                             <Icon Name="IconName.Front" />
                         </Button>
                     </GridColumn>

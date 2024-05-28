@@ -7,6 +7,7 @@ namespace WebApp.Repositories.IRepositories
         ICollection<VwGrilla> ObtenerEtiquetaGrilla();
         ICollection<VwFiltro> ObtenerEtiquetaFiltros();
         ICollection<VwDimension> ObtenerDimension();
+        ICollection<Homologacion> ObtenerGrupos();
         ICollection<IVwHomologacion> ObtenerFiltroDetalles(int IdHomologacion);
     }
 }

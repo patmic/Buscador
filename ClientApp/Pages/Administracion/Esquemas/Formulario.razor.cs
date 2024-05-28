@@ -16,6 +16,8 @@ namespace ClientApp.Pages.Administracion.Esquemas
         [Inject]
         public IHomologacionEsquemaRepository homologacionEsquemaRepository { get; set; }
         [Inject]
+        public IHomologacionRepository iHomologacionRepository { get; set; }
+        [Inject]
         public IVwHomologacionRepository vwHomologacionRepository { get; set; }
         private List<VwHomologacion>? listaVwHomologacion;
 
@@ -27,13 +29,15 @@ namespace ClientApp.Pages.Administracion.Esquemas
         public int? Id { get; set; }
         [Inject]
         public Services.ToastService toastService { get; set; }
-        private IEnumerable<HomologacionEsquemaColumnas> lista = new List<HomologacionEsquemaColumnas>();
+        private IEnumerable<VwHomologacion> lista = new List<VwHomologacion>();
         protected override async Task OnInitializedAsync()
         {
+            listaVwHomologacion = await vwHomologacionRepository.GetHomologacionAsync("dimension");
+
             if (Id > 0) {
                 homologacionEsquema = await homologacionEsquemaRepository.GetHomologacionEsquemaAsync(Id.Value);
 
-                lista = JsonConvert.DeserializeObject<List<HomologacionEsquemaColumnas>>(homologacionEsquema.EsquemaJson);
+                lista = JsonConvert.DeserializeObject<List<VwHomologacion>>(homologacionEsquema.EsquemaJson);
             } else {
                 homologacionEsquema.EsquemaJson = "{}";
             }
@@ -56,6 +60,14 @@ namespace ClientApp.Pages.Administracion.Esquemas
             var result = await homologacionEsquemaRepository.RegistrarOActualizar(homologacionEsquema);
             if (result.registroCorrecto)
             {
+                // guardar las nuevas posiciones
+                foreach (var n in lista) {
+                  await iHomologacionRepository.RegistrarOActualizar(new VwHomologacion() {
+                    IdHomologacion = n.IdHomologacion,
+                    MostrarWebOrden = n.MostrarWebOrden
+                  });
+                }
+
                 toastService.CreateToastMessage(ToastType.Success, "Registrado exitosamente");
                 navigationManager.NavigateTo("/esquemas");
             }
@@ -66,26 +78,18 @@ namespace ClientApp.Pages.Administracion.Esquemas
 
             saveButton.HideLoading();
         }
-        private void AgregarElemento()
+        private void EliminarElemento(int elemento)
         {
-            var nuevoElemento = new HomologacionEsquemaColumnas()
-            {
-                Id = Guid.NewGuid().ToString()
-            };
-            lista = lista.Append(nuevoElemento).ToList();
-        }
-        private void EliminarElemento(string elemento)
-        {
-            lista = lista.Where(c => c.Id != elemento).ToList();
+            lista = lista.Where(c => c.IdHomologacion != elemento).ToList();
         }
         [JSInvokable]
         public async Task OnDragEnd(string[] sortedIds)
         {
-            var tempList = new List<HomologacionEsquemaColumnas>();
+            var tempList = new List<VwHomologacion>();
             for (int i = 0; i < sortedIds.Length; i += 1)
             {
-                HomologacionEsquemaColumnas homo = lista.FirstOrDefault(h => h.Id == sortedIds[i]);
-                homo.Orden = i + 1;
+                VwHomologacion homo = lista.FirstOrDefault(h => h.IdHomologacion == Int32.Parse(sortedIds[i]));
+                homo.MostrarWebOrden = i + 1;
                 tempList.Add(homo);
             }
             lista = tempList;
@@ -98,9 +102,10 @@ namespace ClientApp.Pages.Administracion.Esquemas
 
             return await Task.FromResult(request.ApplyTo(listaVwHomologacion.OrderBy(vmH => vmH.MostrarWebOrden)));
         }
-        private void OnAutoCompleteChanged(VwHomologacion vwHomologacion)
+        private void OnAutoCompleteChanged(VwHomologacion _vwHomologacionSelected)
         {
-            Console.WriteLine($"'{vwHomologacion.MostrarWeb}' selected.");
+            _vwHomologacionSelected.MostrarWebOrden = lista.Count();
+            lista = lista.Append(_vwHomologacionSelected).ToList();
         }
     }
 }

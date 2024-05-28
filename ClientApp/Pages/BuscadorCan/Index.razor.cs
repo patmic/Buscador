@@ -7,6 +7,7 @@ namespace ClientApp.Pages.BuscadorCan
 {
     public partial class Index
     {
+        private Modal modal = default!;
         private Grid<DataLakeOrganizacion> grid;
         private BuscarRequest buscarRequest = new BuscarRequest();
         [Inject]
@@ -81,6 +82,12 @@ namespace ClientApp.Pages.BuscadorCan
             }
 
             return await Task.FromResult(request.ApplyTo(listDataLakeOrganizacion));
+        }
+        private async void showModal(DataLakeOrganizacion dataLake)
+        {
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("dataLake", dataLake);
+            await modal.ShowAsync<EsquemaModal>(title: "Información Detallada", parameters: parameters);
         }
     }
 }

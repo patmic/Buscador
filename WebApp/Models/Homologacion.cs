@@ -8,16 +8,15 @@ namespace WebApp.Models
     {
         [Key]
         public int IdHomologacion { get; set; }
+        public int? IdHomologacionGrupo { get; set; }
         [Required]
-        public int IdHomologacionGrupo { get; set; }
-        [Required]
-        public string ClaveBuscar { get; set; }
-        [Required]
-        public string MostrarWeb { get; set; }
+        public string? MostrarWeb { get; set; }
         public int MostrarWebOrden { get; set; }
-        [Required]
-        public string TooltipWeb { get; set; }
-        [Required]
-        public string InfoExtraJson { get; set; }
+        public string? TooltipWeb { get; set; }
+        public string? InfoExtraJson { get; set; }
+        public string? MascaraDato { get; set; }
+        public string? SiNoHayDato { get; set; }
+        public string? CodigoHomologacion { get; set; }
+        public string? NombreHomologado { get; set; }
     }
 }

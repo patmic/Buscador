@@ -27,16 +27,16 @@ builder.Services.AddControllers();
 builder.Services.AddHostedService<BackgroundWorkerService>();
 
 // Api
-builder.Services.AddScoped<IEcuadorSAEvwBusquedaRepository, EcuadorSAEvwBusquedaRepository>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
-builder.Services.AddScoped<IEcuadorRepository, EcuadorRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IEndpointRepository, EndpointRepository>();
 builder.Services.AddScoped<IUsuarioEndpointPermisoRepository, UsuarioEndpointPermisoRepository>();
-builder.Services.AddScoped<IVwHomologacionRepository, VwHomologacionRepository>();
+builder.Services.AddScoped<IEcuadorSAEvwBusquedaRepository, EcuadorSAEvwBusquedaRepository>();
 builder.Services.AddScoped<IBuscadorRepository, BuscadorRepository>();
+builder.Services.AddScoped<IVwHomologacionRepository, VwHomologacionRepository>();
+builder.Services.AddScoped<IHomologacionRepository, HomologacionRepository>();
 builder.Services.AddScoped<IHomologacionEsquemaRepository, HomologacionEsquemaRepository>();
-builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Agregar Automapper

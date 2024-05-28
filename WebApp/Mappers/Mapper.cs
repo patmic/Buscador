@@ -10,18 +10,27 @@ namespace WebApp.Mappers
         {
             CreateMap<Usuario, UsuarioDto>();
             CreateMap<UsuarioDto, Usuario>();
+            
             CreateMap<Models.Endpoint, EndpointDto>();
+            
             CreateMap<UsuarioEndpointPermiso, UsuarioEndpointPermisoDto>();
-            CreateMap<Empresa, EmpresaDto>();
+            
             CreateMap<DataLakeOrganizacion, BuscadorDto>();
+            
             CreateMap<BuscadorOrganizacion, BuscadorDto>();
+            
             CreateMap<IVwHomologacion, CatalogosDto>();
-            // vistas
+            
             CreateMap<VwDimension, CatalogosDto>();
             CreateMap<VwGrilla, CatalogosDto>();
             CreateMap<VwFiltro, CatalogosDto>();
+            
             CreateMap<HomologacionEsquema, HomologacionEsquemaDto>();
             CreateMap<HomologacionEsquemaDto, HomologacionEsquema>();
+
+            CreateMap<Homologacion, CatalogosDto>();
+            CreateMap<Homologacion, HomologacionDto>();
+            CreateMap<HomologacionDto, Homologacion>();
         }
     }
 }

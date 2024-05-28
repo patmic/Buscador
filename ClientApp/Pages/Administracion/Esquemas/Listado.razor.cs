@@ -17,9 +17,14 @@ namespace ClientApp.Pages.Administracion.Esquemas
         private IHomologacionEsquemaRepository homologacionEsquemaRepository { get; set; }
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
+        [Inject]
+        public IVwHomologacionRepository vwHomologacionRepository { get; set; }
+        private List<VwHomologacion>? listaVwHomologacion;
 
         protected override async Task OnInitializedAsync()
         {
+            listaVwHomologacion = await vwHomologacionRepository.GetHomologacionAsync("dimension");
+
             DataLoaded += async () => {
                 if (!(listaHomologacionEsquemas is null)) {
                     await Task.Delay(2000);
@@ -27,7 +32,6 @@ namespace ClientApp.Pages.Administracion.Esquemas
                 }
             };
         }
-        
         private async Task<GridDataProviderResult<HomologacionEsquema>> EsquemasDataProvider(GridDataProviderRequest<HomologacionEsquema> request)
         {
             if (listaHomologacionEsquemas is null)
@@ -37,7 +41,6 @@ namespace ClientApp.Pages.Administracion.Esquemas
 
             return await Task.FromResult(request.ApplyTo(listaHomologacionEsquemas));
         }
-
         [JSInvokable]
         public async Task OnDragEnd(string[] sortedIds)
         {
@@ -52,7 +55,6 @@ namespace ClientApp.Pages.Administracion.Esquemas
             }
             await Task.CompletedTask;
         }
-
         private async Task OnDeleteClick(int IdHomologacionEsquema)
         {
             var respuesta = await homologacionEsquemaRepository.EliminarHomologacionEsquema(IdHomologacionEsquema);
@@ -64,10 +66,11 @@ namespace ClientApp.Pages.Administracion.Esquemas
         private async void showModal(int IdHomologacionEsquema)
         {
             var homo = listaHomologacionEsquemas.FirstOrDefault(c => c.IdHomologacionEsquema == IdHomologacionEsquema);
-            var columnas = JsonConvert.DeserializeObject<List<HomologacionEsquemaColumnas>>(homo.EsquemaJson);
+            var columnas = JsonConvert.DeserializeObject<List<VwHomologacion>>(homo.EsquemaJson);
 
             var parameters = new Dictionary<string, object>();
             parameters.Add("columnas", columnas);
+            parameters.Add("listaVwHomologacion", listaVwHomologacion);
             await modal.ShowAsync<RowModal>(title: $"{homo.MostrarWeb}", parameters: parameters);
         }
     }

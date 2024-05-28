@@ -78,7 +78,7 @@ RETURNS TABLE AS
 RETURN
 	SELECT	IdHomologacion,     MostrarWeb,     TooltipWeb,	MostrarWebOrden
 	FROM	dbo.Homologacion    WITH (NOLOCK)
-	WHERE	IdHomologacionGrupo = @IdHomologacionGrupo
+	WHERE	IdHomologacionGrupo = @IdHomologacionGrupo and Estado = 'A'
 GO
 
 CREATE OR ALTER FUNCTION fnHomologacionEsquemaCampo ( @IdHomologacionEsquema INT )  

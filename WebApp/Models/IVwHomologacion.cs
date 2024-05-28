@@ -9,5 +9,6 @@ namespace WebApp.Models
         [Required]
         public string? MostrarWeb { get; set; }
         public string? TooltipWeb { get; set; }
+        public int MostrarWebOrden { get; set; }
     }
 }
