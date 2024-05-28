@@ -12,9 +12,9 @@ namespace ClientApp.Services {
         {
             _httpClient = httpClient;
         }
-        public async Task<List<DataLakeOrganizacion>> BuscarPalabraAsync(string value, params int[] fields)
+        public async Task<List<DataLakeOrganizacion>> BuscarPalabraAsync(string value)
         {
-            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/buscar_palabras?value={value}&field1=41");
+            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/buscar_palabras?value={value}");
             response.EnsureSuccessStatusCode();
 
             var tempList = await response.Content.ReadFromJsonAsync<List<ResultDataLakeOrganizacion>>();

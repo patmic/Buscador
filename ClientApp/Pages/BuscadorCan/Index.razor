@@ -44,10 +44,11 @@
 
                     @if (listadeOpciones != null) {
                         @for (int i = 0; i < listadeOpciones.Count; i += 1) {
+                            var currentIndex = i;
                             <div class="span2">
-                                <select style="max-width: 100%" value="@GetSelectedValue(i)">
+                                <select style="max-width: 100%" @onchange="(e) => CambiarSeleccion(e, currentIndex)">
                                     <option value="">Seleccione...</option>
-                                    @foreach (var opcion in listadeOpciones[i])
+                                    @foreach (var opcion in listadeOpciones[currentIndex])
                                     {
                                         <option value="@opcion.IdHomologacion">@opcion.MostrarWeb</option>
                                     }
