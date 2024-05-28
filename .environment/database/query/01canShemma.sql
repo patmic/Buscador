@@ -42,11 +42,11 @@ DROP TABLE if exists Homologacion;
 GO
 
 CREATE TABLE Usuario (
-    IdUsuario				INT IDENTITY(1,1) 
+     IdUsuario				INT IDENTITY(1,1) 
     ,Email					NVARCHAR(100) NOT NULL
     ,Nombre					NVARCHAR(500) NOT NULL
     ,Apellido				NVARCHAR(500)
-	,Telefono				nvarchar(20)
+	,Telefono				NVARCHAR(20)
     ,Clave					NVARCHAR(MAX)	NOT NULL
     ,Rol					NVARCHAR(20)	NOT NULL DEFAULT('USER')
 	,Estado					NVARCHAR(1) NOT NULL DEFAULT('A')
@@ -63,7 +63,7 @@ CREATE TABLE Usuario (
 GO
 
 CREATE TABLE EndPointWeb (
-    IdEndPointWeb			INT IDENTITY(1,1)  
+     IdEndPointWeb			INT IDENTITY(1,1)  
     ,UrlWeb					NVARCHAR(MAX)
     ,Nombre					NVARCHAR(100) NOT NULL
 	,Estado					NVARCHAR(1) NOT NULL DEFAULT('A')
@@ -79,15 +79,15 @@ CREATE TABLE EndPointWeb (
 GO
 
 CREATE TABLE UsuarioEndPointWebPermiso (
-    IdUsuarioEndPointWebPermiso    INT IDENTITY(1,1) 
-    ,IdUsuario                  INT NOT NULL DEFAULT(0)
-    ,IdEndPointWeb              INT NOT NULL DEFAULT(0)
-    ,Accion                     NVARCHAR(10) NOT NULL
-	,Estado						NVARCHAR(1) NOT NULL DEFAULT('A')
-    ,FechaCreacion				DATETIME	NOT NULL DEFAULT(GETDATE())
-    ,FechaModifica			    DATETIME	NOT NULL DEFAULT(GETDATE())  
-    ,IdUserCreacion				INT			NOT NULL DEFAULT(0)
-    ,IdUserModifica			    INT			NOT NULL DEFAULT(0)
+     IdUsuarioEndPointWebPermiso    INT IDENTITY(1,1) 
+    ,IdUsuario                      INT NOT NULL DEFAULT(0)
+    ,IdEndPointWeb                  INT NOT NULL DEFAULT(0)
+    ,Accion                         NVARCHAR(10) NOT NULL
+	,Estado						    NVARCHAR(1) NOT NULL DEFAULT('A')
+    ,FechaCreacion				    DATETIME	NOT NULL DEFAULT(GETDATE())
+    ,FechaModifica			        DATETIME	NOT NULL DEFAULT(GETDATE())  
+    ,IdUserCreacion				    INT			NOT NULL DEFAULT(0)
+    ,IdUserModifica			        INT			NOT NULL DEFAULT(0)
 
 	,CONSTRAINT PK_UEP_IdUsuarioEndpointPermiso	PRIMARY KEY CLUSTERED (IdUsuarioEndPointWebPermiso)  
     ,CONSTRAINT FK_UEP_IdUsuario		FOREIGN KEY (IdUsuario)		REFERENCES Usuario(IdUsuario)
@@ -133,29 +133,30 @@ CREATE TABLE HomologacionEsquema(
     ,FechaModifica				DATETIME	NOT NULL DEFAULT(GETDATE())  
     ,IdUserCreacion				INT			NOT NULL DEFAULT(0)
     ,IdUserModifica				INT			NOT NULL DEFAULT(0)  
-	,CONSTRAINT  [PK_HE_IdHomologacionEsquema]	PRIMARY KEY CLUSTERED (IdHomologacionEsquema) 
+	
+    ,CONSTRAINT  [PK_HE_IdHomologacionEsquema]	PRIMARY KEY CLUSTERED (IdHomologacionEsquema) 
     ,CONSTRAINT  [CK_HE_EsquemaJson]			CHECK   (ISJSON(EsquemaJson) = 1 )
-    ,CONSTRAINT  [CK_HE_Estado]				CHECK   (Estado IN ('A', 'X'))
+    ,CONSTRAINT  [CK_HE_Estado]				    CHECK   (Estado IN ('A', 'X'))
 )
 GO
 
 CREATE TABLE DataLake(
-    IdDataLake				INT IDENTITY(1,1) NOT NULL
+     IdDataLake				INT IDENTITY(1,1) NOT NULL
 	,DataTipo				NVARCHAR(15) NOT NULL DEFAULT('NO_DEFINIDO') 
 	,DataSistemaOrigen		NVARCHAR(15) NOT NULL	
     ,DataSistemaOrigenId	NVARCHAR(10) NOT NULL 
     ,DataSistemaFecha		DATETIME	
 	,Estado					NVARCHAR(1) NOT NULL DEFAULT('A')
-    ,DataFechaCarga			DATETIME	 NOT NULL DEFAULT(GETDATE())
+    ,DataFechaCarga			DATETIME	NOT NULL DEFAULT(GETDATE())
 	
 	,CONSTRAINT  [PK_DL_IdDataLake]	PRIMARY KEY CLUSTERED (IdDataLake) 
-	,CONSTRAINT  [UK_DL_DataTipo]		CHECK (DataTipo IN ('ORGANIZACION', 'PERSONA','NO_DEFINIDO'))
+	,CONSTRAINT  [UK_DL_DataTipo]	CHECK (DataTipo IN ('ORGANIZACION', 'PERSONA','NO_DEFINIDO'))
     ,CONSTRAINT  [CK_DL_Estado]		CHECK   (Estado IN ('A', 'X'))
 )
 GO
 
 CREATE TABLE DataLakeOrganizacion(
-    IdDataLakeOrganizacion  INT IDENTITY(1,1) NOT NULL
+     IdDataLakeOrganizacion INT IDENTITY(1,1) NOT NULL
     ,IdHomologacionEsquema	INT NOT NULL  FOREIGN KEY REFERENCES HomologacionEsquema (IdHomologacionEsquema)
     ,IdDataLake				INT NOT NULL  FOREIGN KEY REFERENCES DataLake (IdDataLake)
     ,DataEsquemaJson        NVARCHAR(max) NOT NULL DEFAULT('{}')
@@ -185,7 +186,7 @@ CREATE TABLE DataLakePersona(
 GO
 
 CREATE TABLE WebSiteLog (
-    IdWebSiteLog		INT IDENTITY(1,1) NOT NULL
+     IdWebSiteLog		INT IDENTITY(1,1) NOT NULL
     ,DataLogJson		NVARCHAR(max)
 	,FechaCreacion		DATETIME	NOT NULL DEFAULT(GETDATE())
 	,Estado				NVARCHAR(1) NOT NULL DEFAULT('A')
