@@ -25,7 +25,6 @@ namespace ClientApp.Services
             _localStorage = localStorage;
             _estadoProveedorAutenticacion = estadoProveedorAutenticacion;
         }
-
         public async Task<RespuestaAutenticacion> Acceder(UsuarioAutenticacion usuarioDesdeAutenticacion)
         {
             var content = JsonConvert.SerializeObject(usuarioDesdeAutenticacion);
@@ -36,9 +35,9 @@ namespace ClientApp.Services
 
             if (response.IsSuccessStatusCode)
             {
-                var Token = resultado["result"]["token"].Value<string>();
-                var Usuario = resultado["result"]["usuario"]["email"].Value<string>();
-                var Rol = resultado["result"]["usuario"]["rol"].Value<string>();
+                var Token = resultado["token"].Value<string>();
+                var Usuario = resultado["usuario"]["email"].Value<string>();
+                var Rol = resultado["usuario"]["rol"].Value<string>();
 
                 await _localStorage.SetItemAsync(Inicializar.Token_Local, Token);
                 await _localStorage.SetItemAsync(Inicializar.Datos_Usuario_Local, Usuario);
@@ -49,7 +48,17 @@ namespace ClientApp.Services
             }
             else
             {
-                return new RespuestaAutenticacion { IsSuccess = false };
+                if (resultado["errorMessages"] is JArray errorMessagesArray)
+                {
+                    var errorMessagesList = errorMessagesArray.ToObject<string[]>();
+                    var errorMessages = string.Join(", ", errorMessagesList);
+
+                    return new RespuestaAutenticacion { IsSuccess = false, ErrorMessages = errorMessages };
+                }
+                else
+                {
+                    return new RespuestaAutenticacion { IsSuccess = false, ErrorMessages = "An unexpected error occurred." };
+                }
             }
         }
 

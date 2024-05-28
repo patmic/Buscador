@@ -31,7 +31,7 @@ namespace WebApp.Repositories
             {
                 Nombre = endpointRegistroDto.Nombre,
                 Url = endpointRegistroDto.Url,
-                FechaCrea = DateTime.Now,
+                FechaCreacion = DateTime.Now,
                 FechaModifica = DateTime.Now
             };
 

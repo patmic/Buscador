@@ -1,0 +1,84 @@
+@page "/"
+@page "/persona"
+@using ClientApp.Services.IService
+@using ClientApp.Models;
+@using Newtonsoft.Json;
+
+<PageTitle>Inicio</PageTitle>
+
+<Modal @ref="modal" Size="ModalSize.ExtraLarge"/>
+<!-- Start of Search Wrapper -->
+<div class="search-area-wrapper">
+    <div class="search-area container">
+        <h3 class="search-header">BUSCADOR SERVICIOS DE EVALUACIÓN DE LA CONFORMIDAD ACREDITADOS EN LA CAN</h3>
+
+        <EditForm Model="buscarRequest" OnValidSubmit="BuscarPalabraRequest" id="search-form" class="search-form clearfix" autocomplete="off">
+            <InputText @bind-Value="buscarRequest.TextoBuscar" class="search-term required" type="text" style="box-sizing: content-box" placeholder="Ingrese Texto a buscar" />
+            <input class="search-btn" type="submit" value="Buscar" />
+            <div id="search-error-container"></div>
+        </EditForm>
+    </div>
+</div>
+
+<!-- Start of Page Container -->
+<div class="page-container">
+    <div class="container">
+        <div class="row">
+
+            <!-- start of page content -->
+            <div class="span12 page-content" style="margin-bottom: 10px;border-bottom: 1px solid #e8e8e8;">
+                <div class="row-fluid">
+                    @if (listaEtiquetasFiltros != null) {
+                        foreach(var etiqueta in listaEtiquetasFiltros) {
+                            <div class="span2">
+                                <h5><Tooltip Title="@etiqueta.TooltipWeb">@etiqueta.MostrarWeb</Tooltip></h5>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- start of page content -->
+            <div class="span12 page-content">
+                <div class="row-fluid">
+
+                    @if (listadeOpciones != null) {
+                        @for (int i = 0; i < listadeOpciones.Count; i += 1) {
+                            <div class="span2">
+                                <select style="max-width: 100%" value="@GetSelectedValue(i)">
+                                    <option value="">Seleccione...</option>
+                                    @foreach (var opcion in listadeOpciones[i])
+                                    {
+                                        <option value="@opcion.IdHomologacion">@opcion.MostrarWeb</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="py-2">
+            @if (listaEtiquetasGrilla != null)
+            {
+                <Grid @ref="grid"  TItem="DataLakeOrganizacion" class="table table-hover table-bordered table-striped" DataProvider="ResultadoBusquedaDataProvider" Responsive="true">
+                    @foreach(var etiqueta in listaEtiquetasGrilla.OrderBy(c => c.MostrarWebOrden)) {
+                        <GridColumn TItem="DataLakeOrganizacion" HeaderText="@etiqueta.MostrarWeb" PropertyName="@etiqueta.MostrarWeb">
+                            @context?.DataJson?.FirstOrDefault(f => f.IdHomologacion == etiqueta.IdHomologacion)?.ValorColumna
+                        </GridColumn>
+                    }
+                    <GridColumn TItem="DataLakeOrganizacion" HeaderText="-">
+                        <Button Color="ButtonColor.Secondary" Outline="true" Size="Size.Small" @onclick="() => showModal(context)">
+                            <Icon Name="IconName.Front" />
+                        </Button>
+                    </GridColumn>
+                    <GridColumn TItem="DataLakeOrganizacion" HeaderText="-">
+                        <Button Color="ButtonColor.Secondary" Outline="true" Size="Size.Small">
+                            <Icon Name="IconName.FileTypePdf" />
+                        </Button>
+                    </GridColumn>
+                </Grid>
+            }
+        </div>
+    </div>
+</div>

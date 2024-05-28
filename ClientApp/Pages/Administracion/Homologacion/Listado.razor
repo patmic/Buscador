@@ -1,0 +1,56 @@
+@page "/homologacion"
+@layout AdminLayout
+@using ClientApp.Models;
+
+<PageTitle>Homologación</PageTitle>
+
+<h3>Administación de campos de Homologación</h3>
+
+<div class="form-row py-2">
+    <AutoComplete @bind-Value="homologacionName"
+        TItem="VwHomologacion"
+        DataProvider="VwHomologacionDataProvider"
+        PropertyName="MostrarWeb"
+        Placeholder="Seleccionar Grupo..."
+        OnChanged="(VwHomologacion vwHomologacion) => OnAutoCompleteChanged(vwHomologacion)" />
+</div>
+
+<div class="form-row py-2">
+    <Grid @ref="grid" TItem="VwHomologacion" class="table table-hover table-bordered table-striped" DataProvider="HomologacionDataProvider" Responsive="true" Id="sortableGrid">
+        <GridColumn TItem="VwHomologacion" HeaderText="Nombre Homologado" PropertyName="NombreHomologado">
+            @context.NombreHomologado
+            <input type="hidden" value="@context.IdHomologacion" />
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Mostrar Web Orden" PropertyName="MostrarWebOrden">
+            @context.MostrarWebOrden
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Mostrar Web" PropertyName="MostrarWeb">
+            @context.MostrarWeb
+            <input type="hidden" value="@context.IdHomologacion" />
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Tooltip Web" PropertyName="TooltipWeb">
+            @context.TooltipWeb
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Mascara Dato" PropertyName="MascaraDato">
+            @context.MascaraDato
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Si NoHay Dato" PropertyName="SiNoHayDato">
+            @context.SiNoHayDato
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Editar">
+            <Button Type="ButtonType.Link" Color="ButtonColor.Secondary" Outline="true" To="@($"/editar-homologacion/{homologacionSelected.IdHomologacion}/{context.IdHomologacion}")" Size="Size.Small">
+                <Icon Name="IconName.PencilSquare" />
+            </Button>
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Eliminar">
+            <Button Color="ButtonColor.Danger" Outline="true" @onclick="async () => await OnDeleteClick(context.IdHomologacion)" Size="Size.Small">
+                <Icon Name="IconName.Trash3" />
+            </Button>
+        </GridColumn>
+    </Grid>
+</div>
+@if (homologacionSelected != null) {
+    <p>
+        <Button Type="ButtonType.Link" Color="ButtonColor.Primary" To="@($"/nuevo-homologacion/{homologacionSelected?.IdHomologacion}")">Nuevo</Button>
+    </p>
+}

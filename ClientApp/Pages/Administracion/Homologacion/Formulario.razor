@@ -1,0 +1,69 @@
+@page "/nuevo-homologacion/{IdPadre:int}"
+@page "/editar-homologacion/{IdPadre:int}/{Id:int}"
+@layout AdminLayout
+@using Microsoft.AspNetCore.Authorization;
+@using ClientApp.Services.IService
+@using ClientApp.Models;
+@attribute [Authorize]
+
+<PageTitle>Formulario de Esquema</PageTitle>
+
+<EditForm Model="homologacion" OnValidSubmit="GuardarHomologacion" class="pt-4">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="card border p-4">
+        <div class="card-body">
+            <h3 class="text-success text-center">
+                <strong>Información Principal</strong>
+            </h3>
+
+            <hr style="background-color:aliceblue" />
+            <div class="py-2 input-group">
+                <InputNumber @bind-Value="homologacion.MostrarWebOrden" class="form-control" placeholder="Mostrar web orden..." />
+                <ValidationMessage For="(()=>homologacion.MostrarWebOrden)" />
+            </div>
+
+            <div class="py-2 input-group">
+                <InputText @bind-Value="homologacion.MostrarWeb" class="form-control" placeholder="Mostrar web..." />
+                <ValidationMessage For="(()=>homologacion.MostrarWeb)" />
+            </div>
+
+            <div class="form-row py-2">
+                <div class="col">
+                    <InputTextArea @bind-Value="homologacion.TooltipWeb" class="form-control" placeholder="Tooltip Web..." />
+                    <ValidationMessage For="(()=>homologacion.TooltipWeb)" />
+                </div>
+            </div>
+
+            <div class="form-row py-2">
+                <div class="col">
+                    <InputText @bind-Value="homologacion.MascaraDato" class="form-control" placeholder="Mascara Dato..." />
+                    <ValidationMessage For="(()=>homologacion.MascaraDato)" />
+                </div>
+            </div>
+
+            <div class="form-row py-2">
+                <div class="col">
+                    <InputText @bind-Value="homologacion.SiNoHayDato" class="form-control" placeholder="Si No Hay Dato..." />
+                    <ValidationMessage For="(()=>homologacion.SiNoHayDato)" />
+                </div>
+            </div>
+
+            <div class="form-row py-2">
+                <div class="col">
+                    <InputText @bind-Value="homologacion.NombreHomologado" class="form-control" placeholder="Nombre Homologado..." />
+                    <ValidationMessage For="(()=>homologacion.NombreHomologado)" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</EditForm>
+
+<div class="py-2">
+    <hr style="background-color:aliceblue" />
+    <Button @ref="saveButton" Color="ButtonColor.Success" @onclick="async () => await GuardarHomologacion()">
+        Guardar
+    </Button>
+</div>

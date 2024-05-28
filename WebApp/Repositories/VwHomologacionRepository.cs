@@ -15,17 +15,24 @@ namespace WebApp.Repositories
         }
         public ICollection<VwGrilla> ObtenerEtiquetaGrilla()
         {
-            return _bd.VwGrilla.OrderBy(c => c.IdHomologacion).ToList();
+            return _bd.VwGrilla.OrderBy(c => c.MostrarWebOrden).ToList();
         }
 
         public ICollection<VwFiltro> ObtenerEtiquetaFiltros()
         {
-            return _bd.VwFiltro.OrderBy(c => c.IdHomologacion).ToList();
+            return _bd.VwFiltro.OrderBy(c => c.MostrarWebOrden).ToList();
         }
-
+        public ICollection<VwDimension> ObtenerDimension()
+        {
+            return _bd.VwDimension.OrderBy(c => c.MostrarWebOrden).ToList();
+        }
+        public ICollection<Homologacion> ObtenerGrupos()
+        {
+            return _bd.Homologacion.Where(c => c.IdHomologacionGrupo == null).OrderBy(c => c.MostrarWebOrden).ToList();
+        }
         public ICollection<IVwHomologacion> ObtenerFiltroDetalles(int IdHomologacion)
         {
-            return _bd.Database.SqlQuery<IVwHomologacion>($"SELECT * FROM fnFiltroDetalle({IdHomologacion})").ToList();
+            return _bd.Database.SqlQuery<IVwHomologacion>($"SELECT * FROM fnFiltroDetalle({IdHomologacion})").OrderBy( c => c.MostrarWebOrden).ToList();
         }
     }
 }

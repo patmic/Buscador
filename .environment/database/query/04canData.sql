@@ -222,6 +222,13 @@ INSERT INTO [OrganizacionFullText]
 ;
 GO
 
+DECLARE @CLAVE NVARCHAR(32);
+SET @CLAVE = (SELECT LOWER(CONVERT(NVARCHAR(32), HASHBYTES('MD5', 'usuario23'), 2)));
+
+INSERT INTO [Usuario](Email, Nombre, Apellido, Telefono, Clave, Rol, IdUserCreacion, IdUserModifica)
+VALUES ('admin@gmail.com', 'admin', 'admin', '593961371400', @CLAVE, 'ADMIN', 0, 0);
+
+-- select * from Usuario
 
 -- INSERT INTO `accreditationoac_v`(`oac_country`
 -- `oac_countrycode`

@@ -13,9 +13,9 @@ namespace WebApp.Models
         public int IdEndpoint { get; set; }
         [Required]
         public string Accion { get; set; }
-        public DateTime FechaCrea { get; set; }
+        public DateTime FechaCreacion { get; set; }
         public DateTime FechaModifica { get; set; }
-        public int IdUserCrea { get; set; }
+        public int IdUserCreacion { get; set; }
         public int IdUserModifica { get; set; }
 
         // Propiedades de navegación

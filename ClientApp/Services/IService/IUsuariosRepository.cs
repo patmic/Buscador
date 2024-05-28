@@ -5,6 +5,6 @@ namespace ClientApp.Services.IService {
     {
         Task<List<Usuario>> GetUsuariosAsync();
         Task<Usuario> GetUsuarioAsync(int IdUsuario);
-        Task<RespuestaRegistro> RegistrarUsuario(Usuario usuarioParaRegistro);
+        Task<RespuestaRegistro> RegistrarOActualizar(Usuario usuarioParaRegistro);
     }
 }

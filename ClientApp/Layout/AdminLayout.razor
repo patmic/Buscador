@@ -1,0 +1,30 @@
+@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Authorization;
+@attribute [Authorize]
+@inject ClientApp.Services.ToastService ToastService
+
+<Toasts class="p-3" Messages="ToastService.Messages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" CreateToastMessageCallback="CreateToastMessage"/>
+
+<div class="bb-page">
+    <AdminSidebar />
+
+    <main>
+        <div class="bb-top-row px-4 d-flex justify-content-end">
+            <a href="/salir" target="_blank">Salir</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code{
+    private bool _iconMenuActive { get; set; }
+    private string? IconMenuCssClass => _iconMenuActive ? "width: 80px;" : null;
+
+    protected void ToggleIconMenu(bool iconMenuActive)
+    {
+        _iconMenuActive = iconMenuActive;
+    }
+}

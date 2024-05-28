@@ -1,0 +1,83 @@
+@page "/nuevo-esquema"
+@page "/editar-esquema/{Id:int}"
+@layout AdminLayout
+@using Microsoft.AspNetCore.Authorization;
+@using ClientApp.Services.IService
+@using ClientApp.Models;
+@attribute [Authorize]
+
+<PageTitle>Formulario de Esquema</PageTitle>
+
+<EditForm Model="homologacionEsquema" OnValidSubmit="GuardarHomologacionEsquema" class="pt-4">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="card border p-4">
+        <div class="card-body">
+            <h3 class="text-success text-center">
+                <strong>Información Principal</strong>
+            </h3>
+
+            <hr style="background-color:aliceblue" />
+            <div class="py-2 input-group">
+                <InputNumber @bind-Value="homologacionEsquema.MostrarWebOrden" class="form-control" placeholder="Mostrar web orden..." />
+                <ValidationMessage For="(()=>homologacionEsquema.MostrarWebOrden)" />
+
+            </div>
+
+            <div class="py-2 input-group">
+                <InputText @bind-Value="homologacionEsquema.MostrarWeb" class="form-control" placeholder="Mostrar web..." />
+                <ValidationMessage For="(()=>homologacionEsquema.MostrarWeb)" />
+
+            </div>
+
+            <div class="form-row py-2">
+                <div class="col">
+                    <InputTextArea @bind-Value="homologacionEsquema.TooltipWeb" class="form-control" placeholder="Tooltip Web..." />
+                    <ValidationMessage For="(()=>homologacionEsquema.TooltipWeb)" />
+                </div>
+
+            </div>
+
+            <div class="form-row py-2">
+                <AutoComplete @bind-Value="homologacionName"
+                    TItem="VwHomologacion"
+                    DataProvider="VwHomologacionDataProvider"
+                    PropertyName="MostrarWeb"
+                    Placeholder="Search a columna..."
+                    OnChanged="(VwHomologacion vwHomologacion) => OnAutoCompleteChanged(vwHomologacion)" />
+            </div>
+        </div>
+    </div>
+</EditForm>
+<div class="py-2">
+    <Grid TItem="VwHomologacion" class="table table-hover table-bordered table-striped" Data="lista" Responsive="true" FixedHeader="true" Height="350" Id="sortableGrid">
+        <GridColumn TItem="VwHomologacion" HeaderText="Mostrar Web Orden" PropertyName="MostrarWebOrden">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MostrarWebOrden
+            <input type="hidden" value="@context.IdHomologacion" />
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Mostrar Web" PropertyName="MostrarWeb">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MostrarWeb
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Tooltip Web" PropertyName="TooltipWeb">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.TooltipWeb
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Mascara Dato" PropertyName="MascaraDato">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MascaraDato
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Si No Hay Dato" PropertyName="SiNoHayDato">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.SiNoHayDato
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Eliminar">
+            <Button Color="ButtonColor.Danger" Outline="true" @onclick="() => EliminarElemento(context.IdHomologacion)" Size="Size.Small">
+                <Icon Name="IconName.Trash3" />
+            </Button>
+        </GridColumn>
+    </Grid>
+</div>
+<div class="py-2">
+    <hr style="background-color:aliceblue" />
+    <Button @ref="saveButton" Color="ButtonColor.Success" @onclick="async () => await GuardarHomologacionEsquema()">
+        Guardar
+    </Button>
+</div>
