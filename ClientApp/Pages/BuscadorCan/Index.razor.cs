@@ -2,6 +2,7 @@ using BlazorBootstrap;
 using ClientApp.Models;
 using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
 
 namespace ClientApp.Pages.BuscadorCan
 {
@@ -17,7 +18,7 @@ namespace ClientApp.Pages.BuscadorCan
         private List<VwHomologacion>? listaEtiquetasFiltros;
         private List<VwHomologacion>? listaEtiquetasGrilla;
         private List<List<VwHomologacion>>? listadeOpciones = new List<List<VwHomologacion>>();
-        private Dictionary<int, int> valoresSeleccionados = new Dictionary<int, int>();
+        private List<int> selectedValues = new List<int>();
         private List<DataLakeOrganizacion>? listDataLakeOrganizacion;
         protected override async Task OnInitializedAsync()
         {
@@ -33,38 +34,27 @@ namespace ClientApp.Pages.BuscadorCan
                 listaEtiquetasGrilla = await vwHomologacionRepository.GetHomologacionAsync("etiquetas_grilla");
             } catch (Exception) { }
         }
-        private async Task CambiarSeleccion(ChangeEventArgs args, List<VwHomologacion> opciones, int index)
+        private void CambiarSeleccion(ChangeEventArgs e, int index)
         {
-            if (args.Value != null && opciones != null && opciones.Any() && index >= 0 && index < listadeOpciones.Count)
+            while (selectedValues.Count <= index)
             {
-                int idSeleccionado = Convert.ToInt32(args.Value);
-
-                if (valoresSeleccionados.ContainsKey(index))
-                {
-                    valoresSeleccionados[index] = idSeleccionado;
-                }
-                else
-                {
-                    valoresSeleccionados.Add(index, idSeleccionado);
-                }
-
-                await BuscarPalabraRequest();
+                selectedValues.Add(0);
             }
-        }
-        private string GetSelectedValue(int index)
-        {
-            if (valoresSeleccionados.ContainsKey(index))
+
+            if (int.TryParse(e.Value.ToString(), out int selectedValue))
             {
-                return valoresSeleccionados[index].ToString();
+                selectedValues[index] = selectedValue;
+            } else {
+                selectedValues[index] = 0;
             }
-            return "";
         }
         private async Task BuscarPalabraRequest()
         {
             try {
-                if (!string.IsNullOrEmpty(buscarRequest.TextoBuscar)) {
-                    listDataLakeOrganizacion = await servicio.BuscarPalabraAsync(buscarRequest.TextoBuscar);
-                }
+                listDataLakeOrganizacion = await servicio.BuscarPalabraAsync(JsonConvert.SerializeObject(new {
+                    TextoBuscar = buscarRequest.TextoBuscar ?? "",
+                    IdHomologacionFiltro = selectedValues.Where(c => c != 0).ToList()
+                }));
             } catch (Exception e) { 
                 Console.WriteLine(e);
             }
@@ -72,11 +62,6 @@ namespace ClientApp.Pages.BuscadorCan
         }
         private async Task<GridDataProviderResult<DataLakeOrganizacion>> ResultadoBusquedaDataProvider(GridDataProviderRequest<DataLakeOrganizacion> request)
         {
-            if (listDataLakeOrganizacion is null && !string.IsNullOrEmpty(buscarRequest.TextoBuscar)) {
-                 try {
-                    listDataLakeOrganizacion = await servicio.BuscarPalabraAsync(buscarRequest.TextoBuscar);
-                 } catch (Exception) { }
-            }
             if (listDataLakeOrganizacion is null) {
                 listDataLakeOrganizacion = new List<DataLakeOrganizacion>();
             }

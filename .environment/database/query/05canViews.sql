@@ -112,7 +112,7 @@ RETURN
 			,MostrarWebOrden	
 			,MostrarWeb	
 			,TooltipWeb	
-			,(select dbo.fnHomologacionEsquemaCampo(IdHomologacionEsquema)) Esquema
+			,(select dbo.fnHomologacionEsquemaCampo(IdHomologacionEsquema)) EsquemaJson
 	FROM	HomologacionEsquema		WITH (NOLOCK)
 	WHERE	IdHomologacionEsquema = @IdHomologacionEsquema	
 	AND		Estado = 'A'
@@ -125,6 +125,6 @@ GO
 -- select * from fnFiltroDetalle(3)
 -- select * from vwFiltro
 
--- select dbo.fnHomologacionEsquemaCampo(5) as er
+-- select dbo.fnHomologacionEsquemaCampo(3) as er
 
--- select * from fnHomologacionEsquema (5)
+-- select * from fnHomologacionEsquema (3)

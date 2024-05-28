@@ -15,17 +15,15 @@ namespace WebApp.Controllers
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<BuscadorController> _logger = logger;
 
-        // [Authorize]
         [HttpGet("buscar_palabras")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult BuscarPalabras(string value, int field1, int field2, int field3, int field4)
+        public IActionResult BuscarPalabras(string value)
         {
             try
             {
-                Console.WriteLine($"Buscando palabras {field1} {field2} {field3} {field4} {value}");
-                var listado = _vhRepo.BuscarPalabra(value, field1, field2, field3, field4);
+                var listado = _vhRepo.BuscarPalabra(value);
 
                 var listadoDto = new List<BuscadorDto>();
 
