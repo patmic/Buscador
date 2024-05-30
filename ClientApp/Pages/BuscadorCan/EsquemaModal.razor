@@ -1,49 +1,16 @@
-@* @using ClientApp.Models; *@
-
-<Tabs>
-    <Tab Title="Esquema 1" IsActive="true">
-        <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Home tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
-        </Content>
-    </Tab>
-    <Tab Title="Esquema 2">
-        <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Home tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
-        </Content>
-    </Tab>
-    <Tab Title="Esquema 3">
-        <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Home tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
-        </Content>
-    </Tab>
+<Tabs @ref="tabs" EnableFadeEffect="true">
     @if (listaEsquemas != null) {
         @foreach(var esquema in listaEsquemas) {
-            <Tab Title="@esquema.MostrarWeb" IsActive="true">
+            <Tab Title="@esquema.MostrarWeb">
+                <Content>
+                    <div class="py-2">
+                        <span style="font-size: 10px;">@esquema.TooltipWeb</span>
+                    </div>
+                    <div class="py-1">
+                        <EsquemaModalGrillaTab homologacionEsquema="@esquema" />
+                    </div>
+                </Content>
             </Tab>
         }
     }
 </Tabs>
-@* <Grid TItem="VwHomologacion" class="table table-hover table-bordered table-striped" Data="columnas" Responsive="true" FixedHeader="true" Height="350" Id="sortableGrid">
-    <GridColumn TItem="VwHomologacion" HeaderText="Id" PropertyName="IdHomologacion">
-        @context.MostrarWebOrden
-        <input type="hidden" value="@context.IdHomologacion" />
-    </GridColumn>
-    <GridColumn TItem="VwHomologacion" HeaderText="Mostrar Web" PropertyName="MostrarWeb">
-        @context.MostrarWeb
-    </GridColumn>
-    <GridColumn TItem="VwHomologacion" HeaderText="Tooltip Web" PropertyName="TooltipWeb">
-        @context.TooltipWeb
-    </GridColumn>
-    <GridColumn TItem="VwHomologacion" HeaderText="Mascara Dato" PropertyName="MascaraDato">
-        @context.MascaraDato
-    </GridColumn>
-    <GridColumn TItem="VwHomologacion" HeaderText="Si No Hay Dato" PropertyName="SiNoHayDato">
-        @context.SiNoHayDato
-    </GridColumn>
-</Grid> *@

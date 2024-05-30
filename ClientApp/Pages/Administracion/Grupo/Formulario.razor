@@ -1,5 +1,4 @@
-@page "/nuevo-homologacion/{IdPadre:int}"
-@page "/editar-homologacion/{IdPadre:int}/{Id:int}"
+@page "/editar-grupos/{Id:int}"
 @layout AdminLayout
 @using Microsoft.AspNetCore.Authorization;
 @using ClientApp.Services.IService
@@ -15,7 +14,7 @@
     <div class="card border p-4">
         <div class="card-body">
             <h3 class="text-success text-center">
-                <strong>Actualizar / Registrar [@homologacionGrupo?.MostrarWeb]</strong>
+                <strong>Actualizar Registro de Grupo</strong>
             </h3>
 
             <hr style="background-color:aliceblue" />
@@ -41,37 +40,6 @@
                 <div class="col">
                     <InputText @bind-Value="homologacion.TooltipWeb" class="form-control" placeholder="ingresar..." />
                     <ValidationMessage For="(()=>homologacion.TooltipWeb)" />
-                </div>
-            </div>
-
-            <div class="form-group row py-2">
-                <div class="col-md-4">
-                    <label class="col-form-label">Tipo de Dato</label>
-                    <div>
-                        <Dropdown AutoClose="true">
-                            <DropdownToggleButton Color="ButtonColor.Secondary">
-                                @homologacion?.MascaraDato
-                            </DropdownToggleButton>
-                            <DropdownMenu>
-                                <DropdownItem @onclick="@(() => OnAutoCompleteChanged("TEXTO"))">TEXTO</DropdownItem>
-                                <DropdownItem @onclick="@(() => OnAutoCompleteChanged("FECHA"))">FECHA</DropdownItem>
-                                <DropdownItem @onclick="@(() => OnAutoCompleteChanged("NUMERICO"))">NUMERICO</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                        <ValidationMessage For="(()=>homologacion.MascaraDato)" />
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="col-form-label">Si No Hay Dato</label>
-                    <InputText @bind-Value="homologacion.SiNoHayDato" class="form-control" placeholder="ingresar..." maxlength="10" />
-                    <ValidationMessage For="(()=>homologacion.SiNoHayDato)" />
-                </div>
-
-                <div class="col-md-4">
-                    <label class="col-form-label">Ancho Columna</label>
-                    <InputNumber @bind-Value="homologacion.AnchoColumna" class="form-control" placeholder="ingresar..." />
-                    <ValidationMessage For="(()=>homologacion.AnchoColumna)" />
                 </div>
             </div>
 

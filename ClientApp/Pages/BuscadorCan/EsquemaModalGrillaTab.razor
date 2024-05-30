@@ -1,0 +1,16 @@
+@using ClientApp.Models;
+
+@if(Columnas != null) {
+    <Grid TItem="VwHomologacion" class="table table-hover table-bordered table-striped" Data="resultados" Responsive="true" FixedHeader="true" Height="350">
+        @foreach(var item in Columnas) {
+            <GridColumn TItem="VwHomologacion" PropertyName="@item.MostrarWeb">
+                <HeaderContent>
+                    <Tooltip Title="@item.TooltipWeb">@item.MostrarWeb</Tooltip>
+                </HeaderContent>
+                <ChildContent>
+                    @context.MostrarWeb
+                </ChildContent>
+            </GridColumn>
+        }
+    </Grid>
+}

@@ -45,12 +45,14 @@ CREATE OR ALTER VIEW vwFiltro AS
 GO
 
 CREATE OR ALTER VIEW vwDimension AS 
-	SELECT   H.IdHomologacion 
+	SELECT   H.IdHomologacion
+			,H.NombreHomologado
 			,H.MostrarWeb
 			,H.TooltipWeb
 			,H.MostrarWebOrden
 			,H.MascaraDato
 			,H.SiNoHayDato
+			,H.NombreHomologado + ' / ' + H.MostrarWeb AS CustomMostrarWeb
 	FROM    Homologacion H		WITH (NOLOCK)
 	JOIN	(	SELECT DISTINCT IdHomologacion
 				FROM	Homologacion		WITH (NOLOCK)
@@ -112,7 +114,7 @@ RETURN
 			,MostrarWebOrden	
 			,MostrarWeb	
 			,TooltipWeb	
-			,(select dbo.fnHomologacionEsquemaCampo(IdHomologacionEsquema)) Esquema
+			,(select dbo.fnHomologacionEsquemaCampo(IdHomologacionEsquema)) EsquemaJson
 	FROM	HomologacionEsquema		WITH (NOLOCK)
 	WHERE	IdHomologacionEsquema = @IdHomologacionEsquema	
 	AND		Estado = 'A'
@@ -125,6 +127,6 @@ GO
 -- select * from fnFiltroDetalle(3)
 -- select * from vwFiltro
 
--- select dbo.fnHomologacionEsquemaCampo(5) as er
+-- select dbo.fnHomologacionEsquemaCampo(3) as er
 
--- select * from fnHomologacionEsquema (5)
+-- select * from fnHomologacionEsquema (3)

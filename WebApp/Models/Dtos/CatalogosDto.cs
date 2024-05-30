@@ -8,5 +8,7 @@ namespace WebApp.Models.Dtos
         public int MostrarWebOrden { get; set; }
         public string? MascaraDato { get; set; }
         public string? SiNoHayDato { get; set; }
+        public string? NombreHomologado { get; set; }
+        public string? CustomMostrarWeb { get; set; }
     }
 }

@@ -6,5 +6,7 @@ namespace WebApp.Models
     public class VwDimension : IVwHomologacion
     {
         public int MostrarWebOrden { get; set; }
+        public string? NombreHomologado { get; set; }
+        public string? CustomMostrarWeb { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace WebApp.Repositories.IRepositories {
         DataLakeOrganizacion BuscarOrganizacion(int Id);
         ICollection<DataLakeOrganizacion> ObtenerOrganizacionesRelacionadas(int Id, int IdDataLake);
 
-        ICollection<HomologacionEsquema> ObtenerEsquemasRelacionados(int Id);
+        ICollection<HomologacionEsquemaDto> ObtenerEsquemasRelacionados(int Id);
     }
 }
