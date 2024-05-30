@@ -45,12 +45,14 @@ CREATE OR ALTER VIEW vwFiltro AS
 GO
 
 CREATE OR ALTER VIEW vwDimension AS 
-	SELECT   H.IdHomologacion 
+	SELECT   H.IdHomologacion
+			,H.NombreHomologado
 			,H.MostrarWeb
 			,H.TooltipWeb
 			,H.MostrarWebOrden
 			,H.MascaraDato
 			,H.SiNoHayDato
+			,H.NombreHomologado + ' / ' + H.MostrarWeb AS CustomMostrarWeb
 	FROM    Homologacion H		WITH (NOLOCK)
 	JOIN	(	SELECT DISTINCT IdHomologacion
 				FROM	Homologacion		WITH (NOLOCK)

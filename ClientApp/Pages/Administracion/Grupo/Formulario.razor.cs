@@ -3,32 +3,26 @@ using ClientApp.Models;
 using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components;
 
-namespace ClientApp.Pages.Administracion.Homologacion
+namespace ClientApp.Pages.Administracion.Grupo
 {
     public partial class Formulario
     {
         private Button saveButton = default!;
         private VwHomologacion homologacion = new VwHomologacion();
-        private VwHomologacion homologacionGrupo = new VwHomologacion();
         [Inject]
         public IHomologacionRepository homologacionRepository { get; set; }
         [Inject]
         public NavigationManager navigationManager { get; set; }
         [Parameter]
         public int? Id { get; set; }
-        [Parameter]
-        public int? IdPadre { get; set; }
         [Inject]
         public Services.ToastService toastService { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            homologacionGrupo = await homologacionRepository.GetHomologacionAsync((int) IdPadre);
             if (Id > 0) {
                 homologacion = await homologacionRepository.GetHomologacionAsync(Id.Value);
             } else {
-                homologacion.IdHomologacionGrupo = IdPadre;
                 homologacion.InfoExtraJson = "{}";
-                homologacion.MascaraDato = "TEXTO";
             }
         }
         private async Task GuardarHomologacion()
@@ -39,7 +33,7 @@ namespace ClientApp.Pages.Administracion.Homologacion
             if (result.registroCorrecto)
             {
                 toastService.CreateToastMessage(ToastType.Success, "Registrado exitosamente");
-                navigationManager.NavigateTo("/homologacion");
+                navigationManager.NavigateTo("/grupos");
             }
             else
             {
@@ -47,9 +41,6 @@ namespace ClientApp.Pages.Administracion.Homologacion
             }
 
             saveButton.HideLoading();
-        }
-        private void OnAutoCompleteChanged(string mascaraDato) {
-            homologacion.MascaraDato = mascaraDato;
         }
     }
 }

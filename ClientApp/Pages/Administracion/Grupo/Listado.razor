@@ -1,0 +1,41 @@
+@page "/grupos"
+@layout AdminLayout
+@using ClientApp.Models;
+
+<PageTitle>Homologación</PageTitle>
+
+<h3>Administación de Grupos de Homologación</h3>
+
+<div class="form-row py-2">
+    <Grid
+        Id="sortableGrid"
+        @ref="grid"
+        TItem="VwHomologacion"
+        class="table table-hover table-bordered table-striped"
+        DataProvider="HomologacionDataProvider"
+        Responsive="true"
+    >
+        <GridColumn TItem="VwHomologacion" HeaderText="Código Homologado" PropertyName="NombreHomologado" ColumnClass="@(x => x.IdHomologacion == 1 ? "table-secondary text-white" : "")">
+            @context.NombreHomologado
+            <input type="hidden" value="@context.IdHomologacion" />
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Texto a Mostrar en la Web" PropertyName="MostrarWeb" ColumnClass="@(x => x.IdHomologacion == 1 ? "table-secondary text-white" : "")">
+            @context.MostrarWeb
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Tooltip Web" PropertyName="TooltipWeb" ColumnClass="@(x => x.IdHomologacion == 1 ? "table-secondary text-white" : "")">
+            @context.TooltipWeb
+        </GridColumn>
+        <GridColumn TItem="VwHomologacion" HeaderText="Editar" Filterable="false" ColumnClass="@(x => x.IdHomologacion == 1 ? "table-secondary text-white" : "")">
+            <Button Type="ButtonType.Link" Color="ButtonColor.Secondary" Outline="true" To="@($"/editar-grupos/{context.IdHomologacion}")" Size="Size.Small">
+                <Icon Name="IconName.PencilSquare" />
+            </Button>
+        </GridColumn>
+    </Grid>
+</div>
+
+<div class="form-row py-2">
+    <Alert Color="AlertColor.Secondary" Dismissable="false">
+        <Icon Name="IconName.ExclamationTriangleFill" class="me-2"></Icon>
+        <span class="text-white">Registro para organización lógico [No es filtro]</span>
+    </Alert>
+</div>

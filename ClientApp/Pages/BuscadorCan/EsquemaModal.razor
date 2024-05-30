@@ -3,7 +3,12 @@
         @foreach(var esquema in listaEsquemas) {
             <Tab Title="@esquema.MostrarWeb">
                 <Content>
-                    <EsquemaModalGrillaTab homologacionEsquema="@esquema" />
+                    <div class="py-2">
+                        <span style="font-size: 10px;">@esquema.TooltipWeb</span>
+                    </div>
+                    <div class="py-1">
+                        <EsquemaModalGrillaTab homologacionEsquema="@esquema" />
+                    </div>
                 </Content>
             </Tab>
         }

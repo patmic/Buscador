@@ -1,17 +1,17 @@
 @using ClientApp.Models;
 
 <Grid TItem="VwHomologacion" class="table table-hover table-bordered table-striped" Data="columnas" Responsive="true" FixedHeader="true" Height="350" Id="sortableGrid">
-    <GridColumn TItem="VwHomologacion" HeaderText="Id" PropertyName="IdHomologacion">
-        @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MostrarWebOrden
+    <GridColumn TItem="VwHomologacion" HeaderText="Código Homologado" PropertyName="NombreHomologado">
+        @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.NombreHomologado
         <input type="hidden" value="@context.IdHomologacion" />
     </GridColumn>
-    <GridColumn TItem="VwHomologacion" HeaderText="Mostrar Web" PropertyName="MostrarWeb">
+    <GridColumn TItem="VwHomologacion" HeaderText="Texto a Mostrar en la Web" PropertyName="MostrarWeb">
         @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MostrarWeb
     </GridColumn>
     <GridColumn TItem="VwHomologacion" HeaderText="Tooltip Web" PropertyName="TooltipWeb">
         @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.TooltipWeb
     </GridColumn>
-    <GridColumn TItem="VwHomologacion" HeaderText="Mascara Dato" PropertyName="MascaraDato">
+    <GridColumn TItem="VwHomologacion" HeaderText="Tipo de Dato" PropertyName="MascaraDato">
         @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MascaraDato
     </GridColumn>
     <GridColumn TItem="VwHomologacion" HeaderText="Si No Hay Dato" PropertyName="SiNoHayDato">

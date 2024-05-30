@@ -4,25 +4,21 @@ using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace ClientApp.Pages.Administracion.Homologacion
+namespace ClientApp.Pages.Administracion.Grupo
 {
     public partial class Listado
     {
-        private VwHomologacion homologacionSelected;
         private Grid<VwHomologacion> grid;
         private List<VwHomologacion>? listaHomologacions = new List<VwHomologacion>();
         [Inject]
         private IVwHomologacionRepository vwHomologacionRepository { get; set; }
         [Inject]
         private IHomologacionRepository homologacionRepository { get; set; }
-        private List<VwHomologacion>? listaVwHomologacion;
         public event Action DataLoaded;
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            listaVwHomologacion = await vwHomologacionRepository.GetHomologacionAsync("grupo");
-
             DataLoaded += async () => {
                 if (!(listaHomologacions is null)) {
                     await Task.Delay(2000);
@@ -32,10 +28,7 @@ namespace ClientApp.Pages.Administracion.Homologacion
         }
         private async Task<GridDataProviderResult<VwHomologacion>> HomologacionDataProvider(GridDataProviderRequest<VwHomologacion> request)
         {
-            if (homologacionSelected != null)
-            {
-                listaHomologacions = await homologacionRepository.GetHomologacionsAsync(homologacionSelected.IdHomologacion);
-            }
+            listaHomologacions = await vwHomologacionRepository.GetHomologacionAsync("grupo");
 
             DataLoaded?.Invoke();
 
@@ -47,11 +40,6 @@ namespace ClientApp.Pages.Administracion.Homologacion
             if (respuesta.registroCorrecto) {
                 await grid.RefreshDataAsync();
             }
-        }
-        private async void OnAutoCompleteChanged(VwHomologacion _vwHomologacionSelected)
-        {
-            homologacionSelected = _vwHomologacionSelected;
-            await grid.RefreshDataAsync();
         }
         [JSInvokable]
         public async Task OnDragEnd(string[] sortedIds)
@@ -66,9 +54,6 @@ namespace ClientApp.Pages.Administracion.Homologacion
                 }
             }
             await Task.CompletedTask;
-        }
-        private string getNameDefault() {
-            return homologacionSelected?.MostrarWeb ?? "Seleccione Grupo de Homologación";
         }
     }
 }
