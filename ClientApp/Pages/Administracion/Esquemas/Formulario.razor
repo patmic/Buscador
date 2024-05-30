@@ -15,54 +15,56 @@
     <div class="card border p-4">
         <div class="card-body">
             <h3 class="text-success text-center">
-                <strong>Información Principal</strong>
+                <strong>Esquema Homologado</strong>
             </h3>
 
             <hr style="background-color:aliceblue" />
-            <div class="py-2 input-group">
-                <InputNumber @bind-Value="homologacionEsquema.MostrarWebOrden" class="form-control" placeholder="Mostrar web orden..." />
-                <ValidationMessage For="(()=>homologacionEsquema.MostrarWebOrden)" />
 
-            </div>
-
-            <div class="py-2 input-group">
-                <InputText @bind-Value="homologacionEsquema.MostrarWeb" class="form-control" placeholder="Mostrar web..." />
-                <ValidationMessage For="(()=>homologacionEsquema.MostrarWeb)" />
-
+            <div class="form-row py-2">
+                <label class="col-form-label">Texto a Mostrar en la Web</label>
+                <div class="col">
+                    <InputText @bind-Value="homologacionEsquema.MostrarWeb" class="form-control" placeholder="Mostrar web..." />
+                    <ValidationMessage For="(()=>homologacionEsquema.MostrarWeb)" />
+                </div>
             </div>
 
             <div class="form-row py-2">
+                <label class="col-form-label">Tooltip Web</label>
                 <div class="col">
-                    <InputTextArea @bind-Value="homologacionEsquema.TooltipWeb" class="form-control" placeholder="Tooltip Web..." />
+                    <InputText @bind-Value="homologacionEsquema.TooltipWeb" class="form-control" placeholder="Tooltip Web..." />
                     <ValidationMessage For="(()=>homologacionEsquema.TooltipWeb)" />
                 </div>
 
             </div>
 
             <div class="form-row py-2">
-                <AutoComplete @bind-Value="homologacionName"
-                    TItem="VwHomologacion"
-                    DataProvider="VwHomologacionDataProvider"
-                    PropertyName="MostrarWeb"
-                    Placeholder="Search a columna..."
-                    OnChanged="(VwHomologacion vwHomologacion) => OnAutoCompleteChanged(vwHomologacion)" />
+                <label class="col-form-label">Buscar y agregar campo homologado</label>
+                <div class="col">
+                    <AutoComplete @bind-Value="homologacionName"
+                        TItem="VwHomologacion"
+                        DataProvider="VwHomologacionDataProvider"
+                        PropertyName="CustomMostrarWeb"
+                        Placeholder="Buscar..."
+                        OnChanged="(VwHomologacion vwHomologacion) => OnAutoCompleteChanged(vwHomologacion)"
+                    />
+                </div>
             </div>
         </div>
     </div>
 </EditForm>
 <div class="py-2">
     <Grid TItem="VwHomologacion" class="table table-hover table-bordered table-striped" Data="lista" Responsive="true" FixedHeader="true" Height="350" Id="sortableGrid">
-        <GridColumn TItem="VwHomologacion" HeaderText="Mostrar Web Orden" PropertyName="MostrarWebOrden">
-            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MostrarWebOrden
+        <GridColumn TItem="VwHomologacion" HeaderText="Código Homologado" PropertyName="NombreHomologado">
+            @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.NombreHomologado
             <input type="hidden" value="@context.IdHomologacion" />
         </GridColumn>
-        <GridColumn TItem="VwHomologacion" HeaderText="Mostrar Web" PropertyName="MostrarWeb">
+        <GridColumn TItem="VwHomologacion" HeaderText="Texto a Mostrar en la Web" PropertyName="MostrarWeb">
             @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MostrarWeb
         </GridColumn>
         <GridColumn TItem="VwHomologacion" HeaderText="Tooltip Web" PropertyName="TooltipWeb">
             @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.TooltipWeb
         </GridColumn>
-        <GridColumn TItem="VwHomologacion" HeaderText="Mascara Dato" PropertyName="MascaraDato">
+        <GridColumn TItem="VwHomologacion" HeaderText="Tipo de Dato" PropertyName="MascaraDato">
             @listaVwHomologacion?.FirstOrDefault(c => c.IdHomologacion == context.IdHomologacion)?.MascaraDato
         </GridColumn>
         <GridColumn TItem="VwHomologacion" HeaderText="Si No Hay Dato" PropertyName="SiNoHayDato">

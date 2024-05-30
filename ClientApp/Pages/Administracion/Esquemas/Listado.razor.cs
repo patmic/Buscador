@@ -53,7 +53,7 @@ namespace ClientApp.Pages.Administracion.Esquemas
                     await homologacionEsquemaRepository.RegistrarOActualizar(homo);
                 }
             }
-            await Task.CompletedTask;
+            await grid.RefreshDataAsync();
         }
         private async Task OnDeleteClick(int IdHomologacionEsquema)
         {
