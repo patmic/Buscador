@@ -11,5 +11,6 @@ namespace WebApp.Repositories.IRepositories
         bool isUniqueUser(string usuario);
         ICollection<Usuario> findAll();
         Task<object> login(UsuarioLoginDto usuarioLoginDto);
+        Task<object> Recuperar(UsuarioDto usuarioDto);
     }
 }

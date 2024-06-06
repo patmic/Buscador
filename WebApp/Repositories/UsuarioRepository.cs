@@ -113,5 +113,17 @@ namespace WebApp.Repositories
                 resp += data[i].ToString("x2").ToLower();
             return resp;
         }
+
+        public async Task<object> Recuperar(UsuarioDto usuarioDto)
+        {
+            var usuario = _bd.Usuario.AsNoTracking().FirstOrDefault(u => u.Email.ToLower() == usuarioDto.Email.ToLower());
+
+            if (usuario == null)
+            {
+                return null;
+            }
+
+            return new { success = true };
+        }
     }
 }

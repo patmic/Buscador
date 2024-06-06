@@ -14,17 +14,12 @@ namespace WebApp.Mappers
             CreateMap<Models.Endpoint, EndpointDto>();
             
             CreateMap<UsuarioEndpointPermiso, UsuarioEndpointPermisoDto>();
-            
-            CreateMap<DataLakeOrganizacion, BuscadorDto>();
-            
-            CreateMap<BuscadorOrganizacion, BuscadorDto>();
-            
             CreateMap<IVwHomologacion, CatalogosDto>();
-            
+
             CreateMap<VwDimension, CatalogosDto>();
             CreateMap<VwGrilla, CatalogosDto>();
             CreateMap<VwFiltro, CatalogosDto>();
-            
+
             CreateMap<HomologacionEsquema, HomologacionEsquemaDto>();
             CreateMap<HomologacionEsquemaDto, HomologacionEsquema>();
 

@@ -38,6 +38,7 @@ builder.Services.AddScoped<IVwHomologacionRepository, VwHomologacionRepository>(
 builder.Services.AddScoped<IHomologacionRepository, HomologacionRepository>();
 builder.Services.AddScoped<IHomologacionEsquemaRepository, HomologacionEsquemaRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Agregar Automapper
 builder.Services.AddAutoMapper(typeof(Mapper));

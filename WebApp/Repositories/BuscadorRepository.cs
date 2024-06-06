@@ -1,37 +1,47 @@
 ﻿using System.Data;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Models;
+using Newtonsoft.Json;
 using WebApp.Models.Dtos;
 using WebApp.Repositories.IRepositories;
 using WebApp.Service;
 
 namespace WebApp.Repositories
 {
-  public class BuscadorRepository: IBuscadorRepository
-  {
-    private readonly SqlServerDbContext _bd;
-    public BuscadorRepository(SqlServerDbContext dbContext)
+    public class BuscadorRepository: IBuscadorRepository
     {
-        _bd = dbContext;
+        private readonly SqlServerDbContext _bd;
+        public BuscadorRepository(SqlServerDbContext dbContext)
+        {
+            _bd = dbContext;
+        }
+        public ICollection<FnHomologacionEsquemaDataDto> PsBuscarPalabra(string value)
+        {
+            var lstTem = _bd.Database.SqlQuery<FnHomologacionEsquemaData>($"exec psBuscarPalabra {value}").AsNoTracking().ToList();
+            return lstTem.Select(c => new FnHomologacionEsquemaDataDto()
+            {
+                IdDataLakeOrganizacion = c.IdDataLakeOrganizacion,
+                DataEsquemaJson = JsonConvert.DeserializeObject<List<ColumnaEsquema>>(c.DataEsquemaJson)
+            })
+            .ToList();
+        }
+        public ICollection<EsquemaDto> FnHomologacionEsquemaTodo()
+        {
+            return _bd.Database.SqlQuery<EsquemaDto>($"select * from fnHomologacionEsquemaTodo()").AsNoTracking().OrderBy(c => c.MostrarWebOrden).ToList();
+        }
+        public HomologacionEsquemaDto FnHomologacionEsquema(int idHomologacionEsquema)
+        {
+            return _bd.Database.SqlQuery<HomologacionEsquemaDto>($"select * from fnHomologacionEsquema({idHomologacionEsquema})").AsNoTracking().FirstOrDefault();
+        }
+        public ICollection<FnHomologacionEsquemaDataDto> FnHomologacionEsquemaDato(int idHomologacionEsquema, int idDataLakeOrganizacion)
+        {
+            var lstTem = _bd.Database.SqlQuery<FnHomologacionEsquemaData>($"select * from fnHomologacionEsquemaDato({idHomologacionEsquema}, {idDataLakeOrganizacion})").AsNoTracking().ToList();
+            return lstTem.Select(c => new FnHomologacionEsquemaDataDto()
+            {
+                IdDataLakeOrganizacion = c.IdDataLakeOrganizacion,
+                IdHomologacionEsquema = c.IdHomologacionEsquema,
+                DataEsquemaJson = JsonConvert.DeserializeObject<List<ColumnaEsquema>>(c.DataEsquemaJson)
+            })
+            .ToList();
+        }
     }
-    public ICollection<BuscadorOrganizacion> BuscarPalabra(string value)
-    {
-      Console.WriteLine(value);
-        return _bd.Set<BuscadorOrganizacion>().FromSqlRaw("exec psBuscarPalabra {0}", value).ToList();
-    }
-    public DataLakeOrganizacion BuscarOrganizacion(int Id)
-    {
-      return _bd.DataLakeOrganizacion.AsNoTracking().FirstOrDefault(u => u.IdDataLakeOrganizacion == Id);
-    }
-    public ICollection<HomologacionEsquemaDto> ObtenerEsquemasRelacionados(int Id)
-    {
-      return _bd.Database.SqlQuery<HomologacionEsquemaDto>($"select * from fnHomologacionEsquema({Id})").OrderBy(c => c.MostrarWebOrden).ToList();
-    }
-    public ICollection<DataLakeOrganizacion> ObtenerOrganizacionesRelacionadas(int Id, int IdDataLake)
-    {
-      return _bd.DataLakeOrganizacion
-        .Where(d => d.IdDataLakeOrganizacion != Id && d.IdDataLake == IdDataLake)
-        .ToList();
-    }
-  }
 }

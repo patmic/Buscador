@@ -26,7 +26,6 @@ namespace WebApp.Service
         // modulo de busquedas
         public DbSet<Homologacion> Homologacion { get; set; }
         public DbSet<DataLakeOrganizacion> DataLakeOrganizacion { get; set; }
-        public DbSet<BuscadorOrganizacion> BuscadorOrganizacion { get; set; }
         public DbSet<HomologacionEsquema> HomologacionEsquema { get; set; }
     }
 }

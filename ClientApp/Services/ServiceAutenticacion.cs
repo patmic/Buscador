@@ -61,6 +61,32 @@ namespace ClientApp.Services
                 }
             }
         }
+        public async Task<RespuestaAutenticacion> Recuperar(UsuarioRecuperacion usuarioRecuperacion) {
+            var content = JsonConvert.SerializeObject(usuarioRecuperacion);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await _cliente.PostAsync($"{Inicializar.UrlBaseApi}api/usuarios/recuperar", bodyContent);
+            var contentTemp = await response.Content.ReadAsStringAsync();
+            var resultado = (JObject)JsonConvert.DeserializeObject(contentTemp);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return new RespuestaAutenticacion { IsSuccess = true };
+            }
+            else
+            {
+                if (resultado["errorMessages"] is JArray errorMessagesArray)
+                {
+                    var errorMessagesList = errorMessagesArray.ToObject<string[]>();
+                    var errorMessages = string.Join(", ", errorMessagesList);
+
+                    return new RespuestaAutenticacion { IsSuccess = false, ErrorMessages = errorMessages };
+                }
+                else
+                {
+                    return new RespuestaAutenticacion { IsSuccess = false, ErrorMessages = "An unexpected error occurred." };
+                }
+            }
+        }
 
         public async Task Salir()
         {
