@@ -147,15 +147,5 @@ GO
 --	para las mostrar los esquemas
 --	select * from fnHomologacionEsquemaTodo()		 -- trae todos los esquemas
 --	select * from fnHomologacionEsquema (3)			 -- trae las cabeceras de un esquema y columnas
+
 --	select * from fnHomologacionEsquemaDato (3, 7)   -- trae la data a mostrar (IdDataLakeOrganizacion , @IdHomologacionEsquema )
-
--- estructura de datos 
--- SELECT * FROM HomologacionEsquema
---IdHomologacionEsquema	DataEsquemaJson
---			2			[{"IdHomologacion": "41", "Data": "41 idHomologacion de dato"},      {"IdHomologacion": "42", "Data": "42 idHomologacion de dato"},      {"IdHomologacion": "43", "Data": "43 idHomologacion de dato"},      {"IdHomologacion": "44", "Data": "44 idHomologacion de dato"},      {"IdHomologacion": "46", "Data": "46 idHomologacion de dato"}  ]
---			2			[{"IdHomologacion": "41", "Data": "41 idHomologacion de dato"},      {"IdHomologacion": "42", "Data": "42 idHomologacion de dato"},      {"IdHomologacion": "43", "Data": "43 idHomologacion de dato"},      {"IdHomologacion": "44", "Data": "44 idHomologacion de dato"},      {"IdHomologacion": "46", "Data": "46 idHomologacion de dato"}  ]
---			3			[{"IdHomologacion": "41", "Data": "41 idHomologacion de dato"},      {"IdHomologacion": "42", "Data": "42 idHomologacion de dato"},      {"IdHomologacion": "43", "Data": "43 idHomologacion de dato"}]
---			3			[{"IdHomologacion": "41", "Data": "41 idHomologacion de dato"},      {"IdHomologacion": "42", "Data": "42 idHomologacion de dato"},      {"IdHomologacion": "43", "Data": "43 idHomologacion de dato"}]
---			4			[{"IdHomologacion": "41", "Data": "41 idHomologacion de dato"},      {"IdHomologacion": "42", "Data": "42 idHomologacion de dato"},      {"IdHomologacion": "43", "Data": "43 idHomologacion de dato"},      {"IdHomologacion": "44", "Data": "44 idHomologacion de dato"},      {"IdHomologacion": "46", "Data": "46 idHomologacion de dato"}  ]
---			4			[{"IdHomologacion": "41", "Data": "41 idHomologacion de dato"},      {"IdHomologacion": "42", "Data": "42 idHomologacion de dato"},      {"IdHomologacion": "43", "Data": "43 idHomologacion de dato"},      {"IdHomologacion": "44", "Data": "44 idHomologacion de dato"},      {"IdHomologacion": "46", "Data": "46 idHomologacion de dato"}  ]
-

@@ -23,11 +23,9 @@ builder.Services.AddDbContextPool<SqlServerDbContext>(options => {
 
 builder.Services.AddControllers();
 
-// WorkerService
-builder.Services.AddHostedService<BackgroundWorkerService>();
-
 // Api
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IExcelService, ExcelService>();
 builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IEndpointRepository, EndpointRepository>();
@@ -37,8 +35,15 @@ builder.Services.AddScoped<IBuscadorRepository, BuscadorRepository>();
 builder.Services.AddScoped<IVwHomologacionRepository, VwHomologacionRepository>();
 builder.Services.AddScoped<IHomologacionRepository, HomologacionRepository>();
 builder.Services.AddScoped<IHomologacionEsquemaRepository, HomologacionEsquemaRepository>();
+builder.Services.AddScoped<IDataLakeRepository, DataLakeRepository>();
+builder.Services.AddScoped<IDataLakeOrganizacionRepository, DataLakeOrganizacionRepository>();
+builder.Services.AddScoped<IOrganizacionFullTextRepository, OrganizacionFullTextRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+
+// WorkerService
+builder.Services.AddHostedService<BackgroundWorkerService>();
+builder.Services.AddHostedService<BackgroundExcelService>();
 
 // Agregar Automapper
 builder.Services.AddAutoMapper(typeof(Mapper));
@@ -107,6 +112,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    // ExcelService excelImportador = new ExcelService();
+    // excelImportador.ImportarExcel(@".\\Files\\cargaDataBusccadorAndino.xlsx");
 }
 
 app.UseAuthentication();
