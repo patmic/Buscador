@@ -1,13 +1,13 @@
 <Tabs @ref="tabs" EnableFadeEffect="true">
     @if (listaEsquemas != null) {
         @foreach(var esquema in listaEsquemas) {
-            <Tab Title="@esquema.MostrarWeb">
+            <Tab>
+                <TitleTemplate>
+                    <Tooltip Title="@esquema.TooltipWeb">@esquema.MostrarWeb</Tooltip>
+                </TitleTemplate>
                 <Content>
                     <div class="py-2">
-                        <span style="font-size: 10px;">@esquema.TooltipWeb</span>
-                    </div>
-                    <div class="py-1">
-                        <EsquemaModalGrillaTab homologacionEsquema="@esquema" />
+                        <EsquemaModalGrillaTab IdHomologacionEsquema="@esquema.IdHomologacionEsquema" IdDataLakeOrganizacion="@dataLake.IdDataLakeOrganizacion" />
                     </div>
                 </Content>
             </Tab>

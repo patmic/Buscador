@@ -1,6 +1,6 @@
-﻿@page "/acceder"
+﻿@page "/recuperar"
 
-<PageTitle>Acceder</PageTitle>
+<PageTitle>Recuperar Clave</PageTitle>
 
 <div class="py-4">
     <div class=" row form-group ">
@@ -8,10 +8,10 @@
             <div class="card border">
                 <div class="card-body px-lg-5 pt-4">
                     <h3 class="col-12 text-success text-center py-2">
-                        <strong>Acceder</strong>
+                        <strong>Recuperar Clave</strong>
                     </h3>
 
-                    <EditForm Model="usuarioAutenticacion" OnValidSubmit="AccesoUsuario">
+                    <EditForm Model="usuarioRecuperacion" OnValidSubmit="RecuperarClave">
                         <DataAnnotationsValidator />
                         <ValidationSummary />
 
@@ -20,21 +20,16 @@
                         }
 
                         <div class="form-row py-2">
-                            <InputText @bind-Value="usuarioAutenticacion.Email" id="email" placeholder="Nombre usuario..." class="form-control mb-2" />
-                            <ValidationMessage For="(()=>usuarioAutenticacion.Email)"></ValidationMessage>
-                        </div>
-
-                        <div class="form-row py-2">
-                            <InputText @bind-Value="usuarioAutenticacion.Clave" type="password" placeholder="Password..." id="clave" class="form-control mb-2" style="height: auto;padding: .375rem .75rem;" />
-                            <ValidationMessage For="(()=>usuarioAutenticacion.Clave)"></ValidationMessage>
+                            <InputText @bind-Value="usuarioRecuperacion.Email" id="email" placeholder="Nombre usuario..." class="form-control mb-2" />
+                            <ValidationMessage For="(() => usuarioRecuperacion.Email)"></ValidationMessage>
                         </div>
 
                         <div class="form-row d-grid gap-2">
                             <Button @ref="saveButton" Type="ButtonType.Submit" Color="ButtonColor.Success">
-                                Acceder
+                                Recuperar
                             </Button>
                             <div class="d-md-flex justify-content-md-end mt-2">
-                                <Button Type="ButtonType.Link" Color="ButtonColor.Link" To="recuperar"> Recuperar Clave </Button>
+                                <Button Type="ButtonType.Link" Color="ButtonColor.Link" To="acceder"> Acceder </Button>
                             </div>
                         </div>
                     </EditForm>

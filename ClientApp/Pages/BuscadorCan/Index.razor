@@ -24,18 +24,6 @@
     <div class="container">
         <div class="row">
 
-            <div class="span12 page-content" style="margin-bottom: 10px;border-bottom: 1px solid #e8e8e8;">
-                <div class="row-fluid">
-                    @if (listaEtiquetasFiltros != null) {
-                        foreach(var etiqueta in listaEtiquetasFiltros) {
-                            <div class="span2">
-                                <h5><Tooltip Title="@etiqueta.TooltipWeb">@etiqueta.MostrarWeb</Tooltip></h5>
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
-
             <div class="span12 page-content">
                 <div class="row-fluid">
 
@@ -43,13 +31,22 @@
                         @for (int i = 0; i < listadeOpciones.Count; i += 1) {
                             var currentIndex = i;
                             <div class="span2">
-                                <select style="max-width: 100%" @onchange="(e) => CambiarSeleccion(e, currentIndex)">
-                                    <option value="">Seleccione...</option>
-                                    @foreach (var opcion in listadeOpciones[currentIndex])
-                                    {
-                                        <option value="@opcion.IdHomologacion">@opcion.MostrarWeb</option>
-                                    }
-                                </select>
+                                <Dropdown AutoClose="true" style="max-width: 100%; min-width: 100%">
+                                    <DropdownToggleButton Color="ButtonColor.Secondary">
+                                        @listaEtiquetasFiltros[currentIndex].MostrarWeb
+                                    </DropdownToggleButton>
+                                    <DropdownMenu>
+                                        @foreach (var opcion in listadeOpciones[currentIndex]) {
+                                            <DropdownItem @onclick="() => CambiarSeleccion(opcion.IdHomologacion, currentIndex)">
+                                                @if (selectedValues != null && selectedValues.Count > currentIndex && selectedValues[currentIndex].Contains(opcion.IdHomologacion))
+                                                {
+                                                    <Icon Name="IconName.Check" />
+                                                }
+                                                @opcion.MostrarWeb
+                                            </DropdownItem>
+                                        }
+                                    </DropdownMenu>
+                                </Dropdown>
                             </div>
                         }
                     }
@@ -60,23 +57,23 @@
         <div class="py-2">
             @if (listaEtiquetasGrilla != null)
             {
-                <Grid @ref="grid"  TItem="DataLakeOrganizacion" class="table table-hover table-bordered table-striped" DataProvider="ResultadoBusquedaDataProvider" Responsive="true">
+                <Grid @ref="grid" TItem="DataHomologacionEsquema" class="table table-hover table-bordered table-striped" DataProvider="ResultadoBusquedaDataProvider" Responsive="true" AllowSorting="true">
                     @foreach(var etiqueta in listaEtiquetasGrilla.OrderBy(c => c.MostrarWebOrden)) {
-                        <GridColumn TItem="DataLakeOrganizacion"PropertyName="@etiqueta.MostrarWeb">
+                        <GridColumn TItem="DataHomologacionEsquema" PropertyName="@etiqueta.MostrarWeb" SortString="@etiqueta.MostrarWeb">
                             <HeaderContent>
                                 <Tooltip Title="@etiqueta.TooltipWeb">@etiqueta.MostrarWeb</Tooltip>
                             </HeaderContent>
                             <ChildContent>
-                                @context?.DataJson?.FirstOrDefault(f => f.IdHomologacion == etiqueta.IdHomologacion)?.ValorColumna
+                                @context?.DataEsquemaJson?.FirstOrDefault(f => f.IdHomologacion == etiqueta.IdHomologacion)?.Data
                             </ChildContent>
                         </GridColumn>
                     }
-                    <GridColumn TItem="DataLakeOrganizacion" HeaderText="-">
+                    <GridColumn TItem="DataHomologacionEsquema" HeaderText="-">
                         <Button Color="ButtonColor.Secondary" Outline="true" Size="Size.Small" @onclick="() => showModal(context)">
                             <Icon Name="IconName.Front" />
                         </Button>
                     </GridColumn>
-                    <GridColumn TItem="DataLakeOrganizacion" HeaderText="-">
+                    <GridColumn TItem="DataHomologacionEsquema" HeaderText="-">
                         <Button Color="ButtonColor.Secondary" Outline="true" Size="Size.Small">
                             <Icon Name="IconName.FileTypePdf" />
                         </Button>

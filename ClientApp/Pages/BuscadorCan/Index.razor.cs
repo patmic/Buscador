@@ -9,7 +9,7 @@ namespace ClientApp.Pages.BuscadorCan
     public partial class Index
     {
         private Modal modal = default!;
-        private Grid<DataLakeOrganizacion> grid;
+        private Grid<DataHomologacionEsquema> grid;
         private BuscarRequest buscarRequest = new BuscarRequest();
         [Inject]
         public IBusquedaRepository servicio { get; set; }
@@ -18,8 +18,8 @@ namespace ClientApp.Pages.BuscadorCan
         private List<VwHomologacion>? listaEtiquetasFiltros;
         private List<VwHomologacion>? listaEtiquetasGrilla;
         private List<List<VwHomologacion>>? listadeOpciones = new List<List<VwHomologacion>>();
-        private List<int> selectedValues = new List<int>();
-        private List<DataLakeOrganizacion>? listDataLakeOrganizacion;
+        private List<List<int>> selectedValues = new List<List<int>>();
+        private List<DataHomologacionEsquema>? listDataHomologacionEsquema;
         protected override async Task OnInitializedAsync()
         {
             try
@@ -34,41 +34,43 @@ namespace ClientApp.Pages.BuscadorCan
                 listaEtiquetasGrilla = await vwHomologacionRepository.GetHomologacionAsync("etiquetas_grilla");
             } catch (Exception) { }
         }
-        private void CambiarSeleccion(ChangeEventArgs e, int index)
+        private void CambiarSeleccion(int selectedValue, int index)
         {
             while (selectedValues.Count <= index)
             {
-                selectedValues.Add(0);
+                selectedValues.Add(new List<int>());
             }
 
-            if (int.TryParse(e.Value.ToString(), out int selectedValue))
+            if (selectedValues[index].Contains(selectedValue))
             {
-                selectedValues[index] = selectedValue;
-            } else {
-                selectedValues[index] = 0;
+                selectedValues[index].Remove(selectedValue);
+            }
+            else
+            {
+                selectedValues[index].Add(selectedValue);
             }
         }
         private async Task BuscarPalabraRequest()
         {
             try {
-                listDataLakeOrganizacion = await servicio.BuscarPalabraAsync(JsonConvert.SerializeObject(new {
+                listDataHomologacionEsquema = await servicio.PsBuscarPalabraAsync(JsonConvert.SerializeObject(new {
                     TextoBuscar = buscarRequest.TextoBuscar ?? "",
-                    IdHomologacionFiltro = selectedValues.Where(c => c != 0).ToList()
+                    IdHomologacionFiltro = selectedValues.SelectMany(list => list).Where(c => c != 0).ToList()
                 }));
             } catch (Exception e) { 
                 Console.WriteLine(e);
             }
             await grid.RefreshDataAsync();
         }
-        private async Task<GridDataProviderResult<DataLakeOrganizacion>> ResultadoBusquedaDataProvider(GridDataProviderRequest<DataLakeOrganizacion> request)
+        private async Task<GridDataProviderResult<DataHomologacionEsquema>> ResultadoBusquedaDataProvider(GridDataProviderRequest<DataHomologacionEsquema> request)
         {
-            if (listDataLakeOrganizacion is null) {
-                listDataLakeOrganizacion = new List<DataLakeOrganizacion>();
+            if (listDataHomologacionEsquema is null) {
+                listDataHomologacionEsquema = new List<DataHomologacionEsquema>();
             }
 
-            return await Task.FromResult(request.ApplyTo(listDataLakeOrganizacion));
+            return await Task.FromResult(request.ApplyTo(listDataHomologacionEsquema));
         }
-        private async void showModal(DataLakeOrganizacion dataLake)
+        private async void showModal(DataHomologacionEsquema dataLake)
         {
             var parameters = new Dictionary<string, object>();
             parameters.Add("dataLake", dataLake);

@@ -120,13 +120,32 @@ RETURN
 	AND		Estado = 'A'
 GO
 
---testing
---select * from vwGrilla
--- select * from vwDimension
+CREATE OR ALTER FUNCTION fnHomologacionEsquemaTodo ( )  
+RETURNS TABLE AS
+RETURN
+	SELECT	 IdHomologacionEsquema	
+			,MostrarWebOrden	
+			,MostrarWeb	
+			,TooltipWeb	
+	FROM	HomologacionEsquema		WITH (NOLOCK)
+	WHERE	MostrarWebOrden > 1	
+	AND		Estado = 'A'
+GO
 
--- select * from fnFiltroDetalle(3)
--- select * from vwFiltro
+CREATE OR ALTER FUNCTION fnHomologacionEsquemaDato (  @IdHomologacionEsquema INT, @IdDataLakeOrganizacion INT )  
+RETURNS TABLE AS
+RETURN
+	SELECT	 IdDataLakeOrganizacion	
+			,IdHomologacionEsquema
+			,DataEsquemaJson
+	FROM	DataLakeOrganizacion	 WITH (NOLOCK)	
+	WHERE	IdDataLakeOrganizacion = @IdDataLakeOrganizacion
+	AND		IdHomologacionEsquema  = @IdHomologacionEsquema
+	AND		Estado				   = 'A'
+GO
 
--- select dbo.fnHomologacionEsquemaCampo(3) as er
+--	para las mostrar los esquemas
+--	select * from fnHomologacionEsquemaTodo()		 -- trae todos los esquemas
+--	select * from fnHomologacionEsquema (3)			 -- trae las cabeceras de un esquema y columnas
 
--- select * from fnHomologacionEsquema (3)
+--	select * from fnHomologacionEsquemaDato (3, 7)   -- trae la data a mostrar (IdDataLakeOrganizacion , @IdHomologacionEsquema )

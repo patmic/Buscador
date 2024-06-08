@@ -2,7 +2,6 @@ using System.Net.Http.Json;
 using ClientApp.Helpers;
 using ClientApp.Models;
 using ClientApp.Services.IService;
-using Newtonsoft.Json;
 
 namespace ClientApp.Services {
     public class BusquedaRepository : IBusquedaRepository
@@ -12,24 +11,30 @@ namespace ClientApp.Services {
         {
             _httpClient = httpClient;
         }
-        public async Task<List<DataLakeOrganizacion>> BuscarPalabraAsync(string value)
+        public async Task<List<DataHomologacionEsquema>> PsBuscarPalabraAsync(string value)
         {
-            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/buscar_palabras?value={value}");
+            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/buscarPalabra?value={value}");
             response.EnsureSuccessStatusCode();
 
-            var tempList = await response.Content.ReadFromJsonAsync<List<ResultDataLakeOrganizacion>>();
-            return tempList.Select(c => new DataLakeOrganizacion()
-                {
-                    IdDataLakeOrganizacion = c.IdDataLakeOrganizacion,
-                    DataJson = JsonConvert.DeserializeObject<List<Columna>>(c.DataJson)
-                })
-                .ToList();
+            return await response.Content.ReadFromJsonAsync<List<DataHomologacionEsquema>>();
         }
-        public async Task<List<HomologacionEsquema>> ObtenerEsquemasRelacionados(int Id)
+        public async Task<List<HomologacionEsquema>> FnHomologacionEsquemaTodoAsync()
         {
-            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/esquemas_relacionados/{Id}");
+            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/homologacionEsquemaTodo");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<List<HomologacionEsquema>>();
+        }
+        public async Task<HomologacionEsquema> FnHomologacionEsquemaAsync(int idHomologacionEsquema)
+        {
+            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/homologacionEsquema/{idHomologacionEsquema}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<HomologacionEsquema>();
+        }
+        public async Task<List<DataHomologacionEsquema>> FnHomologacionEsquemaDatoAsync(int idHomologacionEsquema, int idDataLakeOrganizacion)
+        {
+            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/homologacionEsquemaDato/{idHomologacionEsquema}/{idDataLakeOrganizacion}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<DataHomologacionEsquema>>();
         }
     }
 }

@@ -17,7 +17,6 @@ namespace WebApp.Controllers
         private readonly IUsuarioRepository _vhRepo = vhRepo;
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<UsuariosController> _logger = logger;
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UsuarioLoginDto usuarioLoginDto)
         {          
@@ -39,7 +38,6 @@ namespace WebApp.Controllers
                 return StatusCode(500, "Error en el servidor");
             }
         }
-
         [Authorize]
         [HttpPost("registro")]
         public IActionResult Registro([FromBody] UsuarioDto dto)
@@ -64,7 +62,6 @@ namespace WebApp.Controllers
                 return StatusCode(500, "Error en el servidor");
             }
         }
-
         [Authorize]
         [HttpGet]
         public IActionResult GetUsuarios()
@@ -81,7 +78,6 @@ namespace WebApp.Controllers
                 return StatusCode(500, "Error en el servidor");
             }
         }
-
         [Authorize]
         [HttpGet("{usuarioId:int}", Name = "GetUsuario")]
         public IActionResult GetUsuario(int usuarioId)
@@ -103,7 +99,6 @@ namespace WebApp.Controllers
                 return StatusCode(500, "Error en el servidor");
             }
         }
-
         [Authorize]
         [HttpPut("{Id:int}", Name = "ActualizarUsuario")]
         public IActionResult ActualizarUsuario(int Id, [FromBody] UsuarioDto dto)
@@ -141,6 +136,27 @@ namespace WebApp.Controllers
             }
             catch (Exception e) {
                 _logger.LogError(e, $"Error en {nameof(DesactivarUsuario)}");
+                return StatusCode(500, "Error en el servidor");
+            }
+        }
+        [HttpPost("recuperar")]
+        public async Task<IActionResult> Recuperar([FromBody] UsuarioDto usuarioDto)
+        {          
+            try
+            {
+                var usuarioRecuperar = await _vhRepo.Recuperar(usuarioDto);
+                if (usuarioRecuperar == null)
+                {
+                    return BadRequest(new {
+                        ErrorMessages = new List<string> { "El nombre de usuario incorrecto" }
+                    });
+                }
+
+                return Ok(usuarioRecuperar);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error en {nameof(Recuperar)}");
                 return StatusCode(500, "Error en el servidor");
             }
         }
