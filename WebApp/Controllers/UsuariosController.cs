@@ -132,7 +132,7 @@ namespace WebApp.Controllers
                 var usuario = _mapper.Map<Usuario>(dto);
                 _vhRepo.update(usuario);
 
-                return Ok("Usuario Actualizado correctamente");
+                return Ok();
             }
             catch (Exception e)
             {
