@@ -6,6 +6,9 @@ namespace WebApp.Models
         {
             Estado = "A";
             FechaModifica = DateTime.Now;
+            FechaCreacion = DateTime.Now;
+            IdUserCreacion = 1;
+            IdUserModifica = 1;
         }
 
         public string Estado { get; set; }
