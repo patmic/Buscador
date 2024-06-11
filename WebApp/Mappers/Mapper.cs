@@ -1,6 +1,7 @@
 ﻿using WebApp.Models;
 using WebApp.Models.Dtos;
 using AutoMapper;
+using SharedApp.Models;
 
 namespace WebApp.Mappers
 {

@@ -1,5 +1,5 @@
-﻿using WebApp.Models;
-using WebApp.Models.Dtos;
+﻿using SharedApp.Models.Dtos;
+using WebApp.Models;
 
 namespace WebApp.Repositories.IRepositories
 {
@@ -10,7 +10,7 @@ namespace WebApp.Repositories.IRepositories
         bool update(Usuario usuario);
         bool isUniqueUser(string usuario);
         ICollection<Usuario> findAll();
-        Task<object> login(UsuarioLoginDto usuarioLoginDto);
-        Task<object> Recuperar(UsuarioDto usuarioDto);
+        Task<UsuarioAutenticacionRespuestaDto> login(UsuarioAutenticacionDto usuarioAutenticacionDto);
+        Task<bool> Recuperar(UsuarioRecuperacionDto usuarioRecuperacionDto);
     }
 }

@@ -9,27 +9,27 @@ namespace ClientApp.Pages.Administracion.Esquemas
 {
     public partial class Formulario
     {
-        private string homologacionName;
+        private string? homologacionName;
         private Button saveButton = default!;
-        public event Action DataLoaded;
+        public event Action? DataLoaded;
         private HomologacionEsquema homologacionEsquema = new HomologacionEsquema();
         [Inject]
-        public IHomologacionEsquemaRepository homologacionEsquemaRepository { get; set; }
+        public IHomologacionEsquemaRepository? homologacionEsquemaRepository { get; set; }
         [Inject]
-        public IHomologacionRepository iHomologacionRepository { get; set; }
+        public IHomologacionRepository? iHomologacionRepository { get; set; }
         [Inject]
-        public IVwHomologacionRepository vwHomologacionRepository { get; set; }
+        public IVwHomologacionRepository? vwHomologacionRepository { get; set; }
         private List<VwHomologacion>? listaVwHomologacion;
 
         [Inject]
-        public NavigationManager navigationManager { get; set; }
+        public NavigationManager? navigationManager { get; set; }
         [Inject]
-        protected IJSRuntime JSRuntime { get; set; }
+        protected IJSRuntime? JSRuntime { get; set; }
         [Parameter]
         public int? Id { get; set; }
         [Inject]
-        public Services.ToastService toastService { get; set; }
-        private IEnumerable<VwHomologacion> lista = new List<VwHomologacion>();
+        public Services.ToastService? toastService { get; set; }
+        private IEnumerable<VwHomologacion>? lista = new List<VwHomologacion>();
         protected override async Task OnInitializedAsync()
         {
             listaVwHomologacion = await vwHomologacionRepository.GetHomologacionAsync("dimension");

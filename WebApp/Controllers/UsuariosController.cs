@@ -1,9 +1,11 @@
-﻿using WebApp.Models;
-using WebApp.Models.Dtos;
-using WebApp.Repositories.IRepositories;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using WebApp.Models;
+using SharedApp.Models;
+using SharedApp.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace WebApp.Controllers
 {
@@ -18,25 +20,38 @@ namespace WebApp.Controllers
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<UsuariosController> _logger = logger;
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UsuarioLoginDto usuarioLoginDto)
-        {          
-            try
-            {
-                var usuarioLogin = await _vhRepo.login(usuarioLoginDto);
-                if (usuarioLogin == null)
-                {
-                    return BadRequest(new {
-                        ErrorMessages = new List<string> { "El nombre de usuario o password son incorrectos" }
-                    });
-                }
+        public async Task<IActionResult> Login([FromBody] UsuarioAutenticacionDto usuarioAutenticacionDto)
+        {
+            var respuestaLogin = await _vhRepo.login(usuarioAutenticacionDto);
 
-                return Ok(usuarioLogin);
-            }
-            catch (Exception e)
+            var _respuestaApi = new RespuestasAPI();
+            if (respuestaLogin.Usuario == null || string.IsNullOrEmpty(respuestaLogin.Token))
             {
-                _logger.LogError(e, $"Error en {nameof(Login)}");
-                return StatusCode(500, "Error en el servidor");
+                _respuestaApi.StatusCode = HttpStatusCode.BadRequest;
+                _respuestaApi.IsSuccess = false;
+                _respuestaApi.ErrorMessages.Add("El nombre de usuario o password son incorrectos");
+                return BadRequest(_respuestaApi);
             }
+
+            _respuestaApi.Result = respuestaLogin;
+            return Ok(_respuestaApi);
+        }
+        [HttpPost("recuperar")]
+        public async Task<IActionResult> Recuperar([FromBody] UsuarioRecuperacionDto usuarioRecuperacionDto)
+        {
+            var respuestaLogin = await _vhRepo.Recuperar(usuarioRecuperacionDto);
+
+            var _respuestaApi = new RespuestasAPI();
+
+            if (!respuestaLogin)
+            {
+                _respuestaApi.StatusCode = HttpStatusCode.BadRequest;
+                _respuestaApi.IsSuccess = false;
+                _respuestaApi.ErrorMessages.Add("El nombre de usuario es incorrectos");
+                return BadRequest(_respuestaApi);
+            }
+
+            return Ok(_respuestaApi);
         }
         [Authorize]
         [HttpPost("registro")]
@@ -59,7 +74,9 @@ namespace WebApp.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e, $"Error en {nameof(Registro)}");
-                return StatusCode(500, "Error en el servidor");
+                return StatusCode(500, new {
+                    ErrorMessages = new List<string> { "Error en el servidor" }
+                });
             }
         }
         [Authorize]
@@ -75,7 +92,9 @@ namespace WebApp.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e, $"Error en {nameof(GetUsuarios)}");
-                return StatusCode(500, "Error en el servidor");
+                return StatusCode(500, new {
+                    ErrorMessages = new List<string> { "Error en el servidor" }
+                });
             }
         }
         [Authorize]
@@ -88,7 +107,9 @@ namespace WebApp.Controllers
 
                 if (itemUsuario == null)
                 {
-                    return NotFound();
+                    return BadRequest(new {
+                        ErrorMessages = new List<string> { "Usuario no encontrado" }
+                    });
                 }
 
                 return Ok(_mapper.Map<UsuarioDto>(itemUsuario));
@@ -96,7 +117,9 @@ namespace WebApp.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e, $"Error en {nameof(GetUsuario)}");
-                return StatusCode(500, "Error en el servidor");
+                return StatusCode(500, new {
+                    ErrorMessages = new List<string> { "Error en el servidor" }
+                });
             }
         }
         [Authorize]
@@ -109,12 +132,14 @@ namespace WebApp.Controllers
                 var usuario = _mapper.Map<Usuario>(dto);
                 _vhRepo.update(usuario);
 
-                return Ok();
+                return Ok("Usuario Actualizado correctamente");
             }
             catch (Exception e)
             {
                 _logger.LogError(e, $"Error en {nameof(ActualizarUsuario)}");
-                return StatusCode(500, "Error en el servidor");
+                return StatusCode(500, new {
+                    ErrorMessages = new List<string> { "Error en el servidor" }
+                });
             }
         }
 
@@ -126,38 +151,21 @@ namespace WebApp.Controllers
                 var usuario = _vhRepo.find(Id);
 
                 if (usuario == null) {
-                    return NotFound();
+                    return BadRequest(new {
+                        ErrorMessages = new List<string> { "Id de Usuario incorrecto" }
+                    });
                 }
 
                 usuario.Estado = "X";
                 _vhRepo.update(usuario);
 
-                return Ok("Eliminado correctamente");
+                return Ok("Usuario Eliminado correctamente");
             }
             catch (Exception e) {
                 _logger.LogError(e, $"Error en {nameof(DesactivarUsuario)}");
-                return StatusCode(500, "Error en el servidor");
-            }
-        }
-        [HttpPost("recuperar")]
-        public async Task<IActionResult> Recuperar([FromBody] UsuarioDto usuarioDto)
-        {          
-            try
-            {
-                var usuarioRecuperar = await _vhRepo.Recuperar(usuarioDto);
-                if (usuarioRecuperar == null)
-                {
-                    return BadRequest(new {
-                        ErrorMessages = new List<string> { "El nombre de usuario incorrecto" }
-                    });
-                }
-
-                return Ok(usuarioRecuperar);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, $"Error en {nameof(Recuperar)}");
-                return StatusCode(500, "Error en el servidor");
+                return StatusCode(500, new {
+                    ErrorMessages = new List<string> { "Error en el servidor" }
+                });
             }
         }
     }

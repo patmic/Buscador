@@ -1,8 +1,8 @@
-using WebApp.Models;
 using WebApp.Models.Dtos;
 using WebApp.Repositories.IRepositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using SharedApp.Models;
 
 namespace WebApp.Controllers
 {

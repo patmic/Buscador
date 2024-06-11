@@ -1,7 +1,7 @@
 use CAN_DB;
 go
 
-CREATE OR ALTER PROCEDURE psBuscarPalabra ( @paramJSON NVARCHAR(max) = NULL ) AS
+CREATE OR ALTER PROCEDURE psBuscarPalabra ( @paramJSON NVARCHAR(max) = NULL , @PageNumber INT = 1, @RowsPerPage INT = 20) AS
 BEGIN
  --DECLARE @paramJSON NVARCHAR(max) = N'{ "TextoBuscar": "or",
 	--					 "IdHomologacionFiltro":["41","42","44"]
@@ -12,7 +12,7 @@ BEGIN
     DECLARE @DataLakeOrgBusqueda	TABLE (IdDataLakeOrganizacion INT)
     
 	SET	@BuscarPalabra = ltrim(rtrim(JSON_VALUE(@paramJSON,'$.TextoBuscar')))
-	IF (LTRIM(RTRIM(@BuscarPalabra)) = '') return;
+	IF (LTRIM(RTRIM(@BuscarPalabra)) = '') return '{}';
 	INSERT	INTO @HomologacionFiltro
 	SELECT	DISTINCT value  
 	FROM	OPENJSON(JSON_QUERY(@paramJSON, '$.IdHomologacionFiltro'))
@@ -35,20 +35,31 @@ BEGIN
     --        ) DataJson
     --FROM	@DataLakeOrgBusqueda t
 
-	SELECT	 O.IdDataLakeOrganizacion	
-			,O.IdHomologacionEsquema
-			,O.DataEsquemaJson
-	FROM	DataLakeOrganizacion	 O WITH (NOLOCK)	
-	JOIN	@DataLakeOrgBusqueda	 B on B.IdDataLakeOrganizacion = O.IdDataLakeOrganizacion 
-	WHERE	O.Estado				 = 'A'
+	-- SELECT	 O.IdDataLakeOrganizacion	
+	-- 		,O.IdHomologacionEsquema
+	-- 		,O.DataEsquemaJson
+	-- FROM	DataLakeOrganizacion	 O WITH (NOLOCK)	
+	-- JOIN	@DataLakeOrgBusqueda	 B on B.IdDataLakeOrganizacion = O.IdDataLakeOrganizacion 
+	-- WHERE	O.Estado				 = 'A'
+
+	SELECT  O.IdDataLakeOrganizacion,
+			O.IdHomologacionEsquema,
+			O.DataEsquemaJson
+	FROM DataLakeOrganizacion O WITH (NOLOCK)
+	JOIN @DataLakeOrgBusqueda B ON B.IdDataLakeOrganizacion = O.IdDataLakeOrganizacion
+	WHERE O.Estado = 'A'
+	ORDER BY O.IdDataLakeOrganizacion  -- Necesario para usar OFFSET y FETCH NEXT
+	OFFSET (@PageNumber - 1) * @RowsPerPage ROWS
+	FETCH NEXT @RowsPerPage ROWS ONLY;
+
 END;
 GO
 
---select * from HomologacionEsquema
+select distinct IdDataLake from DataLakeOrganizacion
 --> validar la funcion
-exec psBuscarPalabra N'{ "TextoBuscar": "5",
-						 "IdHomologacionFiltro":["41","42","44"]
-						}'
+exec psBuscarPalabra N'{ "TextoBuscar": "sd",
+						 "IdHomologacionFiltro":[]
+						}', 1, 100
 
 
 --CREATE OR ALTER PROCEDURE psBuscarPalabra

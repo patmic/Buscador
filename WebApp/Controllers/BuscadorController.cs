@@ -1,6 +1,6 @@
-using WebApp.Models;
 using WebApp.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc;
+using SharedApp.Models;
 
 namespace WebApp.Controllers
 {
@@ -13,11 +13,11 @@ namespace WebApp.Controllers
         private readonly ILogger<BuscadorController> _logger = logger;
 
         [HttpGet("buscarPalabra")]
-        public IActionResult PsBuscarPalabra(string value)
+        public IActionResult PsBuscarPalabra(string value, int pageNumber, int pageSize)
         {
             try
             {
-                return Ok(_vhRepo.PsBuscarPalabra(value));
+                return Ok(_vhRepo.PsBuscarPalabra(value, pageNumber, pageSize));
             }
             catch (Exception e)
             {

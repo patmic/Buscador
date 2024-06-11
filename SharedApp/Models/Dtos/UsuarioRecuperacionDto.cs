@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClientApp.Models
+namespace SharedApp.Models.Dtos
 {
-    public class UsuarioRecuperacion
+    public class UsuarioRecuperacionDto
     {
         [Required(ErrorMessage = "El usuario es obligatorio")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
     }
 }

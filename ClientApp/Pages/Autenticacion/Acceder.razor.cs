@@ -1,15 +1,15 @@
-﻿using ClientApp.Models;
-using ClientApp.Services.IService;
+﻿using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components;
 using System.Web;
 using BlazorBootstrap;
+using SharedApp.Models.Dtos;
 
 namespace ClientApp.Pages.Autenticacion
 {
     public partial class Acceder
     {
         private Button saveButton = default!;
-        private UsuarioAutenticacion usuarioAutenticacion = new UsuarioAutenticacion();
+        private UsuarioAutenticacionDto usuarioAutenticacion = new UsuarioAutenticacionDto();
 
         public string UrlRetorno { get; set; }
 
@@ -41,7 +41,7 @@ namespace ClientApp.Pages.Autenticacion
             }
             else
             {
-                alertMessage = result.ErrorMessages;
+                alertMessage = string.Join(";", result.ErrorMessages);
             }
             saveButton.HideLoading();
 

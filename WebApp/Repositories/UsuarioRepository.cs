@@ -1,19 +1,29 @@
-using WebApp.Models;
-using WebApp.Models.Dtos;
 using WebApp.Repositories.IRepositories;
-using System.Text;
-using XSystem.Security.Cryptography;
 using WebApp.Service;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using WebApp.Service.IService;
+using SharedApp.Models;
+using SharedApp.Models.Dtos;
+using WebApp.Models;
 
 namespace WebApp.Repositories
 {
-    public class UsuarioRepository(SqlServerDbContext dbContext, IJwtService jwtService) : IUsuarioRepository
+    public class UsuarioRepository(
+        SqlServerDbContext dbContext,
+        IJwtService jwtService,
+        IEmailService emailService,
+        IMd5Service md5Service,
+        IPasswordService passwordService,
+        ILogger<UsuarioRepository> logger
+    ) : IUsuarioRepository
     {
         private readonly SqlServerDbContext _bd = dbContext;
         private readonly IJwtService _jwtService = jwtService;
+        private readonly IEmailService _emailService = emailService;
+        private readonly IMd5Service _md5Service = md5Service;
+        private readonly IPasswordService _passwordService = passwordService;
+        private readonly ILogger<UsuarioRepository> _logger = logger;
 
         public Usuario find(int usuarioId)
         {
@@ -27,20 +37,12 @@ namespace WebApp.Repositories
 
         public bool isUniqueUser(string email)
         {
-            var usuariobd = _bd.Usuario.AsNoTracking().FirstOrDefault(u => u.Email == email);
-            if (usuariobd == null)
-            {
-                return true;
-            }
-
-            return false;
+            return _bd.Usuario.AsNoTracking().FirstOrDefault(u => u.Email == email) == null;
         }
 
         public bool create(Usuario usuario)
         {
-            var passwordEncriptado = obtenermd5(usuario.Clave);
-            usuario.Clave = passwordEncriptado;
-
+            usuario.Clave = _md5Service.GenerateMd5(usuario.Clave);
             usuario.IdUserCreacion = _jwtService.GetUserIdFromToken(_jwtService.GetTokenFromHeader());
             usuario.IdUserModifica = usuario.IdUserCreacion;
 
@@ -69,61 +71,65 @@ namespace WebApp.Repositories
 
             if (!string.IsNullOrWhiteSpace(usuario.Clave))
             {
-                usuarioExistente.Clave = obtenermd5(usuario.Clave);;
+                usuarioExistente.Clave = _md5Service.GenerateMd5(usuario.Clave);;
             }
 
             _bd.Usuario.Update(usuarioExistente);
             return _bd.SaveChanges() >= 0 ? true : false;
         }
-        public async Task<object> login(UsuarioLoginDto usuarioLoginDto)
+        public async Task<UsuarioAutenticacionRespuestaDto> login(UsuarioAutenticacionDto usuarioAutenticacionDto)
         {
-            var passwordEncriptado = obtenermd5(usuarioLoginDto.Clave);
-
-            var usuario = _bd.Usuario.AsNoTracking().FirstOrDefault(
-                u => u.Email.ToLower() == usuarioLoginDto.Email.ToLower()
-                && u.Clave == passwordEncriptado
+            try {
+                var passwordEncriptado = _md5Service.GenerateMd5(usuarioAutenticacionDto.Clave);
+                var usuario = _bd.Usuario.AsNoTracking().FirstOrDefault(u => 
+                    u.Email.ToLower() == usuarioAutenticacionDto.Email.ToLower() &&
+                    u.Clave == passwordEncriptado
                 );
 
-            if (usuario == null)
-            {
-                return null;
-            }
-
-            return new {
-                Token = _jwtService.GenerateJwtToken(usuario.IdUsuario),
-                Usuario = new
+                if (usuario == null)
                 {
-                    IdUsuario = usuario.IdUsuario,
-                    Email = usuario.Email,
-                    Nombre = usuario.Nombre,
-                    Apellido = usuario.Apellido,
-                    Telefono = usuario.Telefono,
-                    Rol = usuario.Rol,
-                    
+                    return new UsuarioAutenticacionRespuestaDto();
                 }
-            };
-        }
-        private string obtenermd5(string valor)
-        {
-            MD5CryptoServiceProvider x = new MD5CryptoServiceProvider();
-            byte[] data = Encoding.UTF8.GetBytes(valor);
-            data = x.ComputeHash(data);
-            string resp = "";
-            for (int i = 0; i < data.Length; i++)
-                resp += data[i].ToString("x2").ToLower();
-            return resp;
-        }
 
-        public async Task<object> Recuperar(UsuarioDto usuarioDto)
+                return new UsuarioAutenticacionRespuestaDto {
+                    Token = _jwtService.GenerateJwtToken(usuario.IdUsuario),
+                    Usuario = new UsuarioDto
+                    {
+                        IdUsuario = usuario.IdUsuario,
+                        Email = usuario.Email,
+                        Nombre = usuario.Nombre,
+                        Apellido = usuario.Apellido,
+                        Telefono = usuario.Telefono,
+                        Rol = usuario.Rol,
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error en {nameof(login)}");
+                return new UsuarioAutenticacionRespuestaDto();
+                // return StatusCode(500, new {
+                //     ErrorMessages = new List<string> { "Error en el servidor" }
+                // });
+            }
+        }
+        public async Task<bool> Recuperar(UsuarioRecuperacionDto usuarioRecuperacionDto)
         {
-            var usuario = _bd.Usuario.AsNoTracking().FirstOrDefault(u => u.Email.ToLower() == usuarioDto.Email.ToLower());
+            var usuario = _bd.Usuario.AsNoTracking().FirstOrDefault(u => u.Email.ToLower() == usuarioRecuperacionDto.Email.ToLower());
 
             if (usuario == null)
             {
-                return null;
+                return false;
             }
 
-            return new { success = true };
+            string clave = _passwordService.GenerateTemporaryPassword(8);
+            usuario.Clave = _md5Service.GenerateMd5(clave);
+
+            await _emailService.EnviarCorreoAsync(usuario.Email, "Envío de Clave Temporal", $"Su nueva clave temporal es: {clave}");
+
+            _bd.Usuario.Update(usuario);
+
+            return _bd.SaveChanges() >= 0 ? true : false;
         }
     }
 }

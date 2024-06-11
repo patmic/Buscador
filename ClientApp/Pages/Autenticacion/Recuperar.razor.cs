@@ -1,14 +1,14 @@
-﻿using ClientApp.Models;
-using ClientApp.Services.IService;
+﻿using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components;
 using BlazorBootstrap;
+using SharedApp.Models.Dtos;
 
 namespace ClientApp.Pages.Autenticacion
 {
     public partial class Recuperar
     {
         private Button saveButton = default!;
-        private UsuarioRecuperacion usuarioRecuperacion = new UsuarioRecuperacion();
+        private UsuarioRecuperacionDto usuarioRecuperacion = new UsuarioRecuperacionDto();
         public string alertMessage { get; set; }
         [Inject]
         public IServiceAutenticacion servicioAutenticacion { get; set; }
@@ -25,7 +25,7 @@ namespace ClientApp.Pages.Autenticacion
             }
             else
             {
-                alertMessage = result.ErrorMessages;
+                alertMessage = string.Join(";", result.ErrorMessages);
             }
 
             saveButton.HideLoading();

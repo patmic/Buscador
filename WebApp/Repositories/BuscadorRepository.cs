@@ -14,9 +14,9 @@ namespace WebApp.Repositories
         {
             _bd = dbContext;
         }
-        public ICollection<FnHomologacionEsquemaDataDto> PsBuscarPalabra(string value)
+        public ICollection<FnHomologacionEsquemaDataDto> PsBuscarPalabra(string value, int pageNumber, int pageSize)
         {
-            var lstTem = _bd.Database.SqlQuery<FnHomologacionEsquemaData>($"exec psBuscarPalabra {value}").AsNoTracking().ToList();
+            var lstTem = _bd.Database.SqlQuery<FnHomologacionEsquemaData>($"exec psBuscarPalabra {value},{pageNumber},{pageSize}").AsNoTracking().ToList();
             return lstTem.Select(c => new FnHomologacionEsquemaDataDto()
             {
                 IdDataLakeOrganizacion = c.IdDataLakeOrganizacion,

@@ -1,14 +1,14 @@
 using BlazorBootstrap;
-using ClientApp.Models;
 using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components;
+using SharedApp.Models;
 
 namespace ClientApp.Pages.Administracion.Usuarios
 {
     public partial class Formulario
     {
         private Button saveButton = default!;
-        private Usuario Usuario = new Usuario();
+        private UsuarioDto usuario = new UsuarioDto();
         [Inject]
         public IUsuariosRepository usuariosRepository { get; set; }
         [Inject]
@@ -21,17 +21,18 @@ namespace ClientApp.Pages.Administracion.Usuarios
         protected override async Task OnInitializedAsync()
         {
             if (Id > 0) {
-                Usuario = await usuariosRepository.GetUsuarioAsync(Id.Value);
-                Usuario.Clave = null;
+                usuario = await usuariosRepository.GetUsuarioAsync(Id.Value);
+                usuario.Clave = null;
             } else {
-                Usuario.Estado = "A";
+                usuario.Rol = "USER";
+                usuario.Estado = "A";
             }
         }
         private async Task RegistrarUsuario()
         {
             saveButton.ShowLoading("Guardando...");
 
-            var result = await usuariosRepository.RegistrarOActualizar(Usuario);
+            var result = await usuariosRepository.RegistrarOActualizar(usuario);
             if (result.registroCorrecto)
             {
                 toastService.CreateToastMessage(ToastType.Success, "Registrado exitosamente");
@@ -43,6 +44,9 @@ namespace ClientApp.Pages.Administracion.Usuarios
             }
 
             saveButton.HideLoading();
+        }
+        private void OnAutoCompleteChanged(string rol) {
+            usuario.Rol = rol;
         }
     }
 }

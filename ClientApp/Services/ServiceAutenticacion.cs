@@ -1,10 +1,10 @@
 ﻿using Blazored.LocalStorage;
 using ClientApp.Helpers;
-using ClientApp.Models;
 using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using SharedApp.Models;
+using SharedApp.Models.Dtos;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -25,67 +25,33 @@ namespace ClientApp.Services
             _localStorage = localStorage;
             _estadoProveedorAutenticacion = estadoProveedorAutenticacion;
         }
-        public async Task<RespuestaAutenticacion> Acceder(UsuarioAutenticacion usuarioDesdeAutenticacion)
+        public async Task<RespuestasAPI> Acceder(UsuarioAutenticacionDto usuarioAutenticacionDto)
         {
-            var content = JsonConvert.SerializeObject(usuarioDesdeAutenticacion);
+            var content = JsonConvert.SerializeObject(usuarioAutenticacionDto);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var response = await _cliente.PostAsync($"{Inicializar.UrlBaseApi}api/usuarios/login", bodyContent);
             var contentTemp = await response.Content.ReadAsStringAsync();
-            var resultado = (JObject)JsonConvert.DeserializeObject(contentTemp);
+            var respuesta = JsonConvert.DeserializeObject<RespuestasAPI>(contentTemp);
 
             if (response.IsSuccessStatusCode)
             {
-                var Token = resultado["token"].Value<string>();
-                var Usuario = resultado["usuario"]["email"].Value<string>();
-                var Rol = resultado["usuario"]["rol"].Value<string>();
+                var result = JsonConvert.DeserializeObject<UsuarioAutenticacionRespuestaDto>(respuesta.Result.ToString());
 
-                await _localStorage.SetItemAsync(Inicializar.Token_Local, Token);
-                await _localStorage.SetItemAsync(Inicializar.Datos_Usuario_Local, Usuario);
-                await _localStorage.SetItemAsync(Inicializar.Datos_Usuario_Rol_Local, Rol);
-                ((AuthStateProvider)_estadoProveedorAutenticacion).NotificarUsuarioLogueado(Token);
-                _cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Token);
-                return new RespuestaAutenticacion { IsSuccess = true };
+                await _localStorage.SetItemAsync(Inicializar.Token_Local, result.Token);
+                await _localStorage.SetItemAsync(Inicializar.Datos_Usuario_Local, result.Usuario.Email);
+                await _localStorage.SetItemAsync(Inicializar.Datos_Usuario_Rol_Local, result.Usuario.Rol);
+                ((AuthStateProvider)_estadoProveedorAutenticacion).NotificarUsuarioLogueado(result.Token);
+                _cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Token);
             }
-            else
-            {
-                if (resultado["errorMessages"] is JArray errorMessagesArray)
-                {
-                    var errorMessagesList = errorMessagesArray.ToObject<string[]>();
-                    var errorMessages = string.Join(", ", errorMessagesList);
 
-                    return new RespuestaAutenticacion { IsSuccess = false, ErrorMessages = errorMessages };
-                }
-                else
-                {
-                    return new RespuestaAutenticacion { IsSuccess = false, ErrorMessages = "An unexpected error occurred." };
-                }
-            }
+            return respuesta;
         }
-        public async Task<RespuestaAutenticacion> Recuperar(UsuarioRecuperacion usuarioRecuperacion) {
-            var content = JsonConvert.SerializeObject(usuarioRecuperacion);
+        public async Task<RespuestasAPI> Recuperar(UsuarioRecuperacionDto usuarioRecuperacionDto) {
+            var content = JsonConvert.SerializeObject(usuarioRecuperacionDto);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var response = await _cliente.PostAsync($"{Inicializar.UrlBaseApi}api/usuarios/recuperar", bodyContent);
             var contentTemp = await response.Content.ReadAsStringAsync();
-            var resultado = (JObject)JsonConvert.DeserializeObject(contentTemp);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return new RespuestaAutenticacion { IsSuccess = true };
-            }
-            else
-            {
-                if (resultado["errorMessages"] is JArray errorMessagesArray)
-                {
-                    var errorMessagesList = errorMessagesArray.ToObject<string[]>();
-                    var errorMessages = string.Join(", ", errorMessagesList);
-
-                    return new RespuestaAutenticacion { IsSuccess = false, ErrorMessages = errorMessages };
-                }
-                else
-                {
-                    return new RespuestaAutenticacion { IsSuccess = false, ErrorMessages = "An unexpected error occurred." };
-                }
-            }
+            return JsonConvert.DeserializeObject<RespuestasAPI>(contentTemp);
         }
 
         public async Task Salir()

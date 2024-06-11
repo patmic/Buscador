@@ -8,17 +8,17 @@ namespace ClientApp.Pages.Administracion.Homologacion
 {
     public partial class Listado
     {
-        private VwHomologacion homologacionSelected;
-        private Grid<VwHomologacion> grid;
+        private VwHomologacion? homologacionSelected;
+        private Grid<VwHomologacion>? grid;
         private List<VwHomologacion>? listaHomologacions = new List<VwHomologacion>();
         [Inject]
-        private IVwHomologacionRepository vwHomologacionRepository { get; set; }
+        private IVwHomologacionRepository? vwHomologacionRepository { get; set; }
         [Inject]
-        private IHomologacionRepository homologacionRepository { get; set; }
+        private IHomologacionRepository? homologacionRepository { get; set; }
         private List<VwHomologacion>? listaVwHomologacion;
-        public event Action DataLoaded;
+        public event Action? DataLoaded;
         [Inject]
-        protected IJSRuntime JSRuntime { get; set; }
+        protected IJSRuntime? JSRuntime { get; set; }
         protected override async Task OnInitializedAsync()
         {
             listaVwHomologacion = await vwHomologacionRepository.GetHomologacionAsync("grupo");

@@ -11,9 +11,9 @@ namespace ClientApp.Services {
         {
             _httpClient = httpClient;
         }
-        public async Task<List<DataHomologacionEsquema>> PsBuscarPalabraAsync(string value)
+        public async Task<List<DataHomologacionEsquema>> PsBuscarPalabraAsync(string value, int pageNumber, int pageSize)
         {
-            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/buscarPalabra?value={value}");
+            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/buscarPalabra?value={value}&pageNumber={pageNumber}&pageSize={pageSize}");
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<List<DataHomologacionEsquema>>();

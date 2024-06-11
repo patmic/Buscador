@@ -20,6 +20,7 @@ namespace ClientApp.Pages.BuscadorCan
         private List<List<VwHomologacion>>? listadeOpciones = new List<List<VwHomologacion>>();
         private List<List<int>> selectedValues = new List<List<int>>();
         private List<DataHomologacionEsquema>? listDataHomologacionEsquema;
+        private int totalCount = 1000;
         protected override async Task OnInitializedAsync()
         {
             try
@@ -52,23 +53,25 @@ namespace ClientApp.Pages.BuscadorCan
         }
         private async Task BuscarPalabraRequest()
         {
+            await grid.ResetPageNumber();
+            // await grid.RefreshDataAsync();
+        }
+        private async Task<GridDataProviderResult<DataHomologacionEsquema>> ResultadoBusquedaDataProvider(GridDataProviderRequest<DataHomologacionEsquema> request)
+        {
             try {
                 listDataHomologacionEsquema = await servicio.PsBuscarPalabraAsync(JsonConvert.SerializeObject(new {
                     TextoBuscar = buscarRequest.TextoBuscar ?? "",
                     IdHomologacionFiltro = selectedValues.SelectMany(list => list).Where(c => c != 0).ToList()
-                }));
+                }), request.PageNumber, request.PageSize);
             } catch (Exception e) { 
                 Console.WriteLine(e);
             }
-            await grid.RefreshDataAsync();
-        }
-        private async Task<GridDataProviderResult<DataHomologacionEsquema>> ResultadoBusquedaDataProvider(GridDataProviderRequest<DataHomologacionEsquema> request)
-        {
+
             if (listDataHomologacionEsquema is null) {
                 listDataHomologacionEsquema = new List<DataHomologacionEsquema>();
             }
 
-            return await Task.FromResult(request.ApplyTo(listDataHomologacionEsquema));
+            return await Task.FromResult(new GridDataProviderResult<DataHomologacionEsquema> { Data = listDataHomologacionEsquema, TotalCount = listDataHomologacionEsquema.Count() == 0 ? 0 : totalCount });
         }
         private async void showModal(DataHomologacionEsquema dataLake)
         {
