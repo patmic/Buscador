@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SharedApp.Models;
 
 namespace WebApp.Models
 {
@@ -12,7 +13,7 @@ namespace WebApp.Models
         [Required]
         public int IdEndpoint { get; set; }
         [Required]
-        public string Accion { get; set; }
+        public string? Accion { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaModifica { get; set; }
         public int IdUserCreacion { get; set; }
@@ -20,9 +21,9 @@ namespace WebApp.Models
 
         // Propiedades de navegación
         [ForeignKey("IdUsuario")]
-        public Usuario Usuario { get; set; }
+        public Usuario? Usuario { get; set; }
 
         [ForeignKey("IdEndpoint")]
-        public Endpoint Endpoint { get; set; }
+        public Endpoint? Endpoint { get; set; }
     }
 }

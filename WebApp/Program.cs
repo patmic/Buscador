@@ -40,6 +40,8 @@ builder.Services.AddScoped<IDataLakeOrganizacionRepository, DataLakeOrganizacion
 builder.Services.AddScoped<IOrganizacionFullTextRepository, OrganizacionFullTextRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IMd5Service, Md5Service>();
 
 // WorkerService
 builder.Services.AddHostedService<BackgroundWorkerService>();

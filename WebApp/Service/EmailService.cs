@@ -7,7 +7,6 @@ namespace WebApp.Service {
     {
         private readonly IConfiguration _configuration = configuration;
         private readonly ILogger<EmailService> _logger = logger;
-
         public async Task EnviarCorreoAsync(string destinatario, string asunto, string cuerpo)
         {
             var smtpClient = new SmtpClient(_configuration["EmailSettings:SmtpServer"])

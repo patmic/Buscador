@@ -13,7 +13,6 @@
 
                     <EditForm Model="usuarioAutenticacion" OnValidSubmit="AccesoUsuario">
                         <DataAnnotationsValidator />
-                        <ValidationSummary />
 
                         @if(!string.IsNullOrEmpty(@alertMessage)) {
                             <Alert Color="AlertColor.Danger" Dismissable="false"> <Icon Name="IconName.ExclamationTriangleFill" class="me-2"></Icon>@alertMessage </Alert>

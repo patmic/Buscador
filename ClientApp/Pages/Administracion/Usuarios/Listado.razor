@@ -1,33 +1,33 @@
 @page "/usuarios"
 @layout AdminLayout
 @using Microsoft.AspNetCore.Authorization;
-@using ClientApp.Models;
+@using SharedApp.Models;
 @attribute [Authorize]
 
 <PageTitle>Usuarios</PageTitle>
 
 <h3>Administación de Usuarios</h3>
 
-<Grid TItem="Usuario" class="table table-hover table-bordered table-striped" DataProvider="UsuariosDataProvider" Responsive="true">
-    <GridColumn TItem="Usuario" HeaderText="Nombre" PropertyName="Nombre">
+<Grid TItem="UsuarioDto" class="table table-hover table-bordered table-striped" DataProvider="UsuariosDataProvider" Responsive="true">
+    <GridColumn TItem="UsuarioDto" HeaderText="Nombre" PropertyName="Nombre">
         @context.Nombre
     </GridColumn>
-    <GridColumn TItem="Usuario" HeaderText="Apellido" PropertyName="Apellido">
+    <GridColumn TItem="UsuarioDto" HeaderText="Apellido" PropertyName="Apellido">
         @context.Apellido
     </GridColumn>
-    <GridColumn TItem="Usuario" HeaderText="Teléfono" PropertyName="Telefono">
+    <GridColumn TItem="UsuarioDto" HeaderText="Teléfono" PropertyName="Telefono">
         @context.Telefono
     </GridColumn>
-    <GridColumn TItem="Usuario" HeaderText="Email" PropertyName="Email">
+    <GridColumn TItem="UsuarioDto" HeaderText="Email" PropertyName="Email">
         @context.Email
     </GridColumn>
-    <GridColumn TItem="Usuario" HeaderText="Rol" PropertyName="Rol">
+    <GridColumn TItem="UsuarioDto" HeaderText="Rol" PropertyName="Rol">
         @context.Rol
     </GridColumn>
-    <GridColumn TItem="Usuario" HeaderText="Estado" PropertyName="Estado">
+    <GridColumn TItem="UsuarioDto" HeaderText="Estado" PropertyName="Estado">
         @context.Estado
     </GridColumn>
-    <GridColumn TItem="Usuario" HeaderText="Editar">
+    <GridColumn TItem="UsuarioDto" HeaderText="Editar">
         <Button Type="ButtonType.Link" Color="ButtonColor.Secondary" Outline="true" To="@($"/editar-usuario/{context.IdUsuario}")" Size="Size.Small">
             <Icon Name="IconName.PencilSquare" />
         </Button>

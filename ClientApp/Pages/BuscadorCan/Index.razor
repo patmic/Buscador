@@ -57,7 +57,19 @@
         <div class="py-2">
             @if (listaEtiquetasGrilla != null)
             {
-                <Grid @ref="grid" TItem="DataHomologacionEsquema" class="table table-hover table-bordered table-striped" DataProvider="ResultadoBusquedaDataProvider" Responsive="true" AllowSorting="true">
+                <Grid
+                    @ref="grid"
+                    TItem="DataHomologacionEsquema"
+                    class="table table-hover table-bordered table-striped"
+                    DataProvider="ResultadoBusquedaDataProvider"
+                    Responsive="true"
+                    AllowSorting="true"
+                    AllowPaging="true"
+                    PageSize="5"
+                    PageSizeSelectorVisible="true"
+                    PageSizeSelectorItems="@(new int[] { 5, 10, 20, 30 })"
+                    ItemsPerPageText="Items por página"
+                >
                     @foreach(var etiqueta in listaEtiquetasGrilla.OrderBy(c => c.MostrarWebOrden)) {
                         <GridColumn TItem="DataHomologacionEsquema" PropertyName="@etiqueta.MostrarWeb" SortString="@etiqueta.MostrarWeb">
                             <HeaderContent>

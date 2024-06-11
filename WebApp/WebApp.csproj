@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\SharedApp\SharedApp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

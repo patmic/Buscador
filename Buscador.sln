@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApp", "ClientApp\ClientApp.csproj", "{84217101-74C4-4504-9BA7-D553822A1D64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedApp", "SharedApp\SharedApp.csproj", "{D2C87F32-2E95-4E36-BAFE-F01F564D307F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{84217101-74C4-4504-9BA7-D553822A1D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84217101-74C4-4504-9BA7-D553822A1D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84217101-74C4-4504-9BA7-D553822A1D64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2C87F32-2E95-4E36-BAFE-F01F564D307F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2C87F32-2E95-4E36-BAFE-F01F564D307F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2C87F32-2E95-4E36-BAFE-F01F564D307F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2C87F32-2E95-4E36-BAFE-F01F564D307F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

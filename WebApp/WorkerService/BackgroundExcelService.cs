@@ -28,10 +28,10 @@ namespace WebApp.WorkerService
 
               using (var scope = _services.CreateScope())
               {
-                var excelService = scope.ServiceProvider.GetRequiredService<IExcelService>();
-                excelService.ImportarExcel(@".\\Files\\cargaDataBusccadorAndino.xlsx");
+                // var excelService = scope.ServiceProvider.GetRequiredService<IExcelService>();
+                // excelService.ImportarExcel(@"Files/cargaDataBusccadorAndino.xlsx");
               }
-              await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+              await Task.Delay(TimeSpan.FromMinutes(1000), stoppingToken);
             }
         }
     }

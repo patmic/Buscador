@@ -5,10 +5,7 @@ namespace WebApp.Models
         public BaseEntity()
         {
             Estado = "A";
-            FechaCreacion = DateTime.Now;
             FechaModifica = DateTime.Now;
-            IdUserCreacion = 1;
-            IdUserModifica = 1;
         }
 
         public string Estado { get; set; }

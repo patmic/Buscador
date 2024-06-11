@@ -1,10 +1,10 @@
-﻿using WebApp.Models;
-using WebApp.Models.Dtos;
+﻿using WebApp.Models.Dtos;
 using WebApp.Repositories.IRepositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using SharedApp.Models;
 
 namespace WebApp.Controllers
 {

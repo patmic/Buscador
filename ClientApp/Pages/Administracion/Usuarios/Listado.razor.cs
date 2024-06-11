@@ -1,16 +1,16 @@
 using BlazorBootstrap;
-using ClientApp.Models;
 using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components;
+using SharedApp.Models;
 
 namespace ClientApp.Pages.Administracion.Usuarios
 {
     public partial class Listado
     {
-        private List<Usuario>? listaUsuarios;
+        private List<UsuarioDto>? listaUsuarios;
         [Inject]
         IUsuariosRepository usuariosRepository { get; set; }
-        private async Task<GridDataProviderResult<Usuario>> UsuariosDataProvider(GridDataProviderRequest<Usuario> request)
+        private async Task<GridDataProviderResult<UsuarioDto>> UsuariosDataProvider(GridDataProviderRequest<UsuarioDto> request)
         {
             if (listaUsuarios is null)
                 listaUsuarios = await usuariosRepository.GetUsuariosAsync();
