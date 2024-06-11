@@ -31,7 +31,7 @@ namespace WebApp.WorkerService
                 // var excelService = scope.ServiceProvider.GetRequiredService<IExcelService>();
                 // excelService.ImportarExcel(@"Files/cargaDataBusccadorAndino.xlsx");
               }
-              await Task.Delay(TimeSpan.FromMinutes(1000), stoppingToken);
+              await Task.Delay(TimeSpan.FromMinutes(10000), stoppingToken);
             }
         }
     }

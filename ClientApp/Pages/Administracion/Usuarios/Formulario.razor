@@ -18,40 +18,56 @@
             </h3>
 
             <hr style="background-color:aliceblue" />
-            <div class="py-2">
-                <InputText @bind-Value="usuario.Nombre" class="form-control" placeholder="Nombre..." />
-                <ValidationMessage For="(() => usuario.Nombre)" />
-            </div>
-
-            <div class="py-2">
-                <InputText @bind-Value="usuario.Apellido" class="form-control" placeholder="Apellido..." />
-                <ValidationMessage For="(() => usuario.Apellido)" />
-            </div>
-
-            <div class="py-2">
-                <InputText @bind-Value="usuario.Email" class="form-control" placeholder="Email..." />
-                <ValidationMessage For="(() => usuario.Email)" />
-            </div>
-
-            <div class="py-2">
-                <InputText @bind-Value="usuario.Telefono" class="form-control" placeholder="Teléfono..." />
-                <ValidationMessage For="(() => usuario.Telefono)" />
-            </div>
-
-            <div class="py-2">
-                <Dropdown AutoClose="true">
-                    <DropdownToggleButton Color="ButtonColor.Secondary">
-                        @usuario.Rol
-                    </DropdownToggleButton>
-                    <DropdownMenu>
-                        <DropdownItem @onclick="@(() => OnAutoCompleteChanged("USER"))">USER</DropdownItem>
-                        <DropdownItem @onclick="@(() => OnAutoCompleteChanged("ADMIN"))">ADMIN</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-                <ValidationMessage For="(() => usuario.Rol)" />
+            <div class="form-row py-2">
+                <label class="col-form-label">Nombre</label>
+                <div class="col">
+                    <InputText @bind-Value="usuario.Nombre" class="form-control" placeholder="Nombre..." />
+                    <ValidationMessage For="(() => usuario.Nombre)" />
+                </div>
             </div>
 
             <div class="form-row py-2">
+                <label class="col-form-label">Apellido</label>
+                <div class="col">
+                    <InputText @bind-Value="usuario.Apellido" class="form-control" placeholder="Apellido..." />
+                    <ValidationMessage For="(() => usuario.Apellido)" />
+                </div>
+            </div>
+
+            <div class="form-row py-2">
+                <label class="col-form-label">Email</label>
+                <div class="col">
+                    <InputText @bind-Value="usuario.Email" class="form-control" placeholder="Email..." />
+                    <ValidationMessage For="(() => usuario.Email)" />
+                </div>
+            </div>
+
+            <div class="form-row py-2">
+                <label class="col-form-label">Teléfono</label>
+                <div class="col">
+                    <InputText @bind-Value="usuario.Telefono" class="form-control" placeholder="Teléfono..." />
+                    <ValidationMessage For="(() => usuario.Telefono)" />
+                </div>
+            </div>
+
+            <div class="form-row py-2">
+                <label class="col-form-label">Rol</label>
+                <div class="col">
+                    <Dropdown AutoClose="true">
+                        <DropdownToggleButton Color="ButtonColor.Secondary">
+                        @usuario.Rol
+                        </DropdownToggleButton>
+                        <DropdownMenu>
+                            <DropdownItem @onclick="@(() => OnAutoCompleteChanged("USER"))">USER</DropdownItem>
+                            <DropdownItem @onclick="@(() => OnAutoCompleteChanged("ADMIN"))">ADMIN</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                    <ValidationMessage For="(() => usuario.Rol)" />
+                </div>
+            </div>
+
+            <div class="form-row py-2">
+                <label class="col-form-label">Clave</label>
                 <div class="col">
                     <InputText @bind-Value="usuario.Clave" type="password" id="password" placeholder="Clave..." class="form-control" />
                     <ValidationMessage For="(() => usuario.Clave)" />
