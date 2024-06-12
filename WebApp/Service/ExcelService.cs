@@ -14,10 +14,11 @@ namespace WebApp.Service.IService
       private IDataLakeOrganizacionRepository _repositoryDLO = dataLakeOrganizacionRepository;
       private IOrganizacionFullTextRepository _repositoryOFT = organizacionFullTextRepository;
       
-      public Boolean ImportarExcel(string path) {
-          Leer(path, "Esq1");
-            return true;
-        }
+      public Boolean ImportarExcel(string path) 
+      {
+        Leer(path, "Esq1");
+          return true;
+      }
 
       public Boolean Leer(string fileSrc, string worksheet)
       {
@@ -47,8 +48,6 @@ namespace WebApp.Service.IService
                 DataLakeOrganizacion dataLakeOrganizacion = addDataLakeOrganizacion(dataTable, i, dataLake);
 
                 addOrganizacionFullText(dataTable, i, dataLakeOrganizacion.IdDataLakeOrganizacion);
-                if (i == 3) {
-                  break;}
               }
               return true;
             } else {
@@ -62,33 +61,31 @@ namespace WebApp.Service.IService
 
       DataLake getDatalake(DataTable dataTable, int row, DataLake dataLake)
       {
-        Console.WriteLine("DataLake: " + dataLake);
-        Console.WriteLine("DataLake: " + dataLake);
         if (dataLake == null) {
           return buildDatalake(dataTable, row);
         } else
         {
           if (dataTable.Rows[row][0].ToString().Equals(dataLake?.DataTipo?.ToString()) &&
               dataTable.Rows[row][1].ToString().Equals(dataLake?.DataSistemaOrigen?.ToString()) &&
-              dataTable.Rows[row][2].ToString().Equals(dataLake?.DataSistemaOrigenId?.ToString()) &&
-              DateTime.Parse(dataTable.Rows[row][3]?.ToString() ?? "01/01/1900").Equals(dataLake?.DataSistemaFecha))
+              dataTable.Rows[row][2].ToString().Equals(dataLake?.DataSistemaOrigenId?.ToString()))
           {
+            if (DateTime.Parse(dataTable.Rows[row][3]?.ToString() ?? "01/01/1900") > dataLake.DataSistemaFecha)
+            {
+              dataLake.DataSistemaFecha = DateTime.Parse(dataTable.Rows[row][3]?.ToString() ?? "01/01/1900");
+              dataLake.Estado = "A";
+              dataLake.DataFechaCarga = DateTime.Now;
+              return _repositoryDL.update(dataLake);
+            }
             return dataLake;
           } else 
           {
             return buildDatalake(dataTable, row);
           }
-          
         }
       }
 
       DataLake buildDatalake(DataTable dataTable, int row)
       {
-        Console.WriteLine("DataLake[0]: " + dataTable.Rows[row][0].ToString());
-        Console.WriteLine("DataLake[1]: " + dataTable.Rows[row][1].ToString());
-        Console.WriteLine("DataLake[2]: " + dataTable.Rows[row][2].ToString());
-        Console.WriteLine("DataLake[3]: " + dataTable.Rows[row][3].ToString());
-        
         DataLake tmpDataLake = new DataLake
         {
           DataTipo = dataTable.Rows[row][0].ToString(),
@@ -96,8 +93,6 @@ namespace WebApp.Service.IService
           DataSistemaOrigenId = dataTable.Rows[row][2].ToString(),
           DataSistemaFecha = DateTime.Parse(dataTable.Rows[row][3]?.ToString() ?? "01/01/1900")
         };
-
-        Console.WriteLine("DataLake.Id: " + tmpDataLake.IdDataLake);
 
         var existingDataLake = _repositoryDL.findBy(tmpDataLake);
         if (existingDataLake != null)
@@ -157,18 +152,5 @@ namespace WebApp.Service.IService
         }
         return json.TrimEnd(',') + "]";
       }
-      string getDataLakeInsertQuery(DataTable dataTable, int row, int col)
-         {
-          string columnNames = "";
-          string columnValues = "";
-          for (int col1 = 0; col1 < 3; col1++)
-          {
-            columnNames += dataTable.Columns[col1].ColumnName + ",";
-            columnValues += "'" + dataTable.Rows[row][col1].ToString() + "',";
-          }
-          return $"INSERT INTO DataLake ({columnNames.TrimEnd(',')}) OUTPUT INSERTED.IdDataLake VALUES ({columnValues.TrimEnd(',')});";
-         }
-
-         
-    }
+  }
 }

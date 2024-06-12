@@ -29,17 +29,16 @@ namespace WebApp.Repositories
         return _bd.DataLake.AsNoTracking().Where(c => c.Estado.Equals("A")).OrderBy(c => c.DataFechaCarga).ToList();
     }
 
-    public DataLake findBy(DataLake dataLake)
+    public DataLake? findBy(DataLake dataLake)
     {
       return _bd.DataLake.AsNoTracking().FirstOrDefault(
         u => u.DataTipo == dataLake.DataTipo &&
              u.DataSistemaOrigen == dataLake.DataSistemaOrigen &&
-             u.DataSistemaOrigenId == dataLake.DataSistemaOrigenId &&
-              u.DataSistemaFecha == dataLake.DataSistemaFecha
-             );
+             u.DataSistemaOrigenId == dataLake.DataSistemaOrigenId
+            );
     }
 
-    public bool update(DataLake newRecord)
+    public DataLake? update(DataLake newRecord)
     {
       var currentRecord = _bd.DataLake.FirstOrDefault(u => u.IdDataLake == newRecord.IdDataLake);
       newRecord.DataSistemaFecha = DateTime.Now;
@@ -58,7 +57,7 @@ namespace WebApp.Repositories
       }
 
       _bd.DataLake.Update(currentRecord);
-      return _bd.SaveChanges() >= 0 ? true : false;
+      return _bd.SaveChanges() >= 0 ? currentRecord : null;
     }
   }
 }

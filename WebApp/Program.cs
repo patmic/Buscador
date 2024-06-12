@@ -26,6 +26,7 @@ builder.Services.AddControllers();
 // Api
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IExcelService, ExcelService>();
+builder.Services.AddScoped<IImportadorService, ImportadorService>();
 builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IEndpointRepository, EndpointRepository>();
