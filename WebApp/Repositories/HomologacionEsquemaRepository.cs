@@ -11,26 +11,26 @@ namespace WebApp.Repositories
   {
     private readonly SqlServerDbContext _bd = dbContext;
 
-        public bool create(HomologacionEsquema data)
-        {
-            data.FechaCreacion = DateTime.Now;   
-            data.FechaModifica = DateTime.Now;
+      public bool create(HomologacionEsquema data)
+      {
+          data.FechaCreacion = DateTime.Now;   
+          data.FechaModifica = DateTime.Now;
 
-            _bd.HomologacionEsquema.Add(data);
-            return _bd.SaveChanges() >= 0 ? true : false;
-        }
+          _bd.HomologacionEsquema.Add(data);
+          return _bd.SaveChanges() >= 0 ? true : false;
+      }
 
-        public HomologacionEsquema find(int Id)
-        {
-          return _bd.HomologacionEsquema.AsNoTracking().FirstOrDefault(u => u.IdHomologacionEsquema == Id);
-        }
+      public HomologacionEsquema find(int Id)
+      {
+        return _bd.HomologacionEsquema.AsNoTracking().FirstOrDefault(u => u.IdHomologacionEsquema == Id);
+      }
 
-        public ICollection<HomologacionEsquema> findAll()
-        {
-            return _bd.HomologacionEsquema.AsNoTracking().Where(c => c.Estado.Equals("A")).OrderBy(c => c.MostrarWebOrden).ToList();
-        }
+      public ICollection<HomologacionEsquema> findAll()
+      {
+          return _bd.HomologacionEsquema.AsNoTracking().Where(c => c.Estado.Equals("A")).OrderBy(c => c.MostrarWebOrden).ToList();
+      }
 
-        public bool update(HomologacionEsquema newRecord)
+      public bool update(HomologacionEsquema newRecord)
         {
           var currentRecord = _bd.HomologacionEsquema.FirstOrDefault(u => u.IdHomologacionEsquema == newRecord.IdHomologacionEsquema);
           newRecord.FechaModifica = DateTime.Now;

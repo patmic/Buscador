@@ -54,5 +54,10 @@ namespace WebApp.Repositories
       _bd.DataLakeOrganizacion.Update(currentRecord);
       return _bd.SaveChanges() >= 0 ? true : false;
     }
+
+    public int getLastId()
+    {
+      return _bd.DataLakeOrganizacion.AsNoTracking().Max(c => c.IdDataLakeOrganizacion);
+    }
   }
 }
