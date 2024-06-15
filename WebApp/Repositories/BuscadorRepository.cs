@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using WebApp.Models.Dtos;
@@ -14,15 +15,32 @@ namespace WebApp.Repositories
         {
             _bd = dbContext;
         }
-        public ICollection<FnHomologacionEsquemaDataDto> PsBuscarPalabra(string value, int pageNumber, int pageSize)
+        public object PsBuscarPalabra(string paramJSON, int PageNumber, int RowsPerPage)
         {
-            var lstTem = _bd.Database.SqlQuery<FnHomologacionEsquemaData>($"exec psBuscarPalabra {value},{pageNumber},{pageSize}").AsNoTracking().ToList();
-            return lstTem.Select(c => new FnHomologacionEsquemaDataDto()
+            var rowsTotal = new SqlParameter
             {
-                IdDataLakeOrganizacion = c.IdDataLakeOrganizacion,
-                DataEsquemaJson = JsonConvert.DeserializeObject<List<ColumnaEsquema>>(c.DataEsquemaJson)
-            })
-            .ToList();
+                ParameterName = "@RowsTotal",
+                SqlDbType = SqlDbType.Int,
+                Direction = ParameterDirection.Output
+            };
+
+            var lstTem = _bd.Database.SqlQueryRaw<FnHomologacionEsquemaData>(
+                "exec psBuscarPalabra @paramJSON, @PageNumber, @RowsPerPage, @RowsTotal OUT",
+                new SqlParameter("@paramJSON", paramJSON),
+                new SqlParameter("@PageNumber", PageNumber),
+                new SqlParameter("@RowsPerPage", RowsPerPage),
+                rowsTotal
+            ).AsNoTracking().ToList();
+
+            return new {
+                Data = lstTem.Select(c => new FnHomologacionEsquemaDataDto()
+                {
+                    IdDataLakeOrganizacion = c.IdDataLakeOrganizacion,
+                    DataEsquemaJson = JsonConvert.DeserializeObject<List<ColumnaEsquema>>(c.DataEsquemaJson)
+                })
+                .ToList(),
+                TotalCount = (int) rowsTotal.Value
+            };
         }
         public ICollection<EsquemaDto> FnHomologacionEsquemaTodo()
         {

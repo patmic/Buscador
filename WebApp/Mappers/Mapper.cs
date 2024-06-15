@@ -2,6 +2,7 @@
 using WebApp.Models.Dtos;
 using AutoMapper;
 using SharedApp.Models;
+using SharedApp.Models.Dtos;
 
 namespace WebApp.Mappers
 {
@@ -27,6 +28,9 @@ namespace WebApp.Mappers
             CreateMap<Homologacion, CatalogosDto>();
             CreateMap<Homologacion, HomologacionDto>();
             CreateMap<HomologacionDto, Homologacion>();
+
+            CreateMap<HomologacionEsquemaVistaDto, HomologacionEsquemaVista>();
+            CreateMap<HomologacionEsquemaVista, HomologacionEsquemaVistaDto>();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ClientApp.Pages.BuscadorCan
         [Parameter]
         public int IdDataLakeOrganizacion { get; set; }
         [Inject]
-        private IBusquedaRepository servicio { get; set; }
+        private IBusquedaService servicio { get; set; }
         private HomologacionEsquema homologacionEsquema;
         private IEnumerable<VwHomologacion> Columnas;
         private IEnumerable<DataHomologacionEsquema> resultados;

@@ -3,20 +3,18 @@ using ClientApp.Helpers;
 using ClientApp.Models;
 using ClientApp.Services.IService;
 
-namespace ClientApp.Services {
-    public class BusquedaRepository : IBusquedaRepository
+namespace ClientApp.Services
+{
+    public class BusquedaService(HttpClient httpClient) : IBusquedaService
     {
-        private readonly HttpClient _httpClient;
-        public BusquedaRepository(HttpClient httpClient)
+        private readonly HttpClient _httpClient = httpClient;
+
+        public async Task<ResultDataHomologacionEsquema> PsBuscarPalabraAsync(string paramJSON, int PageNumber, int RowsPerPage)
         {
-            _httpClient = httpClient;
-        }
-        public async Task<List<DataHomologacionEsquema>> PsBuscarPalabraAsync(string value, int pageNumber, int pageSize)
-        {
-            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/buscarPalabra?value={value}&pageNumber={pageNumber}&pageSize={pageSize}");
+            var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/buscador/buscarPalabra?paramJSON={paramJSON}&PageNumber={PageNumber}&RowsPerPage={RowsPerPage}");
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<List<DataHomologacionEsquema>>();
+            return await response.Content.ReadFromJsonAsync<ResultDataHomologacionEsquema>();
         }
         public async Task<List<HomologacionEsquema>> FnHomologacionEsquemaTodoAsync()
         {

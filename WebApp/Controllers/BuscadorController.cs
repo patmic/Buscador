@@ -9,15 +9,15 @@ namespace WebApp.Controllers
     public class BuscadorController(ILogger<BuscadorController> logger, IBuscadorRepository vhRepo) : ControllerBase
     {
         private readonly IBuscadorRepository _vhRepo = vhRepo;
-        protected RespuestasAPI? _respuestaApi;
+        // protected RespuestasAPI? _respuestaApi;
         private readonly ILogger<BuscadorController> _logger = logger;
 
         [HttpGet("buscarPalabra")]
-        public IActionResult PsBuscarPalabra(string value, int pageNumber, int pageSize)
+        public IActionResult PsBuscarPalabra(string paramJSON, int PageNumber, int RowsPerPage)
         {
             try
             {
-                return Ok(_vhRepo.PsBuscarPalabra(value, pageNumber, pageSize));
+                return Ok(_vhRepo.PsBuscarPalabra(paramJSON, PageNumber, RowsPerPage));
             }
             catch (Exception e)
             {

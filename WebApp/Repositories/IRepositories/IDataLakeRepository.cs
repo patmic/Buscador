@@ -4,10 +4,10 @@ namespace WebApp.Repositories.IRepositories {
   public interface IDataLakeRepository
   {
 
-    bool update(DataLake data);
+    DataLake? update(DataLake data);
     DataLake create(DataLake data);
     DataLake find(int Id);
-    DataLake findBy(DataLake dataLake);
+    DataLake? findBy(DataLake dataLake);
     ICollection<DataLake> findAll();
   }
 }

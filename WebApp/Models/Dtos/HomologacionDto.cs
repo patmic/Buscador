@@ -11,5 +11,6 @@ namespace WebApp.Models.Dtos
     public string? SiNoHayDato { get; set; }
     public string? NombreHomologado { get; set; }
     public string? InfoExtraJson { get; set; }
+    public string? CodigoHomologacion { get; set; }
   }
 }

@@ -14,7 +14,7 @@ namespace WebApp.Controllers
     public class CatalogosController : ControllerBase
     {
         private readonly IVwHomologacionRepository _vhRepo;
-        protected RespuestasAPI _respuestaApi;
+        // protected RespuestasAPI _respuestaApi;
         private readonly IMapper _mapper;
         private readonly ILogger<CatalogosController> _logger;
 
