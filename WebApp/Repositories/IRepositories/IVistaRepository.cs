@@ -1,3 +1,4 @@
+using SharedApp.Models.Dtos;
 using WebApp.Models;
 
 namespace WebApp.Repositories.IRepositories {
@@ -8,7 +9,7 @@ namespace WebApp.Repositories.IRepositories {
     bool create(Vista data);
     Vista find(int Id);
     ICollection<Vista> findAll();
-    ICollection<string> GetProperties(string vistaNombre);
+    ICollection<PropiedadesTablaDto> GetProperties(string vistaNombre);
     ICollection<Vista> findBySystem(int idHomologacionSistema);
   }
 }

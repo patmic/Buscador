@@ -24,6 +24,7 @@ builder.Services.AddScoped<IVwHomologacionRepository, VwHomologacionRepository>(
 builder.Services.AddScoped<IHomologacionRepository, HomologacionRepository>();
 builder.Services.AddScoped<IHomologacionEsquemaRepository, HomologacionEsquemaRepository>();
 builder.Services.AddSingleton<ClientApp.Services.ToastService>();
+builder.Services.AddScoped<IHomologacionEsquemaVistaService, HomologacionEsquemaVistaService>();
 
 builder.Services.AddBlazoredLocalStorage();
 

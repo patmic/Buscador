@@ -16,11 +16,11 @@ namespace ClientApp.Services {
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<List<VistaDto>>();
         }
-        public async Task<List<string>> GetPropertiesAsync(string vistaNombre)
+        public async Task<List<PropiedadesTablaDto>> GetPropertiesAsync(string vistaNombre)
         {
             var response = await _httpClient.GetAsync($"{Inicializar.UrlBaseApi}api/vistas/propiedades/{vistaNombre}");
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<List<string>>();
+            return await response.Content.ReadFromJsonAsync<List<PropiedadesTablaDto>>();
         }
    }
 }

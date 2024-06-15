@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using WebApp.Repositories.IRepositories;
 using WebApp.Service;
+using SharedApp.Models.Dtos;
 
 namespace WebApp.Repositories
 {
@@ -30,9 +31,9 @@ namespace WebApp.Repositories
         {
             return _bd.Vista.AsNoTracking().Where(c => c.Estado.Equals("A") && c.IdHomologacionSistema == idHomologacionSistema).ToList();
         }
-        public ICollection<string> GetProperties(string vistaNombre)
+        public ICollection<PropiedadesTablaDto> GetProperties(string vistaNombre)
         {
-            List<string> columnInfos = new List<string>();
+            List<PropiedadesTablaDto> columnInfos = new List<PropiedadesTablaDto>();
 
             var connection = _bd.Database.GetDbConnection();
             connection.Open();
@@ -49,7 +50,9 @@ namespace WebApp.Repositories
                 {
                     while (reader.Read())
                     {
-                      columnInfos.Add(reader["COLUMN_NAME"].ToString());
+                      columnInfos.Add(new PropiedadesTablaDto{
+                        NombreColumna = reader["COLUMN_NAME"].ToString()
+                      });
                     }
                 }
             }

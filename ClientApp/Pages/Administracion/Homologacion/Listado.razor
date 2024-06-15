@@ -1,6 +1,7 @@
 @page "/homologacion"
 @layout AdminLayout
 @using ClientApp.Models
+@using SharedApp.Models.Dtos
 
 <PageTitle>Homologación</PageTitle>
 
@@ -31,28 +32,6 @@
     </div>
     <div class="col-md-4">
         <div>
-            <label class="col-form-label">Vistas</label>
-        </div>
-        <Dropdown AutoClose="true">
-            <DropdownToggleButton Color="ButtonColor.Secondary">
-                @if (vistaSelected?.VistaNombre != null)
-                {
-                    @vistaSelected.VistaNombre
-                }
-                else
-                {
-                    <span>Seleccionar Vista</span>
-                }
-            </DropdownToggleButton>
-            <DropdownMenu>
-                @foreach(var opcion in listaVistas) {
-                    <DropdownItem @onclick="() => CambiarSeleccionVista(opcion)">@opcion.VistaNombre</DropdownItem>
-                }
-            </DropdownMenu>
-        </Dropdown>
-    </div>
-    <div class="col-md-4">
-        <div>
             <label class="col-form-label">Esquemas</label>
         </div>
         <Dropdown AutoClose="true">
@@ -73,23 +52,49 @@
             </DropdownMenu>
         </Dropdown>
     </div>
+    <div class="col-md-4">
+        <div>
+            <label class="col-form-label">Vistas</label>
+        </div>
+        <Dropdown AutoClose="true">
+            <DropdownToggleButton Color="ButtonColor.Secondary">
+                @if (vistaSelected?.VistaNombre != null)
+                {
+                    @vistaSelected.VistaNombre
+                }
+                else
+                {
+                    <span>Seleccionar Vista</span>
+                }
+            </DropdownToggleButton>
+            <DropdownMenu>
+                @foreach(var opcion in listaVistas) {
+                    <DropdownItem @onclick="() => CambiarSeleccionVista(opcion)">@opcion.VistaNombre</DropdownItem>
+                }
+            </DropdownMenu>
+        </Dropdown>
+    </div>
     <div class="col-md-12 py-2">
-        <Grid @ref="grid" TItem="VwHomologacion" class="table table-hover table-bordered table-striped" DataProvider="HomologacionDataProvider" Responsive="true">
-            <GridColumn TItem="VwHomologacion" HeaderText="Esquema" PropertyName="MostrarWeb">
+        <Grid @ref="grid" TItem="HomologacionEsquemaVistaDto" class="table table-hover table-bordered table-striped" DataProvider="HomologacionDataProvider" Responsive="true">
+            <GridColumn TItem="HomologacionEsquemaVistaDto" HeaderText="Esquema" PropertyName="NombreHomologado">
                 @context.NombreHomologado
             </GridColumn>
-            <GridColumn TItem="VwHomologacion" HeaderText="Vista" PropertyName="MostrarWeb">
-                <Dropdown AutoClose="true">
-                    <DropdownToggleButton Color="ButtonColor.Secondary">
-                        Seleccione
-                    </DropdownToggleButton>
-                    <DropdownMenu>
-                        @foreach(var opcion in propiedadesVista) {
-                            <DropdownItem>@opcion</DropdownItem>
-                        }
-                    </DropdownMenu>
-                </Dropdown>
+            <GridColumn TItem="HomologacionEsquemaVistaDto" HeaderText="Vista" PropertyName="VistaColumna">
+                <AutoComplete
+                    @bind-Value="context.VistaColumna"
+                    TItem="PropiedadesTablaDto"
+                    DataProvider="NombreColumnaDataProvider"
+                    PropertyName="NombreColumna"
+                    Placeholder="Seleccione..."
+                    StringComparison="StringComparison.Ordinal"
+                />
             </GridColumn>
         </Grid>
+        <div class="py-2">
+            <hr style="background-color:aliceblue" />
+            <Button @ref="saveButton" Color="ButtonColor.Success" @onclick="async () => await GuardarHomologacionEsquemaVista()">
+                Guardar
+            </Button>
+        </div>
     </div>
 </div>

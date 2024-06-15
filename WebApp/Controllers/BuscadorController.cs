@@ -9,7 +9,7 @@ namespace WebApp.Controllers
     public class BuscadorController(ILogger<BuscadorController> logger, IBuscadorRepository vhRepo) : ControllerBase
     {
         private readonly IBuscadorRepository _vhRepo = vhRepo;
-        protected RespuestasAPI? _respuestaApi;
+        // protected RespuestasAPI? _respuestaApi;
         private readonly ILogger<BuscadorController> _logger = logger;
 
         [HttpGet("buscarPalabra")]

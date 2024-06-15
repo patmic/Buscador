@@ -24,6 +24,7 @@ namespace WebApp.Service
         public DbSet<VwFiltro> VwFiltro { get; set; }
         public DbSet<VwDimension> VwDimension { get; set; }
         public DbSet<Vista> Vista { get; set; }
+        public DbSet<HomologacionEsquemaVista> HomologacionEsquemaVista { get; set; }
         // modulo de busquedas
         public DbSet<Homologacion> Homologacion { get; set; }
         public DbSet<DataLakeOrganizacion> DataLakeOrganizacion { get; set; }
