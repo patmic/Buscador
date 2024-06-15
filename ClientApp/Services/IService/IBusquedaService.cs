@@ -2,9 +2,9 @@
 using ClientApp.Models;
 
 namespace ClientApp.Services.IService {
-    public interface IBusquedaRepository
+    public interface IBusquedaService
     {
-        Task<List<DataHomologacionEsquema>> PsBuscarPalabraAsync(string value, int pageNumber, int pageSize);
+        Task<ResultDataHomologacionEsquema> PsBuscarPalabraAsync(string paramJSON, int PageNumber, int RowsPerPage);
         Task<List<HomologacionEsquema>> FnHomologacionEsquemaTodoAsync();
         Task<HomologacionEsquema> FnHomologacionEsquemaAsync(int idHomologacionEsquema);
         Task<List<DataHomologacionEsquema>> FnHomologacionEsquemaDatoAsync(int idHomologacionEsquema, int idDataLakeOrganizacion);

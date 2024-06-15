@@ -93,6 +93,7 @@ BEGIN
 								,H.MostrarWeb
 								,H.TooltipWeb
 								,H.MostrarWebOrden
+								,H.NombreHomologado
 						FROM	Homologacion	H	WITH (NOLOCK)
 						JOIN	(	SELECT DISTINCT IdHomologacion
 									FROM  OPENJSON((	SELECT	EsquemaJson

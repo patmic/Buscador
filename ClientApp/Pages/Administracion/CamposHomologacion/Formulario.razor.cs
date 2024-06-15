@@ -3,7 +3,7 @@ using ClientApp.Models;
 using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components;
 
-namespace ClientApp.Pages.Administracion.Homologacion
+namespace ClientApp.Pages.Administracion.CamposHomologacion
 {
     public partial class Formulario
     {
@@ -39,7 +39,7 @@ namespace ClientApp.Pages.Administracion.Homologacion
             if (result.registroCorrecto)
             {
                 toastService.CreateToastMessage(ToastType.Success, "Registrado exitosamente");
-                navigationManager.NavigateTo("/homologacion");
+                navigationManager.NavigateTo("/campos-homologacion");
             }
             else
             {

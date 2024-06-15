@@ -5,14 +5,9 @@ using ClientApp.Models;
 
 namespace ClientApp.Services {
     // Crea un servicio que maneje la lógica para llamar al API REST y obtener los datos.
-    public class VwHomologacionRepository : IVwHomologacionRepository
+    public class VwHomologacionRepository (HttpClient httpClient) : IVwHomologacionRepository
     {
-        private readonly HttpClient _httpClient;
-
-        public VwHomologacionRepository(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
+        private readonly HttpClient _httpClient = httpClient;
 
         public async Task<List<VwHomologacion>> GetHomologacionAsync(string endpoint)
         {

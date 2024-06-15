@@ -196,3 +196,55 @@ CREATE TABLE WebSiteLog (
     ,CONSTRAINT  [CK_WSL_Estado]			CHECK   (Estado IN ('A', 'X'))
 )
 GO
+
+----------------------------------------
+--ORG (SAE, IB-METRO,..)      ::
+--ESQ (ESQ01) ::			  VISTA    ::
+----------------------------------------
+--CodHomCampo1		->		CodHomCampo1		
+--CodHomCampo2		->		CodHomCampo2		
+--CodHomCampo3		->		..........::
+--...
+-----------------------------------------
+CREATE TABLE Vista (
+	 IdVista			 	INT IDENTITY(1,1)	NOT NULL
+    ,IdHomologacionSistema	INT					NOT NULL 
+    ,VistaNombre			NVARCHAR(50)		NOT NULL
+
+	,Estado					NVARCHAR(1)  NOT NULL DEFAULT('A')
+    ,FechaCreacion			DATETIME	 NOT NULL DEFAULT(GETDATE())
+    ,FechaModifica			DATETIME	 NOT NULL DEFAULT(GETDATE())  
+    ,IdUserCreacion			INT			 NOT NULL DEFAULT(0)
+    ,IdUserModifica			INT			 NOT NULL DEFAULT(0)  
+	
+	,CONSTRAINT  [PK_Vista_IdVista]					PRIMARY KEY CLUSTERED (IdVista) 
+    ,CONSTRAINT  [FK_Vista_IdHomologacionSistema]	FOREIGN KEY (IdHomologacionSistema)		REFERENCES Homologacion(IdHomologacion)
+    ,CONSTRAINT  [CK_Vista_Estado]					CHECK   (Estado IN ('A', 'X'))
+)
+GO
+
+-- insert into Vista(IdHomologacionSistema, VistaNombre) values (12, 'vwEsq01');
+-- insert into Vista(IdHomologacionSistema, VistaNombre) values (13, 'vwEsq01');
+-- insert into Vista(IdHomologacionSistema, VistaNombre) values (14, 'vwEsq02');
+-- insert into Vista(IdHomologacionSistema, VistaNombre) values (15, 'vwEsq02');
+
+CREATE TABLE HomologacionEsquemaVista (
+	 IdHomologacionEsquemaVista	INT IDENTITY(1,1)	NOT NULL
+    ,IdHomologacionEsquema		INT					NOT NULL 
+    ,IdVista					INT					NOT NULL 
+    ,IdHomologacion				INT					NOT NULL 
+    ,VistaColumna				NVARCHAR(50)		NOT NULL
+	
+	,Estado					NVARCHAR(1)  NOT NULL DEFAULT('A')
+    ,FechaCreacion			DATETIME	 NOT NULL DEFAULT(GETDATE())
+    ,FechaModifica			DATETIME	 NOT NULL DEFAULT(GETDATE())  
+    ,IdUserCreacion			INT			 NOT NULL DEFAULT(0)
+    ,IdUserModifica			INT			 NOT NULL DEFAULT(0)  
+	
+	,CONSTRAINT  [PK_HEV_IdHEV]		PRIMARY KEY CLUSTERED (IdHomologacionEsquemaVista) 
+    ,CONSTRAINT  [FK_HEV_IdHE]		FOREIGN KEY (IdHomologacionEsquema)	REFERENCES HomologacionEsquema(IdHomologacionEsquema)
+    ,CONSTRAINT  [FK_HEV_IdH]		FOREIGN KEY (IdHomologacion)		REFERENCES Homologacion(IdHomologacion)
+    ,CONSTRAINT  [FK_HEV_IdVista]	FOREIGN KEY (IdVista)				REFERENCES Vista(IdVista)
+    ,CONSTRAINT  [CK_HEV_Estado]	CHECK   (Estado IN ('A', 'X'))
+)
+GO

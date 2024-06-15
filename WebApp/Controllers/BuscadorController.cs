@@ -13,11 +13,11 @@ namespace WebApp.Controllers
         private readonly ILogger<BuscadorController> _logger = logger;
 
         [HttpGet("buscarPalabra")]
-        public IActionResult PsBuscarPalabra(string value, int pageNumber, int pageSize)
+        public IActionResult PsBuscarPalabra(string paramJSON, int PageNumber, int RowsPerPage)
         {
             try
             {
-                return Ok(_vhRepo.PsBuscarPalabra(value, pageNumber, pageSize));
+                return Ok(_vhRepo.PsBuscarPalabra(paramJSON, PageNumber, RowsPerPage));
             }
             catch (Exception e)
             {
