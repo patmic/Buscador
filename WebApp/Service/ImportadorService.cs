@@ -10,28 +10,37 @@ using System.Configuration;
 
 namespace WebApp.Service.IService
 {
-  public class ImportadorService(IDataLakeRepository dataLakeRepository, IDataLakeOrganizacionRepository dataLakeOrganizacionRepository, IOrganizacionFullTextRepository organizacionFullTextRepository) : IImportadorService
+  public class ImportadorService(IDataLakeRepository dataLakeRepository, IDataLakeOrganizacionRepository dataLakeOrganizacionRepository, IOrganizacionFullTextRepository organizacionFullTextRepository, IHomologacionRepository homologacionRepository) : IImportadorService
     {
       private IDataLakeRepository _repositoryDL = dataLakeRepository;
       private IDataLakeOrganizacionRepository _repositoryDLO = dataLakeOrganizacionRepository;
       private IOrganizacionFullTextRepository _repositoryOFT = organizacionFullTextRepository;
+      private IHomologacionRepository _repositoryH = homologacionRepository;
       private string connectionString = "Server=localhost,1434;Initial Catalog=CAN_DB;User ID=sa;Password=pat_mic_DBKEY;TrustServerCertificate=True";
+      private int? executionIndex = 0;
+      private string[] views =  ["vwGrilla", "vwEsq01", "vwEsq02"];
+      private int[] filters = [5, 6];
 
-      public Boolean Importar(string path) 
+      public Boolean Importar(string[] vistas) 
       {
-        string[] views =  ["GRILLA", "ESQ_01", "ESQ_02"];
+        bool result = true;
+        if (vistas != null && vistas.Length > 0){ views = vistas; }
+
         foreach (string view in views)
         {
-          // if (!Leer(view)) { return false; }
+          executionIndex = Array.IndexOf(views, view);
+          Console.WriteLine("Execution Index: " + executionIndex + "View: " + view);
+          result = result && Leer(view);
         }
-          return Leer("vwEsq01");
+        return result;
       }
 
-      public Boolean Leer(string viewName)
+      public bool Leer(string viewName)
       {
         
         string query = "SELECT * FROM " + viewName;
-        string updateQuery = $"UPDATE DataLakeOrganizacion SET Estado = 'X' where IdDataLakeOrganizacion <= {_repositoryDLO.getLastId()}";
+        // This shal be fixed to soft delete the old record, it´s commented for testing purposes
+        // string updateQuery = $"UPDATE DataLakeOrganizacion SET Estado = 'X' where IdDataLakeOrganizacion <= {_repositoryDLO.getLastId()}";
 
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
@@ -44,12 +53,14 @@ namespace WebApp.Service.IService
             connection.Open();
             adapter.Fill(dataSet);
             DataLake? dataLake = null;
-            if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+            // if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+            // {
+            //   Console.WriteLine(updateQuery);
+            //   SqlCommand updateCommand = new SqlCommand(updateQuery, connection);
+            //   updateCommand.ExecuteNonQuery();
+            // } else 
+            if (dataSet.Tables.Count < 1 || dataSet.Tables[0].Rows.Count < 1)
             {
-              Console.WriteLine(updateQuery);
-              SqlCommand updateCommand = new SqlCommand(updateQuery, connection);
-              updateCommand.ExecuteNonQuery();
-            } else {
               Console.WriteLine("No tables found");
               return false;
             }
@@ -148,12 +159,29 @@ namespace WebApp.Service.IService
       bool addOrganizacionFullText(DataRow row, DataColumnCollection columns, int dataLakeOrganizacionId)
       {
         int columnsCount = columns.Count;
-        if (columnsCount < 5)
+        if (columnsCount < 7)
         {
           return false;
         }
         Boolean result = true;
-        for (int col = 5; col < columnsCount; col++)
+        if (executionIndex == 0)
+        {
+          foreach(int filter in filters)
+          {
+            Homologacion homologacion = _repositoryH.findByMostrarWeb(row[filter].ToString());
+            if (homologacion == null) { continue; }
+
+            _repositoryOFT.create(new OrganizacionFullText
+            {
+              IdOrganizacionFullText = 0,
+              IdDataLakeOrganizacion = dataLakeOrganizacionId,
+              IdHomologacion = homologacion.IdHomologacion,
+              FullTextOrganizacion = row[filter].ToString()
+            });
+          }
+        }
+
+        for (int col = 7; col < columnsCount; col++)
         {
           result = _repositoryOFT.create(new OrganizacionFullText
           {
@@ -168,12 +196,12 @@ namespace WebApp.Service.IService
       
       string buildDataLakeJson(DataRow row, DataColumnCollection columns)
       {
-        if (columns.Count < 5)
+        if (columns.Count < 7)
         {
           return "[]";
         }
         string json = "[";
-        for (int col = 5; col < columns.Count; col++)
+        for (int col = 7; col < columns.Count; col++)
         {
           json += "{ \"IdHomologacion\": \"" + columns[col].ColumnName.Substring(1) + "\", \"Data\": \"" + columns[col].ColumnName.Substring(1) + " " + row[col].ToString() + "\" },";
         }

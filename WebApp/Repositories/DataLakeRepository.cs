@@ -16,6 +16,7 @@ namespace WebApp.Repositories
       data.IdDataLake = 0;
       _bd.DataLake.Add(data);
       _bd.SaveChanges();
+      _bd.Entry(data).State = EntityState.Detached;
       return data;
     }
 
@@ -57,7 +58,10 @@ namespace WebApp.Repositories
       }
 
       _bd.DataLake.Update(currentRecord);
-      return _bd.SaveChanges() >= 0 ? currentRecord : null;
+      currentRecord = _bd.SaveChanges() >= 0 ? currentRecord : null;
+      
+      _bd.Entry(currentRecord).State = EntityState.Detached;
+      return currentRecord;
     }
   }
 }
