@@ -10,5 +10,6 @@ namespace WebApp.Repositories.IRepositories {
     DataLakeOrganizacion findBy(DataLakeOrganizacion dataLakeOrganizacion);
     ICollection<DataLakeOrganizacion> findAll();
     int getLastId();
+    bool deleteOldRecords(int IdHomologacionEsquema);
   }
 }
