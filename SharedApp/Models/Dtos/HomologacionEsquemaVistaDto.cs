@@ -13,6 +13,6 @@ namespace SharedApp.Models.Dtos
         public int IdHomologacion { get; set; }
         [Required]
         public string? VistaColumna { get; set; }
-        public string NombreHomologado { get; set; }
+        public string? NombreHomologado { get; set; }
     }
 }

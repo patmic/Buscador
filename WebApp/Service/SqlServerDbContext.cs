@@ -5,16 +5,7 @@ namespace WebApp.Service
 {
     public class SqlServerDbContext : DbContext
     {
-        public SqlServerDbContext()
-        {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-            ChangeTracker.LazyLoadingEnabled = false;
-        }
-        public SqlServerDbContext(DbContextOptions<SqlServerDbContext> options) : base(options)
-        {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-            ChangeTracker.LazyLoadingEnabled = false;
-        }
+        public SqlServerDbContext(DbContextOptions<SqlServerDbContext> options) : base(options) { }
         // modulo de seguridad
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Models.Endpoint> Endpoint { get; set; }

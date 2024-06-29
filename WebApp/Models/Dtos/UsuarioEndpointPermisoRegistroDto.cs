@@ -9,6 +9,6 @@ namespace WebApp.Models.Dtos
         [Required(ErrorMessage = "El endpoint es obligatorio")]
         public int IdEndpoint { get; set; }
         [Required(ErrorMessage = "La acción es obligatorio")]
-        public string Accion { get; set; }
+        public string? Accion { get; set; }
     }
 }
