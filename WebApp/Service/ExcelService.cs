@@ -17,6 +17,7 @@ namespace WebApp.Service.IService
       private string[] sheets = ["GRILLA", "ESQ_01", "ESQ_02"];
       private int[] filters = [5, 6];
       private int executionIndex = 0;
+      private bool deleted = false;
 
       public Boolean ImportarExcel(string path) 
       {
@@ -55,12 +56,13 @@ namespace WebApp.Service.IService
               {
                 executionIndex = DataSet.Tables.IndexOf(dataTable);
                 Console.WriteLine("Execution Index: " + executionIndex + " Sheet: " + dataTable.TableName);
+                deleted = false;
                 DataLake dataLake = null;
                 for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
                   dataLake = getDatalake(dataTable, i, dataLake);
+                  deleteOldRecords(int.Parse(dataTable.Rows[i][4].ToString()));
                   DataLakeOrganizacion dataLakeOrganizacion = addDataLakeOrganizacion(dataTable, i, dataLake);
-
                   addOrganizacionFullText(dataTable, i, dataLakeOrganizacion.IdDataLakeOrganizacion);
                 }
               }
@@ -185,6 +187,13 @@ namespace WebApp.Service.IService
           json += "{ \"IdHomologacion\": \"" + dataTable.Columns[col].ColumnName + "\", \"Data\": \"" + dataTable.Columns[col].ColumnName + " " + dataTable.Rows[row][col].ToString() + "\" },";
         }
         return json.TrimEnd(',') + "]";
+      }
+
+      bool deleteOldRecords(int IdHomologacionEsquema)
+      {
+        if (deleted) { return true; }
+        deleted = true;
+        return _repositoryDLO.deleteOldRecords(IdHomologacionEsquema);
       }
   }
 }

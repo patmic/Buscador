@@ -59,5 +59,27 @@ namespace WebApp.Repositories
     {
       return _bd.DataLakeOrganizacion.AsNoTracking().Max(c => c.IdDataLakeOrganizacion);
     }
+
+    public bool deleteOldRecords(int IdHomologacionEsquema)
+    {
+      var records = _bd.DataLakeOrganizacion.Where(c => c.IdHomologacionEsquema == IdHomologacionEsquema).ToList();
+      var deletedRecordIds = new List<int?>();
+
+      foreach (var record in records)
+      {
+        record.Estado = "X";
+        deletedRecordIds.Add(record.IdDataLakeOrganizacion);
+      }
+
+      _bd.DataLakeOrganizacion.UpdateRange(records);
+      _bd.SaveChanges();
+
+      var deletedOrganizacionFullTextRecords = _bd.OrganizacionFullText.Where(o => deletedRecordIds.Contains(o.IdDataLakeOrganizacion)).ToList();
+      Console.WriteLine($"Deleted OrganizacionFullText records: {deletedOrganizacionFullTextRecords.Count}");
+      _bd.OrganizacionFullText.RemoveRange(deletedOrganizacionFullTextRecords);
+      _bd.SaveChanges();
+
+      return true;
+    }
   }
 }

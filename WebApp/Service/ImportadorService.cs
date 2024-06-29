@@ -20,7 +20,8 @@ namespace WebApp.Service.IService
       private int? executionIndex = 0;
       private string[] views =  ["vwGrilla", "vwEsq01", "vwEsq02"];
       private int[] filters = [5, 6];
-
+      private bool deleted = false;
+      
       public Boolean Importar(string[] vistas) 
       {
         bool result = true;
@@ -28,6 +29,7 @@ namespace WebApp.Service.IService
 
         foreach (string view in views)
         {
+          deleted = false;
           executionIndex = Array.IndexOf(views, view);
           Console.WriteLine("Execution Index: " + executionIndex + "View: " + view);
           result = result && Leer(view);
@@ -41,7 +43,6 @@ namespace WebApp.Service.IService
         string query = "SELECT * FROM " + viewName;
         // This shal be fixed to soft delete the old record, it´s commented for testing purposes
         // string updateQuery = $"UPDATE DataLakeOrganizacion SET Estado = 'X' where IdDataLakeOrganizacion <= {_repositoryDLO.getLastId()}";
-
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
           SqlCommand command = new SqlCommand(query, connection);
@@ -53,12 +54,6 @@ namespace WebApp.Service.IService
             connection.Open();
             adapter.Fill(dataSet);
             DataLake? dataLake = null;
-            // if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
-            // {
-            //   Console.WriteLine(updateQuery);
-            //   SqlCommand updateCommand = new SqlCommand(updateQuery, connection);
-            //   updateCommand.ExecuteNonQuery();
-            // } else 
             if (dataSet.Tables.Count < 1 || dataSet.Tables[0].Rows.Count < 1)
             {
               Console.WriteLine("No tables found");
@@ -70,6 +65,7 @@ namespace WebApp.Service.IService
               dataLake = getDatalake(row, dataLake);
               if (dataLake == null) { return false; }
               
+              deleteOldRecords(int.Parse(row[4].ToString()));
               DataLakeOrganizacion dataLakeOrganizacion = addDataLakeOrganizacion(row, dataLake, columns);
               if (dataLakeOrganizacion == null) { return false; }
 
@@ -206,6 +202,12 @@ namespace WebApp.Service.IService
           json += "{ \"IdHomologacion\": \"" + columns[col].ColumnName.Substring(1) + "\", \"Data\": \"" + columns[col].ColumnName.Substring(1) + " " + row[col].ToString() + "\" },";
         }
         return json.TrimEnd(',') + "]";
+      }
+      bool deleteOldRecords(int IdHomologacionEsquema)
+      {
+        if (deleted) { return true; }
+        deleted = true;
+        return _repositoryDLO.deleteOldRecords(IdHomologacionEsquema);
       }
   }
 }

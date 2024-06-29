@@ -25,7 +25,8 @@ namespace WebApp.Controllers
                 return StatusCode(500, "Error en el servidor");
             }
         }
-        [HttpGet("homologacionEsquemaTodo")]
+        
+        [HttpGet("homologacionEsquemaTodo")]  
         public IActionResult FnHomologacionEsquemaTodo()
         {
             try
@@ -38,6 +39,7 @@ namespace WebApp.Controllers
                 return StatusCode(500, "Error en el servidor");
             }
         }
+        
         [HttpGet("homologacionEsquema/{idHomologacionEsquema}")]
         public IActionResult FnHomologacionEsquema(int idHomologacionEsquema)
         {
@@ -51,6 +53,7 @@ namespace WebApp.Controllers
                 return StatusCode(500, "Error en el servidor");
             }
         }
+        
         [HttpGet("homologacionEsquemaDato/{idHomologacionEsquema}/{idDataLakeOrganizacion}")]
         public IActionResult FnHomologacionEsquemaDato(int idHomologacionEsquema, int idDataLakeOrganizacion)
         {
