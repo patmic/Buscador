@@ -1,74 +1,100 @@
 @page "/homologacion"
 @layout AdminLayout
-@using ClientApp.Models;
+@using ClientApp.Models
+@using SharedApp.Models.Dtos
 
 <PageTitle>Homologación</PageTitle>
 
-<h3>Administación de campos de Homologación</h3>
+<h3>Administación de Homologación</h3>
 
 <div class="row py-2">
-    <div class="col-md-6">
+    <div class="col-md-4">
+        <div>
+            <label class="col-form-label">Organización</label>
+        </div>
         <Dropdown AutoClose="true">
             <DropdownToggleButton Color="ButtonColor.Secondary">
-                @getNameDefault()
+                @if (organizacionSelected?.MostrarWeb != null)
+                {
+                    @organizacionSelected.MostrarWeb
+                }
+                else
+                {
+                    <span>Seleccionar ORG</span>
+                }
             </DropdownToggleButton>
             <DropdownMenu>
-                @if (listaVwHomologacion != null)
-                    @foreach(var g in listaVwHomologacion) {
-                        <DropdownItem @onclick="() => OnAutoCompleteChanged(g)">@g.MostrarWeb</DropdownItem>
-                    }
+                @foreach(var opcion in listaOrganizaciones) {
+                    <DropdownItem @onclick="async () => await CambiarSeleccionOrganizacion(opcion)">@opcion.MostrarWeb</DropdownItem>
+                }
             </DropdownMenu>
         </Dropdown>
     </div>
-    <div class="col-md-6">
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
-            @if (homologacionSelected != null) {
-                <p>
-                    <Button Type="ButtonType.Link" Color="ButtonColor.Primary" To="@($"/nuevo-homologacion/{homologacionSelected?.IdHomologacion}")">
-                        <span>Agregar Registro</span>
-                    </Button>
-                </p>
-            }
+    <div class="col-md-4">
+        <div>
+            <label class="col-form-label">Esquemas</label>
+        </div>
+        <Dropdown AutoClose="true">
+            <DropdownToggleButton Color="ButtonColor.Secondary">
+                @if (esquemaSelected?.MostrarWeb != null)
+                {
+                    @esquemaSelected.MostrarWeb
+                }
+                else
+                {
+                    <span>Seleccionar ESQ</span>
+                }
+            </DropdownToggleButton>
+            <DropdownMenu>
+                @foreach(var opcion in listaHomologacionEsquemas) {
+                    <DropdownItem @onclick="() => CambiarSeleccionEsquema(opcion)">@opcion.MostrarWeb</DropdownItem>
+                }
+            </DropdownMenu>
+        </Dropdown>
+    </div>
+    <div class="col-md-4">
+        <div>
+            <label class="col-form-label">Vistas</label>
+        </div>
+        <Dropdown AutoClose="true">
+            <DropdownToggleButton Color="ButtonColor.Secondary">
+                @if (vistaSelected?.VistaNombre != null)
+                {
+                    @vistaSelected.VistaNombre
+                }
+                else
+                {
+                    <span>Seleccionar Vista</span>
+                }
+            </DropdownToggleButton>
+            <DropdownMenu>
+                @foreach(var opcion in listaVistas) {
+                    <DropdownItem @onclick="() => CambiarSeleccionVista(opcion)">@opcion.VistaNombre</DropdownItem>
+                }
+            </DropdownMenu>
+        </Dropdown>
+    </div>
+    <div class="col-md-12 py-2">
+        <Grid @ref="grid" TItem="HomologacionEsquemaVistaDto" class="table table-hover table-bordered table-striped" DataProvider="HomologacionDataProvider" Responsive="true">
+            <GridColumn TItem="HomologacionEsquemaVistaDto" HeaderText="Esquema" PropertyName="NombreHomologado">
+                @context.NombreHomologado
+            </GridColumn>
+            <GridColumn TItem="HomologacionEsquemaVistaDto" HeaderText="Vista" PropertyName="VistaColumna">
+                <AutoComplete
+                    @bind-Value="context.VistaColumna"
+                    TItem="PropiedadesTablaDto"
+                    DataProvider="NombreColumnaDataProvider"
+                    PropertyName="NombreColumna"
+                    Placeholder="Seleccione..."
+                    StringComparison="StringComparison.Ordinal"
+                />
+            </GridColumn>
+        </Grid>
+        <div class="py-2">
+            <hr style="background-color:aliceblue" />
+            <Button @ref="saveButton" Color="ButtonColor.Success" @onclick="async () => await GuardarHomologacionEsquemaVista()">
+                Guardar
+            </Button>
         </div>
     </div>
-</div>
-
-<div class="form-row py-2">
-    <Grid
-        Id="sortableGrid"
-        @ref="grid"
-        TItem="VwHomologacion"
-        class="table table-hover table-bordered table-striped"
-        DataProvider="HomologacionDataProvider"
-        Responsive="true"
-        AllowFiltering="true"
-    >
-        <GridColumn TItem="VwHomologacion" HeaderText="Código Homologado" PropertyName="NombreHomologado">
-            @context.NombreHomologado
-            <input type="hidden" value="@context.IdHomologacion" />
-        </GridColumn>
-        <GridColumn TItem="VwHomologacion" HeaderText="Texto a Mostrar en la Web" PropertyName="MostrarWeb">
-            @context.MostrarWeb
-            <input type="hidden" value="@context.IdHomologacion" />
-        </GridColumn>
-        <GridColumn TItem="VwHomologacion" HeaderText="Tooltip Web" PropertyName="TooltipWeb">
-            @context.TooltipWeb
-        </GridColumn>
-        <GridColumn TItem="VwHomologacion" HeaderText="Tipo de Dato" PropertyName="MascaraDato">
-            @context.MascaraDato
-        </GridColumn>
-        <GridColumn TItem="VwHomologacion" HeaderText="Si No Hay Dato" PropertyName="SiNoHayDato">
-            @context.SiNoHayDato
-        </GridColumn>
-        <GridColumn TItem="VwHomologacion" HeaderText="Editar" Filterable="false">
-            <Button Type="ButtonType.Link" Color="ButtonColor.Secondary" Outline="true" To="@($"/editar-homologacion/{homologacionSelected.IdHomologacion}/{context.IdHomologacion}")" Size="Size.Small">
-                <Icon Name="IconName.PencilSquare" />
-            </Button>
-        </GridColumn>
-        <GridColumn TItem="VwHomologacion" HeaderText="Eliminar" Filterable="false">
-            <Button Color="ButtonColor.Danger" Outline="true" @onclick="async () => await OnDeleteClick(context.IdHomologacion)" Size="Size.Small">
-                <Icon Name="IconName.Trash3" />
-            </Button>
-        </GridColumn>
-    </Grid>
 </div>

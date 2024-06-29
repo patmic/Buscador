@@ -21,7 +21,7 @@ namespace WebApp.Service.IService
       private string[] views =  ["vwGrilla", "vwEsq01", "vwEsq02"];
       private int[] filters = [5, 6];
       private bool deleted = false;
-
+      
       public Boolean Importar(string[] vistas) 
       {
         bool result = true;
@@ -42,7 +42,7 @@ namespace WebApp.Service.IService
         
         string query = "SELECT * FROM " + viewName;
         // This shal be fixed to soft delete the old record, it´s commented for testing purposes
-
+        // string updateQuery = $"UPDATE DataLakeOrganizacion SET Estado = 'X' where IdDataLakeOrganizacion <= {_repositoryDLO.getLastId()}";
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
           SqlCommand command = new SqlCommand(query, connection);
@@ -66,7 +66,6 @@ namespace WebApp.Service.IService
               if (dataLake == null) { return false; }
               
               deleteOldRecords(int.Parse(row[4].ToString()));
-              
               DataLakeOrganizacion dataLakeOrganizacion = addDataLakeOrganizacion(row, dataLake, columns);
               if (dataLakeOrganizacion == null) { return false; }
 
@@ -204,7 +203,6 @@ namespace WebApp.Service.IService
         }
         return json.TrimEnd(',') + "]";
       }
-
       bool deleteOldRecords(int IdHomologacionEsquema)
       {
         if (deleted) { return true; }

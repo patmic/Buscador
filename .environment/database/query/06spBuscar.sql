@@ -1,21 +1,22 @@
 use CAN_DB;
 go
 
-CREATE OR ALTER PROCEDURE psBuscarPalabra ( @paramJSON NVARCHAR(max) = NULL , @PageNumber INT = 1, @RowsPerPage INT = 20) AS
+CREATE OR ALTER PROCEDURE psBuscarPalabra ( @paramJSON NVARCHAR(max) = NULL , @PageNumber INT = 1, @RowsPerPage INT = 20, @RowsTotal INT = 0 OUTPUT) AS
 BEGIN
- --DECLARE @paramJSON NVARCHAR(max) = N'{ "TextoBuscar": "or",
-	--					 "IdHomologacionFiltro":["41","42","44"]
-	--					}'
-	IF (@paramJSON is null)			RETURN;
-	DECLARE @BuscarPalabra			NVARCHAR(100)
+	IF  (@paramJSON is null)			
+		RETURN '{}';
+	--	DECLARE @paramJSON NVARCHAR(max) = N'{ "TextoBuscar": "or", "IdHomologacionFiltro":["41","42","44"] }'
+	DECLARE @BuscarPalabra			NVARCHAR(200)	= ltrim(rtrim(JSON_VALUE(@paramJSON,'$.TextoBuscar')))
     DECLARE @HomologacionFiltro		TABLE (IdHomologacion INT)
     DECLARE @DataLakeOrgBusqueda	TABLE (IdDataLakeOrganizacion INT)
-    
-	SET	@BuscarPalabra = ltrim(rtrim(JSON_VALUE(@paramJSON,'$.TextoBuscar')))
-	IF (LTRIM(RTRIM(@BuscarPalabra)) = '') return '{}';
+	 
+	IF  (LTRIM(RTRIM(@BuscarPalabra)) = '')	
+		RETURN '{}';
+
 	INSERT	INTO @HomologacionFiltro
 	SELECT	DISTINCT value  
 	FROM	OPENJSON(JSON_QUERY(@paramJSON, '$.IdHomologacionFiltro'))
+	
 	-->	buscando la palabra
 	INSERT	INTO @DataLakeOrgBusqueda (IdDataLakeOrganizacion)
 	SELECT	DISTINCT IdDataLakeOrganizacion
@@ -24,23 +25,12 @@ BEGIN
 	AND (	IdHomologacion IN (SELECT IdHomologacion FROM @HomologacionFiltro)
 			OR NOT EXISTS (SELECT 1 FROM @HomologacionFiltro)
 		)
-	--select * from @DataLakeOrgBusqueda
-	--> devuelve los resultados según lo encontrado
-    --SELECT	t.IdDataLakeOrganizacion
-    --        ,(	SELECT  Distinct h.IdHomologacion IdHomologacion, o.FullTextOrganizacion  ValorColumna
-    --            FROM	OrganizacionFullText	o with(nolock)
-    --            JOIN	Homologacion			h with(nolock) on o.IdHomologacion = h.IdHomologacion
-    --            Where	o.IdDataLakeOrganizacion = t.IdDataLakeOrganizacion
-    --            for json path
-    --        ) DataJson
-    --FROM	@DataLakeOrgBusqueda t
+	--ORDER BY IdDataLakeOrganizacion  
+	--OFFSET (@PageNumber - 1) * @RowsPerPage ROWS
+	--FETCH NEXT @RowsPerPage ROWS ONLY;
 
-	-- SELECT	 O.IdDataLakeOrganizacion	
-	-- 		,O.IdHomologacionEsquema
-	-- 		,O.DataEsquemaJson
-	-- FROM	DataLakeOrganizacion	 O WITH (NOLOCK)	
-	-- JOIN	@DataLakeOrgBusqueda	 B on B.IdDataLakeOrganizacion = O.IdDataLakeOrganizacion 
-	-- WHERE	O.Estado				 = 'A'
+	IF  (@PageNumber = 1)
+		SELECT @RowsTotal = COUNT(*) FROM @DataLakeOrgBusqueda
 
 	SELECT  O.IdDataLakeOrganizacion,
 			O.IdHomologacionEsquema,
@@ -48,18 +38,17 @@ BEGIN
 	FROM DataLakeOrganizacion O WITH (NOLOCK)
 	JOIN @DataLakeOrgBusqueda B ON B.IdDataLakeOrganizacion = O.IdDataLakeOrganizacion
 	WHERE O.Estado = 'A'
-	ORDER BY O.IdDataLakeOrganizacion  -- Necesario para usar OFFSET y FETCH NEXT
+	ORDER BY O.IdDataLakeOrganizacion  
 	OFFSET (@PageNumber - 1) * @RowsPerPage ROWS
 	FETCH NEXT @RowsPerPage ROWS ONLY;
-
 END;
 GO
 
-select distinct IdDataLake from DataLakeOrganizacion
+--select * from HomologacionEsquema
 --> validar la funcion
-exec psBuscarPalabra N'{ "TextoBuscar": "sd",
-						 "IdHomologacionFiltro":[]
-						}', 1, 100
+exec psBuscarPalabra N'{ "TextoBuscar": "5",
+						 "IdHomologacionFiltro":["41","42","44"]
+						}'
 
 
 --CREATE OR ALTER PROCEDURE psBuscarPalabra

@@ -61,11 +61,8 @@ namespace WebApp.Service.IService
                 for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
                   dataLake = getDatalake(dataTable, i, dataLake);
-
                   deleteOldRecords(int.Parse(dataTable.Rows[i][4].ToString()));
-                  
                   DataLakeOrganizacion dataLakeOrganizacion = addDataLakeOrganizacion(dataTable, i, dataLake);
-
                   addOrganizacionFullText(dataTable, i, dataLakeOrganizacion.IdDataLakeOrganizacion);
                 }
               }

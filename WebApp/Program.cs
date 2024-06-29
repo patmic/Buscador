@@ -28,6 +28,8 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IExcelService, ExcelService>();
 builder.Services.AddScoped<IImportadorService, ImportadorService>();
 builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
+builder.Services.AddScoped<IVistaRepository, VistaRepository>();
+builder.Services.AddScoped<IHomologacionEsquemaVistaRepository, HomologacionEsquemaVistaRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IEndpointRepository, EndpointRepository>();
 builder.Services.AddScoped<IUsuarioEndpointPermisoRepository, UsuarioEndpointPermisoRepository>();

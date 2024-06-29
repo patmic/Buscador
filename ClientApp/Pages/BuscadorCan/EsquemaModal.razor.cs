@@ -11,7 +11,7 @@ namespace ClientApp.Pages.BuscadorCan
         [Parameter]
         public DataHomologacionEsquema dataLake { get; set; }
         [Inject]
-        private IBusquedaRepository servicio { get; set; }
+        private IBusquedaService servicio { get; set; }
         private List<HomologacionEsquema>? listaEsquemas;
         protected override async Task OnInitializedAsync()
         {

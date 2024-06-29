@@ -30,24 +30,7 @@ CREATE TABLE ImportarTablas (
 );
 GO
 
-CREATE OR ALTER VIEW vwGrilla AS
-  SELECT 
-    DataTipo,
-    DataSistemaOrigen,
-    DataSistemaOrigenId,
-    DataSistemaFecha,
-    1 as IdHomologacionEsquema,
-    DataSistema,
-    DataPais,
-    H41,
-    H42,
-    H43,
-    H44,
-    H45,
-    H46,
-    H47
-  FROM ImportarTablas
-GO
+
 
 CREATE OR ALTER VIEW vwEsq01 AS
   SELECT 
@@ -75,7 +58,7 @@ CREATE OR ALTER VIEW vwEsq02 AS
     DataPais,
     H55,
     H56,
-    H57
+
   FROM ImportarTablas
 GO
 

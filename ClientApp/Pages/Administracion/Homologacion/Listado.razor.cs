@@ -1,74 +1,122 @@
 using BlazorBootstrap;
 using ClientApp.Models;
+using SharedApp.Models.Dtos;
 using ClientApp.Services.IService;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+using Newtonsoft.Json;
 
 namespace ClientApp.Pages.Administracion.Homologacion
 {
     public partial class Listado
     {
-        private VwHomologacion? homologacionSelected;
-        private Grid<VwHomologacion>? grid;
-        private List<VwHomologacion>? listaHomologacions = new List<VwHomologacion>();
         [Inject]
-        private IVwHomologacionRepository? vwHomologacionRepository { get; set; }
+        public IVwHomologacionRepository vwHomologacionRepository { get; set; }
         [Inject]
         private IHomologacionRepository? homologacionRepository { get; set; }
-        private List<VwHomologacion>? listaVwHomologacion;
-        public event Action? DataLoaded;
         [Inject]
-        protected IJSRuntime? JSRuntime { get; set; }
+        private IHomologacionEsquemaRepository homologacionEsquemaRepository { get; set; }
+        [Inject]
+        private IBusquedaService servicio { get; set; }
+        [Inject]
+        private IVistaService vistaService { get; set; }
+        [Inject]
+        public Services.ToastService? toastService { get; set; }
+        [Inject]
+        private IHomologacionEsquemaVistaService homologacionEsquemaVistaService { get; set; }
+        private Grid<HomologacionEsquemaVistaDto> grid;
+        private Button saveButton = default!;
+        private List<VwHomologacion>? listaOrganizaciones = new List<VwHomologacion>();
+        private List<HomologacionEsquema>? listaHomologacionEsquemas = new List<HomologacionEsquema>();
+        private List<VwHomologacion>? listaHomologacions = new List<VwHomologacion>();
+        private List<VistaDto>? listaVistas = new List<VistaDto>();
+        private List<PropiedadesTablaDto> propiedadesVista = new List<PropiedadesTablaDto>();
+        private List<HomologacionEsquemaVistaDto> listasHevd = new List<HomologacionEsquemaVistaDto>();
+        List<VwHomologacion> Columnas = new List<VwHomologacion>();
+        private HomologacionEsquema esquemaSelected;
+        private VwHomologacion organizacionSelected;
+        private VistaDto vistaSelected;
         protected override async Task OnInitializedAsync()
         {
-            listaVwHomologacion = await vwHomologacionRepository.GetHomologacionAsync("grupo");
-
-            DataLoaded += async () => {
-                if (!(listaHomologacions is null)) {
-                    await Task.Delay(2000);
-                    await JSRuntime.InvokeVoidAsync("initSortable", DotNetObjectReference.Create(this));
-                }
-            };
+            listaOrganizaciones = await vwHomologacionRepository.GetHomologacionDetalleAsync("filtro_detalles", 3);
+            listaHomologacionEsquemas = await homologacionEsquemaRepository.GetHomologacionEsquemasAsync();
         }
-        private async Task<GridDataProviderResult<VwHomologacion>> HomologacionDataProvider(GridDataProviderRequest<VwHomologacion> request)
+        private async Task CambiarSeleccionOrganizacion(VwHomologacion _organizacionSelected)
         {
-            if (homologacionSelected != null)
-            {
-                listaHomologacions = await homologacionRepository.GetHomologacionsAsync(homologacionSelected.IdHomologacion);
-            }
+            organizacionSelected = _organizacionSelected;
+            vistaSelected = null;
+            esquemaSelected = null;
+            listaVistas = await vistaService.GetFindBySystemAsync(organizacionSelected.IdHomologacion);
 
-            DataLoaded?.Invoke();
-
-            return await Task.FromResult(request.ApplyTo(listaHomologacions));
-        }
-        private async Task OnDeleteClick(int IdHomologacion)
-        {
-            var respuesta = await homologacionRepository.EliminarHomologacion(IdHomologacion);
-            if (respuesta.registroCorrecto) {
-                await grid.RefreshDataAsync();
-            }
-        }
-        private async void OnAutoCompleteChanged(VwHomologacion _vwHomologacionSelected)
-        {
-            homologacionSelected = _vwHomologacionSelected;
+            listasHevd = new List<HomologacionEsquemaVistaDto>();
             await grid.RefreshDataAsync();
-        }
-        [JSInvokable]
-        public async Task OnDragEnd(string[] sortedIds)
-        {
-            for (int i = 0; i < sortedIds.Length; i += 1)
-            {
-                VwHomologacion homo = listaHomologacions.FirstOrDefault(h => h.IdHomologacion == int.Parse(sortedIds[i]));
-                if (homo != null && homo.MostrarWebOrden != i + 1)
-                {
-                    homo.MostrarWebOrden = i + 1;
-                    await homologacionRepository.RegistrarOActualizar(homo);
-                }
-            }
             await Task.CompletedTask;
         }
-        private string getNameDefault() {
-            return homologacionSelected?.MostrarWeb ?? "Seleccione Grupo de Homologación";
+        private async Task CambiarSeleccionEsquema(HomologacionEsquema _esquemaSelected)
+        {
+            esquemaSelected = _esquemaSelected;
+            var homologacionEsquema = await servicio.FnHomologacionEsquemaAsync(esquemaSelected.IdHomologacionEsquema);
+            Columnas = JsonConvert.DeserializeObject<List<VwHomologacion>>(homologacionEsquema.EsquemaJson).OrderBy(c => c.MostrarWebOrden).ToList();
+
+            vistaSelected = null;
+            listasHevd = new List<HomologacionEsquemaVistaDto>();
+
+            await grid.RefreshDataAsync();
+            await Task.CompletedTask;
+        }
+        private async Task CambiarSeleccionVista(VistaDto _vistaSelected)
+        {
+            vistaSelected = _vistaSelected;
+            propiedadesVista = await vistaService.GetPropertiesAsync(vistaSelected.VistaNombre);
+            listasHevd = new List<HomologacionEsquemaVistaDto>();
+
+            await grid.RefreshDataAsync();
+            await Task.CompletedTask;
+        }
+        private async Task<GridDataProviderResult<HomologacionEsquemaVistaDto>> HomologacionDataProvider(GridDataProviderRequest<HomologacionEsquemaVistaDto> request)
+        {
+            if (Columnas.Count > 0 && esquemaSelected != null && vistaSelected != null) {
+                // traer datos ya guardados
+                var datos = await homologacionEsquemaVistaService.GetFindByVistaEsquemaAsync(vistaSelected.IdVista, esquemaSelected.IdHomologacionEsquema);
+
+                foreach(var item in Columnas) {
+                    listasHevd.Add(new HomologacionEsquemaVistaDto {
+                        IdHomologacion = item.IdHomologacion,
+                        IdHomologacionEsquema = esquemaSelected.IdHomologacionEsquema,
+                        NombreHomologado = item.NombreHomologado,
+                        IdVista = vistaSelected.IdVista,
+                        VistaColumna = datos.FirstOrDefault(
+                            c => c.IdHomologacion == item.IdHomologacion &&
+                                c.IdVista == vistaSelected.IdVista &&
+                                c.IdHomologacionEsquema == esquemaSelected.IdHomologacionEsquema
+                        )?.VistaColumna ?? propiedadesVista.FirstOrDefault(
+                            c => c.NombreColumna.Equals(item.NombreHomologado)
+                        )?.NombreColumna
+                    });
+                }
+            }
+
+            return await Task.FromResult(request.ApplyTo(listasHevd));
+        }
+        private async Task<AutoCompleteDataProviderResult<PropiedadesTablaDto>> NombreColumnaDataProvider(AutoCompleteDataProviderRequest<PropiedadesTablaDto> request)
+        {
+            return await Task.FromResult(request.ApplyTo(propiedadesVista.OrderBy(p => p.NombreColumna)));
+        }
+        private async Task GuardarHomologacionEsquemaVista()
+        {
+            saveButton.ShowLoading("Guardando...");
+
+            var result = await homologacionEsquemaVistaService.Registrar(listasHevd);
+            if (result.registroCorrecto)
+            {
+                toastService.CreateToastMessage(ToastType.Success, "Registrado exitosamente");
+            }
+            else
+            {
+                toastService.CreateToastMessage(ToastType.Danger, "Debe llenar todos los campos");
+            }
+
+            saveButton.HideLoading();
+            await Task.CompletedTask;
         }
     }
 }
